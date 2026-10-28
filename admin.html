@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>لوحة التحكم | عَزْوَتْنَا</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <header class="app-header">
+    <div class="header-inner">
+      <div class="logo-area">
+        <div class="logo-icon">⚙️</div>
+        <div>
+          <h1>لوحة الإدارة والمراجعة</h1>
+          <p>إدارة الحرفيين المسجلين في المنصة</p>
+        </div>
+      </div>
+      <a href="index.html" class="back-link">→ معاينة الدليل</a>
+    </div>
+  </header>
+
+  <main class="app-container">
+    <div class="admin-header-card">
+      <div>
+        <h2>الحرفيون الجدد</h2>
+        <p>البيانات المسجلة محلياً في انتظار المراجعة أو الحذف</p>
+      </div>
+      <button id="clearAllBtn" class="delete-all-btn">حذف كل المسجلين</button>
+    </div>
+
+    <div class="admin-table-container">
+      <table class="admin-table">
+        <thead>
+          <tr>
+            <th>الاسم</th>
+            <th>المهنة</th>
+            <th>المنطقة</th>
+            <th>الهاتف</th>
+            <th>الإجراء</th>
+          </tr>
+        </thead>
+        <tbody id="adminWorkersTable">
+          <!-- البيانات بتنزل هنا -->
+        </tbody>
+      </table>
+      <div id="emptyMsg" class="empty-state" style="display: none;">لا يوجد حرفيون مسجلون حالياً.</div>
+    </div>
+  </main>
+
+  <script>
+    const tableBody = document.getElementById('adminWorkersTable');
+    const emptyMsg = document.getElementById('emptyMsg');
+    const clearAllBtn = document.getElementById('clearAllBtn');
+
+    function loadAdminData() {
+      const workers = JSON.parse(localStorage.getItem('custom_workers')) || [];
+      tableBody.innerHTML = '';
+
+      if (workers.length === 0) {
+        emptyMsg.style.display = 'block';
+        return;
+      }
+
+      emptyMsg.style.display = 'none';
+
+      workers.forEach((worker, index) => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td><strong>${worker.name}</strong></td>
+          <td><span class="badge">${worker.job}</span></td>
+          <td>${worker.area}</td>
+          <td dir="ltr" style="text-align: right;">${worker.phone}</td>
+          <td>
+            <button class="action-del-btn" onclick="deleteWorker(${index})">حذف 🗑️</button>
+          </td>
+        `;
+        tableBody.appendChild(tr);
+      });
+    }
+
+    window.deleteWorker = function(index) {
+      if (confirm('هل أنتِ متأكدة من حذف هذا الحرفي؟')) {
+        const workers = JSON.parse(localStorage.getItem('custom_workers')) || [];
+        workers.splice(index, 1);
+        localStorage.setItem('custom_workers', JSON.stringify(workers));
+        loadAdminData();
+      }
+    };
+
+    clearAllBtn.addEventListener('click', () => {
+      if (confirm('تنبيه: سيتم مسح جميع الحرفيين المسجلين محلياً، هل توافقين؟')) {
+        localStorage.removeItem('custom_workers');
+        loadAdminData();
+      }
+    });
+
+    loadAdminData();
+  </script>
+</body>
+</html>

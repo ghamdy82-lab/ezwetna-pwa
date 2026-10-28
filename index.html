@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>عزوتنا | خدمات التجمع الثالث</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+  
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#0D9488">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- شريط الرأس -->
+    <header class="app-header">
+      <div class="header-inner">
+        <div class="logo-area">
+            <img src="icons/21762905-9471-44f1-96cc-d8d576c02f75.jpg" alt="شعار عزوتنا" class="logo-img">
+          <div>
+            <h1>عَزْوَتْنَا</h1>
+            <p>دليل صنايعية وحرفيي التجمع</p>
+          </div>
+        </div>
+        <a href="register.html" class="join-btn">+ انضم كحرفي</a>
+      </div>
+    </header>
+
+    <!-- المحتوى الداخلي -->
+    <main class="app-container">
+      
+      <!-- البحث والتصنيفات -->
+      <section class="search-section">
+        <div class="search-box">
+          <input type="text" id="searchInput" placeholder="بتدوري على سباك، نجار، كهربائي...">
+        </div>
+        
+        <div class="categories-scroll" id="categoriesBar">
+          <button class="cat-pill active" data-cat="all">الكل</button>
+          <button class="cat-pill" data-cat="plumber">سباكة 🔧</button>
+          <button class="cat-pill" data-cat="electric">كهرباء ⚡</button>
+          <button class="cat-pill" data-cat="carpenter">نجارة 🪚</button>
+          <button class="cat-pill" data-cat="paint">نقاشة 🎨</button>
+          <button class="cat-pill" data-cat="ac">تكييفات ❄️</button>
+        </div>
+      </section>
+
+      <!-- قائمة الصنايعية -->
+      <section class="workers-grid" id="workersList">
+        <!-- الكروت بتنزل هنا عبر app.js -->
+      </section>
+
+    </main>
+
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

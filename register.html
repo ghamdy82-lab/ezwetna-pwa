@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>انضم كحرفي | عَزْوَتْنَا</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+
+    <header class="app-header">
+      <div class="header-inner">
+        <div class="logo-text-only">عَزْوَتْنَا</div>
+        <a href="index.html" class="back-link">→ رجوع للدليل</a>
+      </div>
+    </header>
+
+    <main class="app-container">
+      <div class="form-card">
+        <div class="form-header">
+          <h2>انضم لعزوتنا في التجمع 🤝</h2>
+          <p>سجّل بياناتك كصنايعي أو صاحب ورشة عشان جيرانك في المنطقة يوصلولك بسهولة وبدون وسيط.</p>
+        </div>
+
+        <form id="craftsmanForm">
+          <div class="input-group">
+            <label>الاسم بالكامل (أو اسم الشهرة)</label>
+            <input type="text" id="wName" placeholder="مثلاً: الأسطى أحمد، م/ كريم..." required>
+          </div>
+
+          <div class="input-group">
+            <label>المهنة أو التخصص</label>
+            <select id="wCategory" required>
+              <option value="" disabled selected>اختار مهنتك</option>
+              <option value="plumber">سباكة وشبكات مياه 🔧</option>
+              <option value="electric">كهرباء وتأسيس منازل ⚡</option>
+              <option value="carpenter">نجارة وأبواب ومطابخ 🪚</option>
+              <option value="paint">نقاشة وتشطيبات 🎨</option>
+              <option value="ac">تكييفات وتبريد ❄️</option>
+              <option value="other">خدمات وصيانة أخرى 🛠️</option>
+            </select>
+          </div>
+
+          <div class="input-group">
+            <label>رقم التليفون (للاتصال والواتساب)</label>
+            <input type="tel" id="wPhone" placeholder="01xxxxxxxxx" required dir="ltr">
+          </div>
+
+          <div class="input-group">
+            <label>منطقتك أو مكانك في التجمع</label>
+            <input type="text" id="wArea" placeholder="مثلاً: المحلية التالتة، إسكان الشباب..." required>
+          </div>
+
+          <div class="input-group">
+            <label>عنوان المحل / الورشة (لو متاح)</label>
+            <input type="text" id="wShop" placeholder="اختياري: عمارة كذا، أو جنب سنتر كذا">
+          </div>
+
+          <button type="submit" class="submit-btn">تسجيل البيانات الآن</button>
+        </form>
+      </div>
+    </main>
+
+  </div>
+
+ <script>
+    const form = document.getElementById('craftsmanForm');
+
+    // أيقونات وتسميات المهن المظبوطة
+    const iconsMap = {
+      plumber: "🔧",
+      electric: "⚡",
+      carpenter: "🪚",
+      paint: "🎨",
+      ac: "❄️",
+      other: "🛠️"
+    };
+
+    const titlesMap = {
+      plumber: "سباكة وشبكات مياه",
+      electric: "كهرباء وتأسيس منازل",
+      carpenter: "نجارة ومطابخ",
+      paint: "نقاشة وتشطيبات",
+      ac: "صيانة وتكييفات",
+      other: "خدمات وصيانة عامة"
+    };
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+
+      // سحب البيانات من الخانات
+      const name = document.getElementById('wName').value.trim();
+      const category = document.getElementById('wCategory').value;
+      const phone = document.getElementById('wPhone').value.trim();
+      const area = document.getElementById('wArea').value.trim();
+      const shop = document.getElementById('wShop').value.trim();
+
+      // تجهيز كارت الحرفي الجديد
+      const newWorker = {
+        id: Date.now(),
+        name: name,
+        job: titlesMap[category] || "صنايعي وحرفي",
+        category: category,
+        area: shop ? `${area} (${shop})` : area,
+        phone: phone,
+        avatar: iconsMap[category] || "🛠️"
+      };
+
+      // حفظ الحرفي في ذاكرة المتصفح المحلية LocalStorage
+      const savedWorkers = JSON.parse(localStorage.getItem('custom_workers')) || [];
+      savedWorkers.unshift(newWorker); // يظهر في الأول خالص
+      localStorage.setItem('custom_workers', JSON.stringify(savedWorkers));
+
+      alert('تسلم إيدك! تم تسجيل الحرفي بنجاح، وهيظهر في الدليل فوراً.');
+      window.location.href = 'index.html';
+    });
+  </script>
+</body>
+</html>
