@@ -3,105 +3,491 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>لوحة التحكم | عَزْوَتْنَا</title>
+  <title>لوحة تحكم عزوتنا | الإدارة الكاملة</title>
   
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   
   <link rel="stylesheet" href="style.css">
+  <style>
+    .auth-overlay {
+      position: fixed; inset: 0; background: #0f172a; display: flex; 
+      align-items: center; justify-content: center; z-index: 9999;
+    }
+    .auth-card {
+      background: #ffffff; padding: 32px 24px; border-radius: 16px; 
+      width: 90%; max-width: 400px; text-align: center; box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    }
+    .auth-card input {
+      width: 100%; padding: 12px; margin: 16px 0; border: 1px solid #cbd5e1; 
+      border-radius: 10px; font-family: 'Cairo'; font-size: 1rem; text-align: center; box-sizing: border-box;
+    }
+    .auth-card button {
+      width: 100%; padding: 12px; background: var(--primary); color: #fff; border: none; 
+      border-radius: 10px; font-weight: 700; cursor: pointer; font-family: 'Cairo';
+    }
+    .tabs-nav {
+      display: flex; gap: 10px; margin-bottom: 20px; border-bottom: 2px solid #e2e8f0; padding-bottom: 10px; overflow-x: auto;
+    }
+    .tab-btn {
+      background: none; border: none; padding: 10px 18px; font-family: 'Cairo'; font-size: 0.95rem;
+      font-weight: 700; color: #64748b; cursor: pointer; border-radius: 8px; transition: 0.2s; white-space: nowrap;
+    }
+    .tab-btn.active { background: var(--primary); color: #fff; }
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+    .card-box {
+      background: #fff; border-radius: 14px; border: 1px solid #e2e8f0; padding: 20px; margin-bottom: 24px;
+    }
+    .form-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; margin-bottom: 14px;
+    }
+    .form-grid input, .form-grid select {
+      width: 100%; padding: 10px 12px; border: 1px solid #cbd5e1; border-radius: 8px; font-family: 'Cairo'; box-sizing: border-box;
+    }
+    .table-container { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; text-align: right; margin-top: 10px; }
+    th, td { padding: 12px 14px; border-bottom: 1px solid #f1f5f9; font-size: 0.9rem; }
+    th { background: #f8fafc; color: var(--primary); font-weight: 700; }
+    .btn-approve { background: #10b981; color: #fff; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-family: 'Cairo'; font-weight: 600; }
+    .btn-reject { background: #ef4444; color: #fff; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-family: 'Cairo'; font-weight: 600; }
+    .badge-job { background: #EAF4F4; color: var(--primary); padding: 3px 10px; border-radius: 20px; font-weight: 700; font-size: 0.8rem; }
+  </style>
 </head>
 <body>
 
+  <!-- شاشة الدخول بالباسورد -->
+  <div id="authOverlay" class="auth-overlay">
+    <div class="auth-card">
+      <div style="font-size: 2.5rem; color: var(--primary); margin-bottom: 8px;"><i class="fa-solid fa-shield-halved"></i></div>
+      <h3 style="margin: 0 0 8px; color: #1e293b;">إدارة منصة عزوتنا</h3>
+      <p style="margin: 0; color: #64748b; font-size: 0.85rem;">ادخلي كلمة المرور الخاصة بكِ للمتابعة</p>
+      <input type="password" id="adminPassInput" placeholder="••••••••">
+      <button id="loginBtn" type="button">دخول</button>
+      <p id="errorMsg" style="color: #ef4444; font-size: 0.8rem; display: none; margin-top: 10px;">كلمة المرور غير صحيحة!</p>
+    </div>
+  </div>
+
   <header class="app-header">
-    <div class="header-inner">
-      <div class="logo-area">
-        <div class="logo-icon">⚙️</div>
+    <div class="header-container">
+      <div class="brand">
+        <img src="icons/21762905-9471-44f1-96cc-d8d576c02f75.jpg" alt="لوجو عزوتنا" class="brand-logo">
         <div>
-          <h1>لوحة الإدارة والمراجعة</h1>
-          <p>إدارة الحرفيين المسجلين في المنصة</p>
+          <h1 class="brand-title">لوحة التحكم الشاملة</h1>
+          <span class="brand-sub">إدارة الأقسام والخدمات والاقتراحات</span>
         </div>
       </div>
-      <a href="index.html" class="back-link">→ معاينة الدليل</a>
+      <a href="index.html" class="back-link">
+        <i class="fa-solid fa-arrow-right"></i> الذهاب للدليل
+      </a>
     </div>
   </header>
 
-  <main class="app-container">
-    <div class="admin-header-card">
-      <div>
-        <h2>الحرفيون الجدد</h2>
-        <p>البيانات المسجلة محلياً في انتظار المراجعة أو الحذف</p>
-      </div>
-      <button id="clearAllBtn" class="delete-all-btn">حذف كل المسجلين</button>
+  <main style="max-width: 1100px; margin: 20px auto; padding: 0 16px;">
+    
+    <!-- التبويبات -->
+    <div class="tabs-nav">
+      <button class="tab-btn active" id="btnTabWorkers">
+        <i class="fa-solid fa-user-plus"></i> إضافة وإدارة الحرفيين
+      </button>
+      <button class="tab-btn" id="btnTabCategories">
+        <i class="fa-solid fa-shapes"></i> إدارة الأقسام والمهن
+      </button>
+      <button class="tab-btn" id="btnTabPending">
+        <i class="fa-solid fa-clock-rotate-left"></i> طلبات المراجعة (<span id="pendingCount">0</span>)
+      </button>
+      <button class="tab-btn" id="btnTabSuggestions">
+        <i class="fa-solid fa-lightbulb"></i> اقتراحات الأهالي (<span id="sugCount">0</span>)
+      </button>
     </div>
 
-    <div class="admin-table-container">
-      <table class="admin-table">
-        <thead>
-          <tr>
-            <th>الاسم</th>
-            <th>المهنة</th>
-            <th>المنطقة</th>
-            <th>الهاتف</th>
-            <th>الإجراء</th>
-          </tr>
-        </thead>
-        <tbody id="adminWorkersTable">
-          <!-- البيانات بتنزل هنا -->
-        </tbody>
-      </table>
-      <div id="emptyMsg" class="empty-state" style="display: none;">لا يوجد حرفيون مسجلون حالياً.</div>
+    <!-- تبويب 1: إضافة حرفي مباشر -->
+    <div id="workersTab" class="tab-content active">
+      <div class="card-box">
+        <h3 style="margin-top:0; color:var(--primary);"><i class="fa-solid fa-plus-circle"></i> إضافة حرفي أو مقدم خدمة جديد</h3>
+        <form id="addWorkerForm">
+          <div class="form-grid">
+            <input type="text" id="mName" placeholder="الاسم / اسم المحل *" required>
+            <select id="mCategory" required>
+              <option value="" disabled selected>اختار القسم *</option>
+            </select>
+            <input type="tel" id="mPhone" placeholder="رقم الهاتف (01xxxxxxxxx) *" required dir="ltr">
+            <input type="text" id="mArea" placeholder="المنطقة (المحلية، الحي...) *" required>
+            <input type="text" id="mJob" placeholder="المسمى الوظيفي (مثلاً: سباك صحي / دكتور أطفال) *" required>
+            <input type="text" id="mExp" placeholder="سنين الخبرة (مثلاً: 10 سنين)">
+          </div>
+          <input type="text" id="mBio" placeholder="نبذة مختصرة تظهر في الكارت (مثلاً: متاح طوارئ 24 ساعة - معاينة مجانية)" style="width:100%; padding:10px 12px; border:1px solid #cbd5e1; border-radius:8px; font-family:'Cairo'; box-sizing:border-box; margin-bottom:14px;">
+          <button type="submit" style="background:var(--accent); color:#fff; border:none; padding:10px 24px; border-radius:8px; font-weight:700; font-family:'Cairo'; cursor:pointer;">
+            حفظ ونشر فوراً في الدليل
+          </button>
+        </form>
+      </div>
+
+      <div class="card-box">
+        <h3 style="margin-top:0; color:var(--primary);"><i class="fa-solid fa-list-check"></i> الحرفيون المعتمدون في المنصة</h3>
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>الاسم</th>
+                <th>التخصص</th>
+                <th>المنطقة</th>
+                <th>الهاتف</th>
+                <th style="text-align: center;">حذف</th>
+              </tr>
+            </thead>
+            <tbody id="approvedWorkersBody"></tbody>
+          </table>
+        </div>
+      </div>
     </div>
+
+    <!-- تبويب 2: إدارة الأقسام -->
+    <div id="categoriesTab" class="tab-content">
+      <div class="card-box">
+        <h3 style="margin-top:0; color:var(--primary);"><i class="fa-solid fa-folder-plus"></i> إضافة قسم جديد (مثل: دكاترة، محامين، صيدليات)</h3>
+        <form id="addCategoryForm">
+          <div class="form-grid">
+            <input type="text" id="cId" placeholder="المعرف بالإنجليزي (مثلاً: doctors)" required>
+            <input type="text" id="cName" placeholder="اسم القسم بالعربي (مثلاً: أطباء وعيادات)" required>
+            <input type="text" id="cIcon" placeholder="الأيقونة أو الإيموجي (مثلاً: 🩺 أو ⚡)" required>
+          </div>
+          <button type="submit" style="background:var(--primary); color:#fff; border:none; padding:10px 22px; border-radius:8px; font-weight:700; font-family:'Cairo'; cursor:pointer;">
+            إضافة القسم للسحابة
+          </button>
+        </form>
+      </div>
+
+      <div class="card-box">
+        <h3 style="margin-top:0; color:var(--primary);">الأقسام المتاحة حالياً</h3>
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>الأيقونة</th>
+                <th>اسم القسم</th>
+                <th>المعرف (ID)</th>
+                <th style="text-align: center;">إجراء</th>
+              </tr>
+            </thead>
+            <tbody id="categoriesTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- تبويب 3: طلبات الانتظار -->
+    <div id="pendingTab" class="tab-content">
+      <div class="card-box">
+        <h3 style="margin-top:0; color:var(--primary);"><i class="fa-solid fa-user-clock"></i> طلبات التسجيل بانتظار الموافقة</h3>
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>الاسم</th>
+                <th>القسم</th>
+                <th>المنطقة</th>
+                <th>النبذة</th>
+                <th>الهاتف</th>
+                <th style="text-align: center;">القرار</th>
+              </tr>
+            </thead>
+            <tbody id="pendingWorkersBody"></tbody>
+          </table>
+          <p id="noPendingMsg" style="text-align:center; color:#94a3b8; padding:20px; display:none;">لا توجد أي طلبات معلقة حالياً.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- تبويب 4: اقتراحات أهالي الحي -->
+    <div id="suggestionsTab" class="tab-content">
+      <div class="card-box">
+        <h3 style="margin-top:0; color:var(--primary);"><i class="fa-solid fa-comments"></i> رسائل واقتراحات سكان الحي</h3>
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>الرسالة / الاقتراح</th>
+                <th style="text-align: center; width: 120px;">إجراء</th>
+              </tr>
+            </thead>
+            <tbody id="suggestionsBody"></tbody>
+          </table>
+          <p id="noSugMsg" style="text-align:center; color:#94a3b8; padding:20px; display:none;">لا توجد اقتراحات مرسلة حالياً.</p>
+        </div>
+      </div>
+    </div>
+
   </main>
 
-  <script>
-    const tableBody = document.getElementById('adminWorkersTable');
-    const emptyMsg = document.getElementById('emptyMsg');
-    const clearAllBtn = document.getElementById('clearAllBtn');
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { getFirestore, collection, addDoc, getDocs, doc, updateDoc, deleteDoc, query, where, serverTimestamp } 
+    from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-    function loadAdminData() {
-      const workers = JSON.parse(localStorage.getItem('custom_workers')) || [];
-      tableBody.innerHTML = '';
+    const firebaseConfig = {
+      apiKey: "AIzaSyB76NcdVQTSUIYxeBsXh9ojeTMWg9L5mt8",
+      authDomain: "azwetna.firebaseapp.com",
+      projectId: "azwetna",
+      storageBucket: "azwetna.firebasestorage.app",
+      messagingSenderId: "1029926764111",
+      appId: "1:1029926764111:web:91ad2c45165c86e5fc743a",
+      measurementId: "G-JN3ERLW46Y"
+    };
 
-      if (workers.length === 0) {
-        emptyMsg.style.display = 'block';
-        return;
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    const ADMIN_PASS = "2026";
+
+    function checkAdminPassword() {
+      const pass = document.getElementById('adminPassInput').value;
+      if (pass === ADMIN_PASS) {
+        document.getElementById('authOverlay').style.display = 'none';
+        sessionStorage.setItem('adminAuth', 'true');
+        loadAllData();
+      } else {
+        document.getElementById('errorMsg').style.display = 'block';
+      }
+    }
+
+    document.getElementById('loginBtn').addEventListener('click', checkAdminPassword);
+    document.getElementById('adminPassInput').addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') checkAdminPassword();
+    });
+
+    if (sessionStorage.getItem('adminAuth') === 'true') {
+      document.getElementById('authOverlay').style.display = 'none';
+      loadAllData();
+    }
+
+    function switchTab(tabId, btn) {
+      document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.getElementById(tabId).classList.add('active');
+      btn.classList.add('active');
+    }
+
+    document.getElementById('btnTabWorkers').addEventListener('click', function() { switchTab('workersTab', this); });
+    document.getElementById('btnTabCategories').addEventListener('click', function() { switchTab('categoriesTab', this); });
+    document.getElementById('btnTabPending').addEventListener('click', function() { switchTab('pendingTab', this); });
+    document.getElementById('btnTabSuggestions').addEventListener('click', function() { switchTab('suggestionsTab', this); });
+
+    async function loadAllData() {
+      await loadCategories();
+      await loadWorkers();
+      await loadPending();
+      await loadSuggestions();
+    }
+
+    async function loadCategories() {
+      const catSelect = document.getElementById('mCategory');
+      const catTable = document.getElementById('categoriesTableBody');
+      catSelect.innerHTML = '<option value="" disabled selected>اختار القسم *</option>';
+      catTable.innerHTML = '';
+
+      const querySnapshot = await getDocs(collection(db, "categories"));
+      
+      if (querySnapshot.empty) {
+        const defaults = [
+          { id: "plumber", name: "سباكة", icon: "🔧" },
+          { id: "electric", name: "كهرباء", icon: "⚡" },
+          { id: "carpenter", name: "نجارة", icon: "🪚" },
+          { id: "paint", name: "نقاشة", icon: "🎨" },
+          { id: "ac", name: "تكييفات", icon: "❄️" },
+          { id: "doctors", name: "أطباء وعيادات", icon: "🩺" }
+        ];
+        for (const item of defaults) {
+          await addDoc(collection(db, "categories"), item);
+        }
+        return loadCategories();
       }
 
-      emptyMsg.style.display = 'none';
-
-      workers.forEach((worker, index) => {
+      querySnapshot.forEach((docSnap) => {
+        const cat = docSnap.data();
+        catSelect.innerHTML += `<option value="${cat.id}" data-icon="${cat.icon || '🛠️'}">${cat.name} ${cat.icon}</option>`;
+        
         const tr = document.createElement('tr');
         tr.innerHTML = `
-          <td><strong>${worker.name}</strong></td>
-          <td><span class="badge">${worker.job}</span></td>
-          <td>${worker.area}</td>
-          <td dir="ltr" style="text-align: right;">${worker.phone}</td>
-          <td>
-            <button class="action-del-btn" onclick="deleteWorker(${index})">حذف 🗑️</button>
+          <td style="font-size:1.3rem;">${cat.icon}</td>
+          <td><strong>${cat.name}</strong></td>
+          <td><code>${cat.id}</code></td>
+          <td style="text-align:center;">
+            <button class="btn-reject del-cat-btn" data-id="${docSnap.id}">حذف</button>
           </td>
         `;
-        tableBody.appendChild(tr);
+        catTable.appendChild(tr);
+      });
+
+      document.querySelectorAll('.del-cat-btn').forEach(b => {
+        b.addEventListener('click', () => deleteCategory(b.getAttribute('data-id')));
       });
     }
 
-    window.deleteWorker = function(index) {
-      if (confirm('هل أنتِ متأكدة من حذف هذا الحرفي؟')) {
-        const workers = JSON.parse(localStorage.getItem('custom_workers')) || [];
-        workers.splice(index, 1);
-        localStorage.setItem('custom_workers', JSON.stringify(workers));
-        loadAdminData();
-      }
-    };
+    async function loadWorkers() {
+      const tbody = document.getElementById('approvedWorkersBody');
+      tbody.innerHTML = '';
+      const q = query(collection(db, "workers"), where("status", "==", "approved"));
+      const querySnapshot = await getDocs(q);
 
-    clearAllBtn.addEventListener('click', () => {
-      if (confirm('تنبيه: سيتم مسح جميع الحرفيين المسجلين محلياً، هل توافقين؟')) {
-        localStorage.removeItem('custom_workers');
-        loadAdminData();
+      querySnapshot.forEach((docSnap) => {
+        const w = docSnap.data();
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td><strong>${w.name}</strong></td>
+          <td><span class="badge-job">${w.job}</span></td>
+          <td>${w.area}</td>
+          <td dir="ltr" style="text-align:right;">${w.phone}</td>
+          <td style="text-align:center;">
+            <button class="btn-reject del-worker-btn" data-id="${docSnap.id}">حذف</button>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+
+      document.querySelectorAll('.del-worker-btn').forEach(b => {
+        b.addEventListener('click', () => deleteWorker(b.getAttribute('data-id')));
+      });
+    }
+
+    async function loadPending() {
+      const tbody = document.getElementById('pendingWorkersBody');
+      const countEl = document.getElementById('pendingCount');
+      const noPending = document.getElementById('noPendingMsg');
+      tbody.innerHTML = '';
+
+      const q = query(collection(db, "workers"), where("status", "==", "pending"));
+      const querySnapshot = await getDocs(q);
+
+      countEl.innerText = querySnapshot.size;
+      if (querySnapshot.empty) {
+        noPending.style.display = 'block';
+        return;
       }
+      noPending.style.display = 'none';
+
+      querySnapshot.forEach((docSnap) => {
+        const w = docSnap.data();
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td><strong>${w.name}</strong></td>
+          <td><span class="badge-job">${w.job}</span></td>
+          <td>${w.area}</td>
+          <td style="font-size:0.82rem; color:#64748b;">${w.bio || '—'}</td>
+          <td dir="ltr" style="text-align:right;">${w.phone}</td>
+          <td style="text-align:center;">
+            <button class="btn-approve app-worker-btn" data-id="${docSnap.id}">موافقة ونشر</button>
+            <button class="btn-reject del-worker-btn" data-id="${docSnap.id}">رفض</button>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+
+      document.querySelectorAll('.app-worker-btn').forEach(b => {
+        b.addEventListener('click', () => approveWorker(b.getAttribute('data-id')));
+      });
+      document.querySelectorAll('.del-worker-btn').forEach(b => {
+        b.addEventListener('click', () => deleteWorker(b.getAttribute('data-id')));
+      });
+    }
+
+    async function loadSuggestions() {
+      const tbody = document.getElementById('suggestionsBody');
+      const countEl = document.getElementById('sugCount');
+      const noSug = document.getElementById('noSugMsg');
+      tbody.innerHTML = '';
+
+      const querySnapshot = await getDocs(collection(db, "suggestions"));
+      countEl.innerText = querySnapshot.size;
+
+      if (querySnapshot.empty) {
+        noSug.style.display = 'block';
+        return;
+      }
+      noSug.style.display = 'none';
+
+      querySnapshot.forEach((docSnap) => {
+        const s = docSnap.data();
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${s.message}</td>
+          <td style="text-align:center;">
+            <button class="btn-reject del-sug-btn" data-id="${docSnap.id}">حذف</button>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+
+      document.querySelectorAll('.del-sug-btn').forEach(b => {
+        b.addEventListener('click', async () => {
+          if (confirm('حذف هذا الاقتراح؟')) {
+            await deleteDoc(doc(db, "suggestions", b.getAttribute('data-id')));
+            loadSuggestions();
+          }
+        });
+      });
+    }
+
+    document.getElementById('addCategoryForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const id = document.getElementById('cId').value.trim().toLowerCase();
+      const name = document.getElementById('cName').value.trim();
+      const icon = document.getElementById('cIcon').value.trim();
+
+      await addDoc(collection(db, "categories"), { id, name, icon, createdAt: serverTimestamp() });
+      e.target.reset();
+      alert('تمت إضافة القسم بنجاح!');
+      loadCategories();
     });
 
-    loadAdminData();
+    document.getElementById('addWorkerForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const catSelect = document.getElementById('mCategory');
+      const selectedOpt = catSelect.options[catSelect.selectedIndex];
+      const icon = selectedOpt.getAttribute('data-icon') || '🛠️';
+
+      const name = document.getElementById('mName').value.trim();
+      const category = catSelect.value;
+      const phone = document.getElementById('mPhone').value.trim();
+      const area = document.getElementById('mArea').value.trim();
+      const job = document.getElementById('mJob').value.trim();
+      const experience = document.getElementById('mExp').value.trim();
+      const bio = document.getElementById('mBio').value.trim();
+
+      await addDoc(collection(db, "workers"), {
+        name, category, phone, area, job, experience, bio,
+        avatar: icon,
+        status: "approved",
+        createdAt: serverTimestamp()
+      });
+
+      e.target.reset();
+      alert('تم نشر الحرفي في الدليل السحابي بنجاح!');
+      loadWorkers();
+    });
+
+    async function approveWorker(id) {
+      await updateDoc(doc(db, "workers", id), { status: "approved" });
+      loadPending();
+      loadWorkers();
+    }
+
+    async function deleteWorker(id) {
+      if (confirm('هل أنتِ متأكدة من الحذف؟')) {
+        await deleteDoc(doc(db, "workers", id));
+        loadWorkers();
+        loadPending();
+      }
+    }
+
+    async function deleteCategory(id) {
+      if (confirm('هل أنتِ متأكدة من حذف هذا القسم؟')) {
+        await deleteDoc(doc(db, "categories", id));
+        loadCategories();
+      }
+    }
   </script>
 </body>
 </html>

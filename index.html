@@ -1,62 +1,94 @@
+<!-- 
+  منصة عَزْوَتْنَا - دليل خدمات وأهالي التجمع الثالث
+  جميع الحقوق البرمجية والفكرية محفوظة لـ: م. تغريد حمدي (Taghreed Hamdy - CodeCraft Egypt) © 2026
+-->
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>عزوتنا | خدمات التجمع الثالث</title>
+  <meta name="author" content="Taghreed Hamdy - CodeCraft Egypt">
+  <title>عَزْوَتْنَا | دليل خدمات وأهالي التجمع</title>
   
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   
-  <link rel="manifest" href="manifest.json">
-  <meta name="theme-color" content="#0D9488">
   <link rel="stylesheet" href="style.css">
+  <link rel="manifest" href="manifest.json">
 </head>
 <body>
 
-    <!-- شريط الرأس -->
-    <header class="app-header">
-      <div class="header-inner">
-        <div class="logo-area">
-            <img src="icons/21762905-9471-44f1-96cc-d8d576c02f75.jpg" alt="شعار عزوتنا" class="logo-img">
-          <div>
-            <h1>عَزْوَتْنَا</h1>
-            <p>دليل صنايعية وحرفيي التجمع</p>
-          </div>
-        </div>
-        <a href="register.html" class="join-btn">+ انضم كحرفي</a>
-      </div>
-    </header>
-
-    <!-- المحتوى الداخلي -->
-    <main class="app-container">
+  <!-- الهيدر البترولي الفخم -->
+  <header class="app-header">
+    <div class="header-container">
       
-      <!-- البحث والتصنيفات -->
-      <section class="search-section">
-        <div class="search-box">
-          <input type="text" id="searchInput" placeholder="بتدوري على سباك، نجار، كهربائي...">
+      <!-- اللوجو والعنوان -->
+      <a href="index.html" class="brand-section">
+        <img src="icons/21762905-9471-44f1-96cc-d8d576c02f75.jpg" alt="لوجو عزوتنا" class="brand-logo">
+        <div>
+          <h1 class="brand-title">عَزْوَتْنَا</h1>
+          <span class="brand-sub">دليل خدمات الحي</span>
         </div>
-        
-        <div class="categories-scroll" id="categoriesBar">
-          <button class="cat-pill active" data-cat="all">الكل</button>
-          <button class="cat-pill" data-cat="plumber">سباكة 🔧</button>
-          <button class="cat-pill" data-cat="electric">كهرباء ⚡</button>
-          <button class="cat-pill" data-cat="carpenter">نجارة 🪚</button>
-          <button class="cat-pill" data-cat="paint">نقاشة 🎨</button>
-          <button class="cat-pill" data-cat="ac">تكييفات ❄️</button>
+      </a>
+
+      <!-- البحث وزرار الانضمام وزرار المشاركة -->
+      <div class="top-controls">
+        <div class="compact-search">
+          <i class="fa-solid fa-magnifying-glass"></i>
+          <input type="text" id="searchInput" placeholder="ابحث باسم، مهنة، دكتور، أو منطقة...">
         </div>
-      </section>
+        <a href="register.html" class="join-btn">
+          <i class="fa-solid fa-plus-circle"></i> انضم لخدمات الحي
+        </a>
+        <button type="button" id="shareAppBtn" class="share-header-btn" title="شارك الدليل مع جيرانك">
+          <i class="fa-solid fa-share-nodes"></i>
+        </button>
+      </div>
 
-      <!-- قائمة الصنايعية -->
-      <section class="workers-grid" id="workersList">
-        <!-- الكروت بتنزل هنا عبر app.js -->
-      </section>
+    </div>
+  </header>
 
-    </main>
-
+  <!-- شريط التنويه الملفت في أعلى الصفحة مباشرة -->
+  <div class="disclaimer-banner">
+    <i class="fa-solid fa-shield-cat" style="margin-left: 4px;"></i>
+    <strong>تنويه هام لأهالي الحي:</strong> 
+    منصة "عَزْوَتْنَا" دليل وسيط حر لتسهيل التواصل المباشر بين الجيران ومقدمي الخدمات. نحن لا نتبع أي جهة أو نضمن أي فني، والتقييمات ملك وتجارب أصحابها فقط.
   </div>
 
-  <script src="app.js"></script>
+  <main>
+    <!-- شريط الأقسام السريع -->
+    <div class="categories-bar-wrapper" id="categoriesBar">
+      <button class="cat-pill active" data-cat="all">الكل</button>
+    </div>
+
+    <!-- شبكة عرض مقدمي الخدمات -->
+    <div id="workersList" class="providers-grid">
+      <div style="grid-column: 1/-1; text-align: center; padding: 40px; color: #64748b;">
+        <i class="fa-solid fa-spinner fa-spin" style="font-size: 1.5rem; color: var(--primary);"></i>
+        <p style="margin-top: 8px;">جارٍ تحميل دليل الخدمات من السحابة...</p>
+      </div>
+    </div>
+  </main>
+
+  <!-- الفوتر الرسمي الموثق بحقوق الملكية -->
+  <footer class="official-footer">
+    <div class="footer-share-box">
+      <p>عجبك الدليل؟ فيد جيرانك في التجمع وانشره في جروب العمارة أو الحي!</p>
+      <button type="button" id="footerShareBtn" class="whatsapp-share-btn">
+        <i class="fa-brands fa-whatsapp"></i> شارك الدليل في جروب الحي 📲
+      </button>
+    </div>
+    <hr class="footer-divider">
+    <p class="copyright-title">
+      منصة عَزْوَتْنَا &copy; 2026 — دليل أهالي وخدمات التجمع الثالث المستقل
+    </p>
+    <p class="copyright-owner">
+      جميع حقوق الملكية الفكرية والتطوير البرمجي محفوظة لـ <strong>Taghreed Hamdy (CodeCraft Egypt)</strong>
+    </p>
+  </footer>
+
+  <script type="module" src="app.js"></script>
 </body>
-</html>
+</html>س
