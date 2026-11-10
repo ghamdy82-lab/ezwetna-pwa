@@ -15,7 +15,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css?v=1.3">
 </head>
 <body>
 
@@ -23,7 +23,7 @@
   <header class="app-header">
     <div class="header-container">
       <div class="brand">
-        <img src="icons/21762905-9471-44f1-96cc-d8d576c02f75.jpg" alt="لوجو عزوتنا" class="brand-logo">
+        <img src="icons/logo.png.png" alt="لوجو عزوتنا" class="brand-logo">
         <div>
           <h1 class="brand-title">عَزْوَتْنَا</h1>
           <span class="brand-sub">دليل الحي والمجتمع المحلي</span>
@@ -40,74 +40,87 @@
     <!-- كارت تسجيل الحرفي -->
     <div class="form-card" style="background:#fff; border:1px solid var(--border-color); border-radius:16px; padding:28px 20px; box-shadow:var(--shadow);">
       
-      <div class="form-header" style="margin-bottom:20px; text-align:center;">
-        <div style="font-size:2.2rem; margin-bottom:4px;">🤝</div>
-        <h2 style="font-size:1.3rem; color:var(--primary); margin:0 0 6px;">انضم لعزوتنا في التجمع</h2>
-        <p style="font-size:0.88rem; color:var(--text-muted); margin:0; line-height:1.5;">
-          سجّل بياناتك علشان جيرانك في المنطقة يوصلولك مباشرة بدون وسيط ولا عمولات.
+      <!-- العنوان الملموم: الإيدين مع النص في سطر واحد -->
+      <div style="text-align: center; margin-bottom: 16px;">
+        <h2 style="display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 1.25rem; color: #0f4c5c; margin: 0 0 4px 0;">
+          <span>🤝</span> انضم لعزوتنا في التجمع
+        </h2>
+        <p style="font-size: 0.82rem; color: #64748b; margin: 0;">
+          سجّل بياناتك علشان جيرانك يوصلولك مباشرة بدون وسيط ولا عمولات.
         </p>
       </div>
 
       <form id="craftsmanForm">
         
-        <div style="margin-bottom:14px;">
-          <label style="display:block; font-weight:700; margin-bottom:6px; font-size:0.9rem;">الاسم بالكامل (أو اسم الشهرة / الورشة) *</label>
-          <input type="text" id="wName" placeholder="مثلاً: الأسطى إبراهيم، د/ أحمد، ورشة الأمانة..." required style="width:100%; padding:11px 14px; border:1px solid #cbd5e1; border-radius:10px; font-family:'Cairo'; outline:none; box-sizing:border-box;">
-        </div>
-
-        <div style="margin-bottom:14px;">
-          <label style="display:block; font-weight:700; margin-bottom:6px; font-size:0.9rem;">المهنة أو التخصص *</label>
-          <select id="wCategory" required style="width:100%; padding:11px 14px; border:1px solid #cbd5e1; border-radius:10px; font-family:'Cairo'; outline:none; box-sizing:border-box; background:#fff;">
-            <option value="" disabled selected>جارٍ تحميل الأقسام...</option>
-          </select>
-        </div>
-
-        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:12px; margin-bottom:14px;">
-          <div>
-            <label style="display:block; font-weight:700; margin-bottom:6px; font-size:0.9rem;">سنين الخبرة</label>
-            <input type="number" id="wExperience" placeholder="مثلاً: 5" min="0" max="60" style="width:100%; padding:11px 14px; border:1px solid #cbd5e1; border-radius:10px; font-family:'Cairo'; outline:none; box-sizing:border-box;">
+        <!-- الصف الأول: الاسم والتخصص -->
+        <div class="form-row-double">
+          <div class="form-group">
+            <label>الاسم بالكامل (أو اسم الشهرة / الورشة) *</label>
+            <input type="text" id="workerName" placeholder="مثلاً: الأسطى إبراهيم، د/ أحمد، ورشة الأمانة..." required>
           </div>
-          <div>
-            <label style="display:block; font-weight:700; margin-bottom:6px; font-size:0.9rem;">رقم التليفون / واتساب *</label>
-            <input type="tel" id="wPhone" placeholder="01xxxxxxxxx" required dir="ltr" maxlength="11" style="width:100%; padding:11px 14px; border:1px solid #cbd5e1; border-radius:10px; font-family:'Cairo'; outline:none; box-sizing:border-box; text-align:right;">
+
+          <div class="form-group">
+            <label>المهنة أو التخصص *</label>
+            <select id="workerJob" required>
+              <option value="" disabled selected>اختار مهنتك أو تخصصك *</option>
+              <option value="نجارة">نجارة</option>
+              <option value="سباكة">سباكة</option>
+              <option value="كهرباء">كهرباء</option>
+              <option value="تكييفات">تكييفات</option>
+              <option value="نقاشة">نقاشة</option>
+              <option value="أطباء وعيادات">أطباء وعيادات</option>
+            </select>
           </div>
         </div>
 
-        <div style="margin-bottom:14px;">
-          <label style="display:block; font-weight:700; margin-bottom:6px; font-size:0.9rem;">منطقتك في التجمع *</label>
-          <input type="text" id="wArea" placeholder="مثلاً: المحلية التالتة، إسكان الشباب، المستثمرين..." required style="width:100%; padding:11px 14px; border:1px solid #cbd5e1; border-radius:10px; font-family:'Cairo'; outline:none; box-sizing:border-box;">
+       <!-- الصف الثاني: التليفون والخبرة -->
+        <div class="form-row-double">
+          <div class="form-group">
+            <label>رقم التليفون / واتساب *</label>
+            <input type="tel" id="workerPhone" placeholder="01xxxxxxxxx" dir="ltr" required>
+          </div>
+
+          <div class="form-group">
+            <label>سنين الخبرة</label>
+            <input type="number" id="workerExp" placeholder="مثلاً: 5" min="0">
+          </div>
         </div>
 
-        <div style="margin-bottom:14px;">
-          <label style="display:block; font-weight:700; margin-bottom:6px; font-size:0.9rem;">عنوان الورشة أو المحل (اختياري)</label>
-          <input type="text" id="wShop" placeholder="مثلاً: سنتر الحجاز، عمارة 15..." style="width:100%; padding:11px 14px; border:1px solid #cbd5e1; border-radius:10px; font-family:'Cairo'; outline:none; box-sizing:border-box;">
+       <!-- الصف الثالث: المنطقة والعنوان -->
+        <div class="form-row-double">
+          <div class="form-group">
+            <label>منطقتك في التجمع *</label>
+            <input type="text" id="workerArea" placeholder="مثلاً: المحلية التالتة، إسكان الشباب..." required>
+          </div>
+
+          <div class="form-group">
+            <label>عنوان الورشة أو المحل (اختياري)</label>
+            <input type="text" id="workerAddress" placeholder="مثلاً: سنتر الحجاز، عمارة 15...">
+          </div>
         </div>
 
         <div style="margin-bottom:14px;">
           <label style="display:block; font-weight:700; margin-bottom:6px; font-size:0.9rem;">نبذة عن شغلك أو خدمات بتقدمها (اختياري)</label>
-          <textarea id="wBio" rows="3" placeholder="مثلاً: متاح طوارئ 24 ساعة، صيانة أجهزة، معاينة مجانية..." style="width:100%; padding:11px 14px; border:1px solid #cbd5e1; border-radius:10px; font-family:'Cairo'; outline:none; box-sizing:border-box; resize:none;"></textarea>
+          <textarea id="workerBio" rows="3" placeholder="مثلاً: متاح طوارئ 24 ساعة، صيانة أجهزة، معاينة مجانية..." style="width:100%; padding:11px 14px; border:1px solid #cbd5e1; border-radius:10px; font-family:'Cairo'; outline:none; box-sizing:border-box; resize:none;"></textarea>
         </div>
 
-        <!-- رفع صورة شخصية أو للورشة -->
-        <div style="margin-bottom:20px; background:#f8fafc; border:1px dashed #cbd5e1; border-radius:12px; padding:16px; text-align:center;">
-          <label style="display:block; font-weight:700; margin-bottom:6px; font-size:0.9rem; color:var(--primary);">
-            <i class="fa-solid fa-camera"></i> صورة شخصية أو لشغلك / ورشتك (اختياري)
-          </label>
-          <input type="file" id="wPhoto" accept="image/*" style="display:none;">
-          <button type="button" onclick="document.getElementById('wPhoto').click()" style="background:#fff; border:1px solid #cbd5e1; padding:8px 16px; border-radius:8px; font-family:'Cairo'; font-weight:700; cursor:pointer; font-size:0.85rem; color:var(--primary);">
-            <i class="fa-solid fa-upload"></i> اختار صورة من الموبايل
-          </button>
-          <div id="photoPreviewContainer" style="margin-top:10px; display:none;">
-            <img id="photoPreview" src="" alt="معاينة" style="width:70px; height:70px; border-radius:10px; object-fit:cover; border:2px solid var(--primary);">
-            <p id="photoName" style="font-size:0.75rem; color:#64748b; margin:4px 0 0;"></p>
-          </div>
+      <!-- خانة رفع الصورة مع زرار مخفي ومعاينة سريعة -->
+      <div class="compact-upload-box">
+        <div style="display: flex; align-items: center; gap: 8px; color: #0f4c5c; font-size: 0.85rem; font-weight: bold;">
+          <i class="fa-solid fa-camera"></i>
+          <span>صورة شخصية أو للورشة (اختياري)</span>
+          <span id="uploadStatusText" style="font-size: 0.75rem; color: #16a34a; font-weight: normal;"></span>
         </div>
 
-        <div style="background:#fffbeb; border:1px solid #fde68a; border-radius:10px; padding:12px 14px; margin-bottom:20px; font-size:0.8rem; color:#92400e; line-height:1.6;">
-          <i class="fa-solid fa-triangle-exclamation" style="margin-left:4px;"></i>
-          <strong>إخلاء مسؤولية وتنويه قانوني:</strong><br>
-          منصة "عَزْوَتْنَا" هي دليل وسيط رقمي حر يهدف فقط لتسهيل التواصل والتعارف بين أهالي الحي ومقدمي الخدمات دون أدنى مسؤولية فنية أو قانونية.
-        </div>
+        <!-- زرار الاختيار المرئي -->
+        <button type="button" id="uploadTriggerBtn" class="compact-upload-btn">
+          <i class="fa-solid fa-cloud-arrow-up"></i> اختيار صورة
+        </button>
+
+        <!-- مدخل الملف المخفي الحقيقي -->
+        <input type="file" id="workerImageInput" accept="image/*" style="display: none;">
+      </div>
+
 
         <button type="submit" id="submitBtn" class="submit-form-btn">
           إرسال البيانات للمراجعة
@@ -115,21 +128,7 @@
       </form>
     </div>
 
-    <!-- صندوق الاقتراحات لأهل الحي -->
-    <div style="background:#fff; border:1px solid var(--border-color); border-radius:16px; padding:22px; margin-top:24px; box-shadow:var(--shadow);">
-      <h3 style="margin:0 0 6px; font-size:1.05rem; color:var(--primary); display:flex; align-items:center; gap:8px;">
-        <i class="fa-solid fa-lightbulb" style="color:var(--accent);"></i> عندك اقتراح أو مهنة نفسك نضيفها؟
-      </h3>
-      <p style="margin:0 0 12px; font-size:0.85rem; color:var(--text-muted);">
-        رأيك يساعدنا نطور عزوتنا ونخليها أنفع لكل سكان التجمع.
-      </p>
-      <form id="suggestionForm">
-        <textarea id="sugText" rows="2" placeholder="اكتب اقتراحك، ملاحظتك، أو خدمة محتاج نضيفها في الحي..." required style="width:100%; padding:10px 12px; border:1px solid #cbd5e1; border-radius:8px; font-family:'Cairo'; font-size:0.85rem; outline:none; box-sizing:border-box; resize:none; margin-bottom:10px;"></textarea>
-        <button type="submit" id="sugBtn" style="background:var(--primary); color:#fff; border:none; padding:9px 20px; border-radius:8px; font-family:'Cairo'; font-size:0.85rem; font-weight:700; cursor:pointer;">
-          إرسال الاقتراح
-        </button>
-      </form>
-    </div>
+ 
 
   </main>
 
@@ -138,15 +137,36 @@
       منصة عَزْوَتْنَا &copy; 2026 — دليل أهالي وخدمات التجمع الثالث المستقل
     </p>
     <p class="copyright-owner">
-      جميع حقوق الملكية الفكرية والتطوير البرمجي محفوظة لـ <strong>Taghreed Hamdy (CodeCraft Egypt)</strong>
+      جميع حقوق التطوير والبرمجة محفوظة لـ: 
+      <a href="https://www.facebook.com/profile.php?id=61596198263613" target="_blank" style="color:var(--accent); text-decoration:none; font-weight:700;">
+        <i class="fa-brands fa-facebook"></i> Taghreed Hamdy (Webify Solutions)
+      </a>
     </p>
   </footer>
 
+  <!-- السكريبت الموحد: فايربيز + ضغط الصورة + بوت التليجرام -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { getFirestore, collection, addDoc, getDocs, serverTimestamp } 
     from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
+    // 1. إعدادات بوت التليجرام
+    const TELEGRAM_BOT_TOKEN = "9241445474:AAH8uKYRudHx9JhWGgoC8gTMIghtk0bu2rk";
+    const TELEGRAM_CHAT_ID = "9127937709";
+
+    async function sendTelegramAlert(text) {
+      try {
+        await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ chat_id: TELEGRAM_CHAT_ID, text: text })
+        });
+      } catch (e) {
+        console.error("Telegram error", e);
+      }
+    }
+
+    // 2. إعدادات فايربيز
     const firebaseConfig = {
       apiKey: "AIzaSyB76NcdVQTSUIYxeBsXh9ojeTMWg9L5mt8",
       authDomain: "azwetna.firebaseapp.com",
@@ -160,131 +180,150 @@
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
 
-    const categorySelect = document.getElementById('wCategory');
-    const photoInput = document.getElementById('wPhoto');
-    const photoPreviewContainer = document.getElementById('photoPreviewContainer');
-    const photoPreview = document.getElementById('photoPreview');
-    const photoName = document.getElementById('photoName');
-    let base64Photo = "";
-
+    // 3. جلب الأقسام تلقائياً لو موجودة في الداتابيز
+    const categorySelect = document.getElementById('wCategory') || document.getElementById('workerJob');
     async function loadCategories() {
+      if (!categorySelect) return;
       try {
         const snap = await getDocs(collection(db, "categories"));
-        categorySelect.innerHTML = '<option value="" disabled selected>اختار مهنتك أو تخصصك *</option>';
-        snap.forEach(docSnap => {
-          const cat = docSnap.data();
-          categorySelect.innerHTML += `<option value="${cat.id}" data-name="${cat.name}" data-icon="${cat.icon || '🛠️'}">${cat.icon || '🛠️'} ${cat.name}</option>`;
-        });
+        if (!snap.empty) {
+          categorySelect.innerHTML = '<option value="" disabled selected>اختار مهنتك أو تخصصك *</option>';
+          snap.forEach(docSnap => {
+            const cat = docSnap.data();
+            categorySelect.innerHTML += `<option value="${cat.id || cat.name}" data-name="${cat.name}" data-icon="${cat.icon || '🛠️'}">${cat.icon || '🛠️'} ${cat.name}</option>`;
+          });
+        }
       } catch (e) {
-        categorySelect.innerHTML = '<option value="" disabled selected>تعذر جلب الأقسام</option>';
+        console.log("استخدام الأقسام الافتراضية");
       }
     }
     loadCategories();
 
-    // ضغط الصورة تلقائياً
-    photoInput.addEventListener('change', function(e) {
-      const file = e.target.files[0];
-      if (!file) return;
-      photoName.innerText = file.name;
-      const reader = new FileReader();
-      reader.onload = function(evt) {
-        const img = new Image();
-        img.onload = function() {
-          const canvas = document.createElement('canvas');
-          const maxDim = 300;
-          let width = img.width;
-          let height = img.height;
-          if (width > height) {
-            if (width > maxDim) { height *= maxDim / width; width = maxDim; }
-          } else {
-            if (height > maxDim) { width *= maxDim / height; height = maxDim; }
-          }
-          canvas.width = width;
-          canvas.height = height;
-          const ctx = canvas.getContext('2d');
-          ctx.drawImage(img, 0, 0, width, height);
-          base64Photo = canvas.toDataURL('image/jpeg', 0.7);
-          photoPreview.src = base64Photo;
-          photoPreviewContainer.style.display = 'block';
+    // 4. ضغط الصورة بالـ Canvas وربط زرار الاختيار
+    const uploadTriggerBtn = document.getElementById('uploadTriggerBtn');
+    const photoInput = document.getElementById('workerImageInput') || document.getElementById('wPhoto');
+    const uploadStatusText = document.getElementById('uploadStatusText');
+    let base64Photo = "";
+
+    if (uploadTriggerBtn && photoInput) {
+      uploadTriggerBtn.addEventListener('click', () => photoInput.click());
+    }
+
+    if (photoInput) {
+      photoInput.addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        if (uploadStatusText) {
+          uploadStatusText.textContent = "جارٍ المعالجة...";
+          uploadStatusText.style.color = "#d97706";
+        }
+
+        const reader = new FileReader();
+        reader.onload = function(evt) {
+          const img = new Image();
+          img.onload = function() {
+            const canvas = document.createElement('canvas');
+            const maxDim = 350;
+            let width = img.width;
+            let height = img.height;
+
+            if (width > height) {
+              if (width > maxDim) { height = Math.round((height * maxDim) / width); width = maxDim; }
+            } else {
+              if (height > maxDim) { width = Math.round((width * maxDim) / height); height = maxDim; }
+            }
+
+            canvas.width = width;
+            canvas.height = height;
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(img, 0, 0, width, height);
+            base64Photo = canvas.toDataURL('image/jpeg', 0.7);
+
+            if (uploadStatusText) {
+              uploadStatusText.textContent = "✓ تم اختيار الصورة";
+              uploadStatusText.style.color = "#16a34a";
+            }
+          };
+          img.src = evt.target.result;
         };
-        img.src = evt.target.result;
-      };
-      reader.readAsDataURL(file);
-    });
+        reader.readAsDataURL(file);
+      });
+    }
 
-    document.getElementById('craftsmanForm').addEventListener('submit', async (e) => {
-      e.preventDefault();
+    // 5. إرسال الفورم وحفظ البيانات وإرسال تنبيه تليجرام
+    const craftsmanForm = document.getElementById('craftsmanForm') || document.getElementById('workerRegisterForm');
 
-      const name = document.getElementById('wName').value.trim();
-      const categoryId = categorySelect.value;
-      const selectedOption = categorySelect.options[categorySelect.selectedIndex];
-      const jobName = selectedOption.getAttribute('data-name') || "خدمات عامة";
-      const icon = selectedOption.getAttribute('data-icon') || "🛠️";
-      const exp = document.getElementById('wExperience').value.trim();
-      const rawPhone = document.getElementById('wPhone').value.trim();
-      const area = document.getElementById('wArea').value.trim();
-      const shop = document.getElementById('wShop').value.trim();
-      const bio = document.getElementById('wBio').value.trim();
+    if (craftsmanForm) {
+      craftsmanForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
 
-      const cleanPhone = rawPhone.replace(/[^0-9]/g, '');
-      if (cleanPhone.length < 11) {
-        alert('برجاء كتابة رقم هاتف صحيح مكون من 11 رقم');
-        return;
-      }
+        const nameEl = document.getElementById('wName') || document.getElementById('workerName');
+        const phoneEl = document.getElementById('wPhone') || document.getElementById('workerPhone');
+        const expEl = document.getElementById('wExperience') || document.getElementById('workerExp');
+        const areaEl = document.getElementById('wArea') || document.getElementById('workerArea');
+        const shopEl = document.getElementById('wShop') || document.getElementById('workerAddress');
+        const bioEl = document.getElementById('wBio') || document.getElementById('workerBio');
 
-      const submitBtn = document.getElementById('submitBtn');
-      submitBtn.disabled = true;
-      submitBtn.innerText = 'جارٍ تسجيل البيانات...';
+        const name = nameEl ? nameEl.value.trim() : "";
+        const rawPhone = phoneEl ? phoneEl.value.trim() : "";
+        const cleanPhone = rawPhone.replace(/[^0-9]/g, '');
 
-      try {
-        await addDoc(collection(db, "workers"), {
-          name: name,
-          category: categoryId,
-          job: jobName,
-          experience: exp ? `${exp} سنة` : "",
-          phone: cleanPhone,
-          area: shop ? `${area} (${shop})` : area,
-          bio: bio,
-          photoUrl: base64Photo || "",
-          avatar: icon,
-          status: "pending",
-          rating: 5.0,
-          ratingsCount: 0,
-          createdAt: serverTimestamp()
-        });
+        if (cleanPhone.length < 11) {
+          alert('برجاء كتابة رقم هاتف صحيح مكون من 11 رقم');
+          return;
+        }
 
-        alert('شكراً لانضمامك لعزوتنا! تم استلام بياناتك بنجاح وجارٍ مراجعتها.');
-        window.location.href = 'index.html';
-      } catch (err) {
-        alert('حدث خطأ أثناء الإرسال، يرجى المحاولة ثانية.');
-        submitBtn.disabled = false;
-        submitBtn.innerText = 'إرسال البيانات للمراجعة';
-      }
-    });
+        const categoryId = categorySelect ? categorySelect.value : "";
+        const selectedOption = categorySelect ? categorySelect.options[categorySelect.selectedIndex] : null;
+        const jobName = selectedOption ? (selectedOption.getAttribute('data-name') || selectedOption.text.replace(/^[^\s]+\s*/, '') || selectedOption.value) : "خدمات عامة";
+        const icon = selectedOption ? (selectedOption.getAttribute('data-icon') || "🛠️") : "🛠️";
 
-    // إرسال الاقتراحات للسحابة
-    document.getElementById('suggestionForm').addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const sugText = document.getElementById('sugText').value.trim();
-      const sugBtn = document.getElementById('sugBtn');
+        const exp = expEl ? expEl.value.trim() : "";
+        const area = areaEl ? areaEl.value.trim() : "";
+        const shop = shopEl ? shopEl.value.trim() : "";
+        const bio = bioEl ? bioEl.value.trim() : "";
 
-      sugBtn.disabled = true;
-      sugBtn.innerText = 'جارٍ الإرسال...';
+        const submitBtn = craftsmanForm.querySelector("button[type='submit']") || document.getElementById('submitBtn');
+        if (submitBtn) {
+          submitBtn.disabled = true;
+          submitBtn.innerText = 'جارٍ تسجيل البيانات...';
+        }
 
-      try {
-        await addDoc(collection(db, "suggestions"), {
-          message: sugText,
-          createdAt: serverTimestamp()
-        });
-        alert('تسلم! تم استلام اقتراحك وهندرسه فوراً لتطوير عزوتنا.');
-        document.getElementById('sugText').value = '';
-      } catch (err) {
-        alert('تعذر إرسال الاقتراح حالياً.');
-      } finally {
-        sugBtn.disabled = false;
-        sugBtn.innerText = 'إرسال الاقتراح';
-      }
-    });
+        try {
+          // الحفظ في مجموعة workers بحالة pending للمراجعة
+          await addDoc(collection(db, "workers"), {
+            name: name,
+            category: categoryId,
+            job: jobName,
+            experience: exp ? `${exp} سنة` : "",
+            phone: cleanPhone,
+            area: shop ? `${area} (${shop})` : area,
+            bio: bio,
+            photoUrl: base64Photo || "",
+            avatar: icon,
+            status: "pending",
+            rating: 5.0,
+            ratingsCount: 0,
+            createdAt: serverTimestamp()
+          });
+
+          // إرسال الإشعار لتليجرام
+          await sendTelegramAlert(`🚨 طلب تسجيل حرفي جديد في عزوتنا!\n👤 الاسم: ${name}\n🛠️ المهنة: ${jobName}\n📍 المنطقة: ${area}\n📞 التليفون: ${cleanPhone}`);
+
+          alert('شكراً لانضمامك لعزوتنا! تم استلام بياناتك بنجاح وجارٍ مراجعتها.');
+          craftsmanForm.reset();
+          window.location.href = 'index.html';
+        } catch (err) {
+          console.error("خطأ أثناء الإرسال:", err);
+          alert('حدث خطأ أثناء الإرسال، يرجى المحاولة ثانية.');
+          if (submitBtn) {
+            submitBtn.disabled = false;
+            submitBtn.innerText = 'إرسال البيانات للمراجعة';
+          }
+        }
+      });
+    }
   </script>
 </body>
 </html>

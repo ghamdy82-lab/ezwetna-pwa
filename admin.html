@@ -10,7 +10,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css?v=1.4">
   <style>
     .auth-overlay {
       position: fixed; inset: 0; background: #0f172a; display: flex; 
@@ -32,7 +32,7 @@
       display: flex; gap: 10px; margin-bottom: 20px; border-bottom: 2px solid #e2e8f0; padding-bottom: 10px; overflow-x: auto;
     }
     .tab-btn {
-      background: none; border: none; padding: 10px 18px; font-family: 'Cairo'; font-size: 0.95rem;
+      background: none; border: none; padding: 10px 16px; font-family: 'Cairo'; font-size: 0.92rem;
       font-weight: 700; color: #64748b; cursor: pointer; border-radius: 8px; transition: 0.2s; white-space: nowrap;
     }
     .tab-btn.active { background: var(--primary); color: #fff; }
@@ -54,29 +54,93 @@
     .btn-approve { background: #10b981; color: #fff; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-family: 'Cairo'; font-weight: 600; }
     .btn-reject { background: #ef4444; color: #fff; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-family: 'Cairo'; font-weight: 600; }
     .badge-job { background: #EAF4F4; color: var(--primary); padding: 3px 10px; border-radius: 20px; font-weight: 700; font-size: 0.8rem; }
+  
+    /* ========================================= */
+    /* تحسينات الموبايل للوحة التحكم (Responsive) */
+    /* ========================================= */
+    @media (max-width: 768px) {
+      /* 1. ترتيب الهيدر ليكون فوق بعضه */
+      .app-header .header-container {
+        flex-direction: column;
+        text-align: center;
+        gap: 12px;
+        padding: 10px;
+      }
+      .app-header .brand {
+        justify-content: center;
+        flex-direction: column;
+      }
+      .brand-logo { margin: 0 0 10px 0; }
+      .back-link { width: 100%; justify-content: center; margin-top: 5px; }
+
+      /* 2. التبويبات قابلة للسحب العرضي (Scrollable) */
+      .tabs-nav {
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        padding-bottom: 8px;
+        justify-content: flex-start;
+      }
+      /* تصغير شكل شريط التمرير للتبويبات */
+      .tabs-nav::-webkit-scrollbar { height: 4px; }
+      .tabs-nav::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+      .tab-btn { font-size: 0.85rem; padding: 8px 12px; }
+
+      /* 3. ترتيب حقول التسجيل فوق بعضها بدلاً من جنب بعض */
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+      .card-box { padding: 15px; }
+
+      /* 4. حماية الجداول من تخريب عرض الشاشة */
+      .table-container {
+        width: 100%;
+        overflow-x: auto;
+        display: block;
+        border: 1px solid #f1f5f9;
+        border-radius: 8px;
+      }
+      th, td {
+        white-space: nowrap; /* يمنع الكلام من إنه يتكسر ويبوظ شكل الجدول */
+        font-size: 0.85rem;
+        padding: 10px;
+      }
+    }
   </style>
 </head>
 <body>
 
-  <!-- شاشة الدخول بالباسورد -->
+ <!-- شاشة الدخول الآمنة بحساب جوجل -->
   <div id="authOverlay" class="auth-overlay">
     <div class="auth-card">
-      <div style="font-size: 2.5rem; color: var(--primary); margin-bottom: 8px;"><i class="fa-solid fa-shield-halved"></i></div>
+      <div style="font-size: 2.5rem; color: var(--primary); margin-bottom: 8px;">
+        <i class="fa-solid fa-shield-halved"></i>
+      </div>
       <h3 style="margin: 0 0 8px; color: #1e293b;">إدارة منصة عزوتنا</h3>
-      <p style="margin: 0; color: #64748b; font-size: 0.85rem;">ادخلي كلمة المرور الخاصة بكِ للمتابعة</p>
-      <input type="password" id="adminPassInput" placeholder="••••••••">
-      <button id="loginBtn" type="button">دخول</button>
-      <p id="errorMsg" style="color: #ef4444; font-size: 0.8rem; display: none; margin-top: 10px;">كلمة المرور غير صحيحة!</p>
+      <p style="margin: 0 0 20px; color: #64748b; font-size: 0.85rem;">يُرجى تسجيل الدخول بحساب الإدارة المعتمد</p>
+      
+      <!-- زرار الدخول بجوجل -->
+      <button id="googleLoginBtn" type="button" style="display:flex; align-items:center; justify-content:center; gap:10px; background:#fff; color:#333; border:1px solid #cbd5e1; padding:12px; border-radius:10px; font-family:'Cairo'; font-weight:700; cursor:pointer; width:100%;">
+        <img src="https://img.icons8.com/color/24/000000/google-logo.png" alt="Google">
+        الدخول بحساب Google
+      </button>
+      
+      <!-- زرار تسجيل الخروج (هيظهر للإدمن فقط من جوة اللوحة بس هنجهزه هنا) -->
+      <button id="logoutBtn" type="button" style="display:none; background:#ef4444; color:#fff; border:none; padding:10px; border-radius:8px; font-weight:700; margin-top:10px; cursor:pointer;">
+        تسجيل الخروج
+      </button>
+
+      <p id="errorMsg" style="color: #ef4444; font-size: 0.8rem; display: none; margin-top: 10px; font-weight:bold;"></p>
     </div>
   </div>
 
   <header class="app-header">
     <div class="header-container">
       <div class="brand">
-        <img src="icons/21762905-9471-44f1-96cc-d8d576c02f75.jpg" alt="لوجو عزوتنا" class="brand-logo">
+        <img src="icons/logo.png.png" alt="لوجو عزوتنا" class="brand-logo">
         <div>
           <h1 class="brand-title">لوحة التحكم الشاملة</h1>
-          <span class="brand-sub">إدارة الأقسام والخدمات والاقتراحات</span>
+          <span class="brand-sub">إدارة الأقسام والخدمات والتقييمات والاقتراحات</span>
         </div>
       </div>
       <a href="index.html" class="back-link">
@@ -90,20 +154,23 @@
     <!-- التبويبات -->
     <div class="tabs-nav">
       <button class="tab-btn active" id="btnTabWorkers">
-        <i class="fa-solid fa-user-plus"></i> إضافة وإدارة الحرفيين
+        <i class="fa-solid fa-user-plus"></i> الحرفيون (<span id="workersCount">0</span>)
       </button>
       <button class="tab-btn" id="btnTabCategories">
-        <i class="fa-solid fa-shapes"></i> إدارة الأقسام والمهن
+        <i class="fa-solid fa-shapes"></i> إدارة الأقسام
       </button>
       <button class="tab-btn" id="btnTabPending">
         <i class="fa-solid fa-clock-rotate-left"></i> طلبات المراجعة (<span id="pendingCount">0</span>)
       </button>
+      <button class="tab-btn" id="btnTabRatings">
+        <i class="fa-solid fa-star"></i> تقييمات الجيران (<span id="ratingsCount">0</span>)
+      </button>
       <button class="tab-btn" id="btnTabSuggestions">
-        <i class="fa-solid fa-lightbulb"></i> اقتراحات الأهالي (<span id="sugCount">0</span>)
+        <i class="fa-solid fa-lightbulb"></i> المقترحات والشكاوى (<span id="sugCount">0</span>)
       </button>
     </div>
 
-    <!-- تبويب 1: إضافة حرفي مباشر -->
+    <!-- تبويب 1: إضافة حرفي -->
     <div id="workersTab" class="tab-content active">
       <div class="card-box">
         <h3 style="margin-top:0; color:var(--primary);"><i class="fa-solid fa-plus-circle"></i> إضافة حرفي أو مقدم خدمة جديد</h3>
@@ -115,10 +182,22 @@
             </select>
             <input type="tel" id="mPhone" placeholder="رقم الهاتف (01xxxxxxxxx) *" required dir="ltr">
             <input type="text" id="mArea" placeholder="المنطقة (المحلية، الحي...) *" required>
-            <input type="text" id="mJob" placeholder="المسمى الوظيفي (مثلاً: سباك صحي / دكتور أطفال) *" required>
+            <input type="text" id="mJob" placeholder="المسمى الوظيفي (مثلاً: سباك صحي) *" required>
             <input type="text" id="mExp" placeholder="سنين الخبرة (مثلاً: 10 سنين)">
           </div>
-          <input type="text" id="mBio" placeholder="نبذة مختصرة تظهر في الكارت (مثلاً: متاح طوارئ 24 ساعة - معاينة مجانية)" style="width:100%; padding:10px 12px; border:1px solid #cbd5e1; border-radius:8px; font-family:'Cairo'; box-sizing:border-box; margin-bottom:14px;">
+          <input type="text" id="mBio" placeholder="نبذة مختصرة تظهر في الكارت" style="width:100%; padding:10px 12px; border:1px solid #cbd5e1; border-radius:8px; font-family:'Cairo'; box-sizing:border-box; margin-bottom:14px;">
+          
+          <div style="margin-bottom:14px; background:#f8fafc; border:1px dashed #cbd5e1; border-radius:10px; padding:12px; text-align:center;">
+            <input type="file" id="mPhoto" accept="image/*" style="display:none;">
+            <button type="button" onclick="document.getElementById('mPhoto').click()" style="background:#fff; border:1px solid #cbd5e1; padding:7px 14px; border-radius:8px; font-family:'Cairo'; font-weight:700; cursor:pointer; font-size:0.84rem; color:var(--primary);">
+              <i class="fa-solid fa-camera"></i> إضافة صورة شخصية أو للورشة (اختياري)
+            </button>
+            <div id="mPhotoPreviewBox" style="margin-top:8px; display:none;">
+              <img id="mPhotoImg" src="" alt="معاينة" style="width:55px; height:55px; border-radius:8px; object-fit:cover; border:2px solid var(--primary);">
+              <p id="mPhotoName" style="font-size:0.75rem; color:#64748b; margin:2px 0 0;"></p>
+            </div>
+          </div>
+
           <button type="submit" style="background:var(--accent); color:#fff; border:none; padding:10px 24px; border-radius:8px; font-weight:700; font-family:'Cairo'; cursor:pointer;">
             حفظ ونشر فوراً في الدليل
           </button>
@@ -144,15 +223,15 @@
       </div>
     </div>
 
-    <!-- تبويب 2: إدارة الأقسام -->
+    <!-- تبويب 2: الأقسام -->
     <div id="categoriesTab" class="tab-content">
       <div class="card-box">
-        <h3 style="margin-top:0; color:var(--primary);"><i class="fa-solid fa-folder-plus"></i> إضافة قسم جديد (مثل: دكاترة، محامين، صيدليات)</h3>
+        <h3 style="margin-top:0; color:var(--primary);"><i class="fa-solid fa-folder-plus"></i> إضافة قسم جديد</h3>
         <form id="addCategoryForm">
           <div class="form-grid">
             <input type="text" id="cId" placeholder="المعرف بالإنجليزي (مثلاً: doctors)" required>
             <input type="text" id="cName" placeholder="اسم القسم بالعربي (مثلاً: أطباء وعيادات)" required>
-            <input type="text" id="cIcon" placeholder="الأيقونة أو الإيموجي (مثلاً: 🩺 أو ⚡)" required>
+            <input type="text" id="cIcon" placeholder="الأيقونة أو الإيموجي (مثلاً: 🩺)" required>
           </div>
           <button type="submit" style="background:var(--primary); color:#fff; border:none; padding:10px 22px; border-radius:8px; font-weight:700; font-family:'Cairo'; cursor:pointer;">
             إضافة القسم للسحابة
@@ -201,7 +280,30 @@
       </div>
     </div>
 
-    <!-- تبويب 4: اقتراحات أهالي الحي -->
+    <!-- تبويب 4: التقييمات -->
+    <div id="ratingsTab" class="tab-content">
+      <div class="card-box">
+        <h3 style="margin-top:0; color:var(--primary);"><i class="fa-solid fa-star"></i> تقييمات الجيران بانتظار المراجعة</h3>
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>الحرفي</th>
+                <th>اسم الجار</th>
+                <th>الواتساب</th>
+                <th>النجوم</th>
+                <th>التعليق</th>
+                <th style="text-align: center;">القرار</th>
+              </tr>
+            </thead>
+            <tbody id="pendingRatingsBody"></tbody>
+          </table>
+          <p id="noRatingsMsg" style="text-align:center; color:#94a3b8; padding:20px; display:none;">لا توجد تقييمات معلقة حالياً.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- تبويب 5: المقترحات -->
     <div id="suggestionsTab" class="tab-content">
       <div class="card-box">
         <h3 style="margin-top:0; color:var(--primary);"><i class="fa-solid fa-comments"></i> رسائل واقتراحات سكان الحي</h3>
@@ -210,6 +312,8 @@
             <thead>
               <tr>
                 <th>الرسالة / الاقتراح</th>
+                <th>اسم الجار</th>
+                <th>الواتساب</th>
                 <th style="text-align: center; width: 120px;">إجراء</th>
               </tr>
             </thead>
@@ -224,9 +328,10 @@
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getFirestore, collection, addDoc, getDocs, doc, updateDoc, deleteDoc, query, where, serverTimestamp } 
-    from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-
+    import { 
+      getFirestore, collection, addDoc, getDocs, getDoc, doc, updateDoc, deleteDoc, query, where, orderBy, serverTimestamp 
+    } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+    
     const firebaseConfig = {
       apiKey: "AIzaSyB76NcdVQTSUIYxeBsXh9ojeTMWg9L5mt8",
       authDomain: "azwetna.firebaseapp.com",
@@ -240,28 +345,64 @@
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
 
-    const ADMIN_PASS = "2026";
+   import { getAuth, signInWithPopup, GoogleAuthProvider, signOut, onAuthStateChanged } 
+    from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
-    function checkAdminPassword() {
-      const pass = document.getElementById('adminPassInput').value;
-      if (pass === ADMIN_PASS) {
-        document.getElementById('authOverlay').style.display = 'none';
-        sessionStorage.setItem('adminAuth', 'true');
-        loadAllData();
+    const auth = getAuth(app);
+    const provider = new GoogleAuthProvider();
+    
+    // إيميل الإدارة الوحيد المسموح له بالدخول
+    const ADMIN_EMAIL = "ghamdy82@gmail.com"; 
+    
+    const authOverlay = document.getElementById('authOverlay');
+    const googleLoginBtn = document.getElementById('googleLoginBtn');
+    const errorMsg = document.getElementById('errorMsg');
+    const logoutBtn = document.getElementById('logoutBtn');
+
+    // 1. مراقبة حالة الدخول (لو الإدمن مسجل دخول قبل كدة، يفتح اللوحة علطول)
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        if (user.email === ADMIN_EMAIL) {
+          // السماح بالدخول
+          authOverlay.style.display = 'none';
+          loadAllData();
+          
+          // إظهار زرار الخروج جوة الهيدر (هتضيفيه بعدين في الـ HTML أو نسيبه مخفي دلوقتي)
+        } else {
+          // لو إيميل غريب، أخرجه فوراً
+          signOut(auth);
+          authOverlay.style.display = 'flex';
+          errorMsg.textContent = "عفواً، هذا الحساب لا يملك صلاحية الإدارة!";
+          errorMsg.style.display = 'block';
+        }
       } else {
-        document.getElementById('errorMsg').style.display = 'block';
+        authOverlay.style.display = 'flex';
       }
-    }
-
-    document.getElementById('loginBtn').addEventListener('click', checkAdminPassword);
-    document.getElementById('adminPassInput').addEventListener('keypress', (e) => {
-      if (e.key === 'Enter') checkAdminPassword();
     });
 
-    if (sessionStorage.getItem('adminAuth') === 'true') {
+    // 2. تفعيل زرار الدخول بجوجل
+    googleLoginBtn.addEventListener('click', async () => {
+      errorMsg.style.display = 'none';
+      try {
+        const result = await signInWithPopup(auth, provider);
+        const user = result.user;
+        
+        if (user.email !== ADMIN_EMAIL) {
+          await signOut(auth);
+          errorMsg.textContent = "عفواً، أنت لست مسؤولاً في المنصة!";
+          errorMsg.style.display = 'block';
+        }
+      } catch (error) {
+        console.error("خطأ في تسجيل الدخول:", error);
+        errorMsg.textContent = "حدث خطأ، يرجى المحاولة مرة أخرى.";
+        errorMsg.style.display = 'block';
+      }
+    });
+
+   
       document.getElementById('authOverlay').style.display = 'none';
       loadAllData();
-    }
+    
 
     function switchTab(tabId, btn) {
       document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
@@ -270,16 +411,43 @@
       btn.classList.add('active');
     }
 
-    document.getElementById('btnTabWorkers').addEventListener('click', function() { switchTab('workersTab', this); });
-    document.getElementById('btnTabCategories').addEventListener('click', function() { switchTab('categoriesTab', this); });
-    document.getElementById('btnTabPending').addEventListener('click', function() { switchTab('pendingTab', this); });
-    document.getElementById('btnTabSuggestions').addEventListener('click', function() { switchTab('suggestionsTab', this); });
+    document.getElementById('btnTabWorkers').addEventListener('click', function() { switchTab('workersTab', this); loadWorkers(); });
+    document.getElementById('btnTabCategories').addEventListener('click', function() { switchTab('categoriesTab', this); loadCategories(); });
+    document.getElementById('btnTabPending').addEventListener('click', function() { switchTab('pendingTab', this); loadPending(); });
+    document.getElementById('btnTabRatings').addEventListener('click', function() { switchTab('ratingsTab', this); loadPendingRatings(); });
+    document.getElementById('btnTabSuggestions').addEventListener('click', function() { switchTab('suggestionsTab', this); loadSuggestions(); });
+
+    document.getElementById('mPhoto').addEventListener('change', function(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+      document.getElementById('mPhotoName').innerText = file.name;
+      const reader = new FileReader();
+      reader.onload = function(evt) {
+        const img = new Image();
+        img.onload = function() {
+          const canvas = document.createElement('canvas');
+          const maxDim = 300;
+          let width = img.width, height = img.height;
+          if (width > height) { if (width > maxDim) { height *= maxDim / width; width = maxDim; } }
+          else { if (height > maxDim) { width *= maxDim / height; height = maxDim; } }
+          canvas.width = width; canvas.height = height;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0, width, height);
+          adminBase64Photo = canvas.toDataURL('image/jpeg', 0.7);
+          document.getElementById('mPhotoImg').src = adminBase64Photo;
+          document.getElementById('mPhotoPreviewBox').style.display = 'block';
+        };
+        img.src = evt.target.result;
+      };
+      reader.readAsDataURL(file);
+    });
 
     async function loadAllData() {
-      await loadCategories();
-      await loadWorkers();
-      await loadPending();
-      await loadSuggestions();
+      try { await loadCategories(); } catch(e) { console.error("خطأ الأقسام:", e); }
+      try { await loadWorkers(); } catch(e) { console.error("خطأ الحرفيين:", e); }
+      try { await loadPending(); } catch(e) { console.error("خطأ طلبات الانتظار:", e); }
+      try { await loadPendingRatings(); } catch(e) { console.error("خطأ التقييمات:", e); }
+      try { await loadSuggestions(); } catch(e) { console.error("خطأ المقترحات:", e); }
     }
 
     async function loadCategories() {
@@ -287,51 +455,30 @@
       const catTable = document.getElementById('categoriesTableBody');
       catSelect.innerHTML = '<option value="" disabled selected>اختار القسم *</option>';
       catTable.innerHTML = '';
-
       const querySnapshot = await getDocs(collection(db, "categories"));
-      
-      if (querySnapshot.empty) {
-        const defaults = [
-          { id: "plumber", name: "سباكة", icon: "🔧" },
-          { id: "electric", name: "كهرباء", icon: "⚡" },
-          { id: "carpenter", name: "نجارة", icon: "🪚" },
-          { id: "paint", name: "نقاشة", icon: "🎨" },
-          { id: "ac", name: "تكييفات", icon: "❄️" },
-          { id: "doctors", name: "أطباء وعيادات", icon: "🩺" }
-        ];
-        for (const item of defaults) {
-          await addDoc(collection(db, "categories"), item);
-        }
-        return loadCategories();
-      }
-
       querySnapshot.forEach((docSnap) => {
         const cat = docSnap.data();
         catSelect.innerHTML += `<option value="${cat.id}" data-icon="${cat.icon || '🛠️'}">${cat.name} ${cat.icon}</option>`;
-        
         const tr = document.createElement('tr');
         tr.innerHTML = `
           <td style="font-size:1.3rem;">${cat.icon}</td>
           <td><strong>${cat.name}</strong></td>
           <td><code>${cat.id}</code></td>
           <td style="text-align:center;">
-            <button class="btn-reject del-cat-btn" data-id="${docSnap.id}">حذف</button>
+            <button class="btn-reject" onclick="deleteCategory('${docSnap.id}')">حذف</button>
           </td>
         `;
         catTable.appendChild(tr);
-      });
-
-      document.querySelectorAll('.del-cat-btn').forEach(b => {
-        b.addEventListener('click', () => deleteCategory(b.getAttribute('data-id')));
       });
     }
 
     async function loadWorkers() {
       const tbody = document.getElementById('approvedWorkersBody');
+      const countEl = document.getElementById('workersCount');
       tbody.innerHTML = '';
       const q = query(collection(db, "workers"), where("status", "==", "approved"));
       const querySnapshot = await getDocs(q);
-
+      countEl.innerText = querySnapshot.size;
       querySnapshot.forEach((docSnap) => {
         const w = docSnap.data();
         const tr = document.createElement('tr');
@@ -341,14 +488,10 @@
           <td>${w.area}</td>
           <td dir="ltr" style="text-align:right;">${w.phone}</td>
           <td style="text-align:center;">
-            <button class="btn-reject del-worker-btn" data-id="${docSnap.id}">حذف</button>
+            <button class="btn-reject" onclick="deleteWorker('${docSnap.id}')">حذف</button>
           </td>
         `;
         tbody.appendChild(tr);
-      });
-
-      document.querySelectorAll('.del-worker-btn').forEach(b => {
-        b.addEventListener('click', () => deleteWorker(b.getAttribute('data-id')));
       });
     }
 
@@ -357,17 +500,14 @@
       const countEl = document.getElementById('pendingCount');
       const noPending = document.getElementById('noPendingMsg');
       tbody.innerHTML = '';
-
       const q = query(collection(db, "workers"), where("status", "==", "pending"));
       const querySnapshot = await getDocs(q);
-
       countEl.innerText = querySnapshot.size;
       if (querySnapshot.empty) {
         noPending.style.display = 'block';
         return;
       }
       noPending.style.display = 'none';
-
       querySnapshot.forEach((docSnap) => {
         const w = docSnap.data();
         const tr = document.createElement('tr');
@@ -378,18 +518,45 @@
           <td style="font-size:0.82rem; color:#64748b;">${w.bio || '—'}</td>
           <td dir="ltr" style="text-align:right;">${w.phone}</td>
           <td style="text-align:center;">
-            <button class="btn-approve app-worker-btn" data-id="${docSnap.id}">موافقة ونشر</button>
-            <button class="btn-reject del-worker-btn" data-id="${docSnap.id}">رفض</button>
+            <button class="btn-approve" onclick="approveWorker('${docSnap.id}')">موافقة</button>
+            <button class="btn-reject" onclick="deleteWorker('${docSnap.id}')">رفض</button>
           </td>
         `;
         tbody.appendChild(tr);
       });
+    }
 
-      document.querySelectorAll('.app-worker-btn').forEach(b => {
-        b.addEventListener('click', () => approveWorker(b.getAttribute('data-id')));
-      });
-      document.querySelectorAll('.del-worker-btn').forEach(b => {
-        b.addEventListener('click', () => deleteWorker(b.getAttribute('data-id')));
+    async function loadPendingRatings() {
+      const tbody = document.getElementById('pendingRatingsBody');
+      const countEl = document.getElementById('ratingsCount');
+      const noMsg = document.getElementById('noRatingsMsg');
+      tbody.innerHTML = '';
+      
+      const q = query(collection(db, "reviews"), where("status", "==", "pending"));
+      const querySnapshot = await getDocs(q);
+      
+      countEl.innerText = querySnapshot.size;
+      if (querySnapshot.empty) {
+        noMsg.style.display = 'block';
+        return;
+      }
+      noMsg.style.display = 'none';
+      
+      querySnapshot.forEach((docSnap) => {
+        const r = docSnap.data();
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td><strong>${r.workerName || 'مهني'}</strong></td>
+          <td>${r.userName || '—'}</td>
+          <td dir="ltr" style="font-size:0.85rem; color:#10b981; font-weight:bold;">${r.userPhone || '—'}</td>
+          <td>⭐ ${r.rating}</td>
+          <td>${r.comment || '—'}</td>
+          <td style="text-align:center;">
+            <button class="btn-approve" onclick="approveRating('${docSnap.id}', '${r.workerId || ''}', ${r.rating || 5})">اعتماد</button>
+            <button class="btn-reject" onclick="deleteRating('${docSnap.id}')">حذف</button>
+          </td>
+        `;
+        tbody.appendChild(tr);
       });
     }
 
@@ -398,48 +565,149 @@
       const countEl = document.getElementById('sugCount');
       const noSug = document.getElementById('noSugMsg');
       tbody.innerHTML = '';
-
-      const querySnapshot = await getDocs(collection(db, "suggestions"));
+      
+      let querySnapshot;
+      try {
+        const q = query(collection(db, "suggestions"), orderBy("createdAt", "desc"));
+        querySnapshot = await getDocs(q);
+      } catch(e) {
+        // حماية في حال عدم وجود فهرس زمني
+        querySnapshot = await getDocs(collection(db, "suggestions"));
+      }
+      
       countEl.innerText = querySnapshot.size;
-
       if (querySnapshot.empty) {
         noSug.style.display = 'block';
         return;
       }
       noSug.style.display = 'none';
-
+      
       querySnapshot.forEach((docSnap) => {
         const s = docSnap.data();
         const tr = document.createElement('tr');
         tr.innerHTML = `
           <td>${s.message}</td>
+          <td>${s.userName || '—'}</td>
+          <td dir="ltr" style="font-size:0.85rem; color:#10b981; font-weight:bold;">${s.userPhone || '—'}</td>
           <td style="text-align:center;">
-            <button class="btn-reject del-sug-btn" data-id="${docSnap.id}">حذف</button>
+            <button class="btn-reject" onclick="deleteSuggestion('${docSnap.id}')">حذف</button>
           </td>
         `;
         tbody.appendChild(tr);
       });
-
-      document.querySelectorAll('.del-sug-btn').forEach(b => {
-        b.addEventListener('click', async () => {
-          if (confirm('حذف هذا الاقتراح؟')) {
-            await deleteDoc(doc(db, "suggestions", b.getAttribute('data-id')));
-            loadSuggestions();
-          }
-        });
-      });
     }
+
+    // ==============================================
+    // دوال الأزرار المربوطة بـ window ومحمية بـ try/catch
+    // ==============================================
+
+    window.approveWorker = async function(id) {
+      try {
+        await updateDoc(doc(db, "workers", id), { status: "approved" });
+        alert("✓ تم اعتماد الحرفي بنجاح ونشره في الدليل!");
+        loadPending();
+        loadWorkers();
+      } catch (err) {
+        console.error("خطأ اعتماد الحرفي:", err);
+        alert("تعذر اعتماد الحرفي: " + err.message);
+      }
+    };
+
+    window.deleteWorker = async function(id) {
+      if (confirm('هل أنتِ متأكدة من حذف هذا الحرفي نهائياً؟')) {
+        try {
+          await deleteDoc(doc(db, "workers", id));
+          alert("✓ تم الحذف بنجاح!");
+          loadWorkers();
+          loadPending();
+        } catch (err) {
+          console.error("خطأ حذف الحرفي:", err);
+          alert("تعذر حذف الحرفي: " + err.message);
+        }
+      }
+    };
+
+    window.deleteCategory = async function(id) {
+      if (confirm('هل أنتِ متأكدة من حذف هذا القسم؟')) {
+        try {
+          await deleteDoc(doc(db, "categories", id));
+          alert("✓ تم حذف القسم بنجاح!");
+          loadCategories();
+        } catch (err) {
+          console.error("خطأ حذف القسم:", err);
+          alert("تعذر حذف القسم: " + err.message);
+        }
+      }
+    };
+
+    window.deleteSuggestion = async function(id) {
+      if (confirm('هل أنتِ متأكدة من حذف هذا المقترح؟')) {
+        try {
+          await deleteDoc(doc(db, "suggestions", id));
+          alert("✓ تم حذف المقترح بنجاح!");
+          loadSuggestions();
+        } catch (err) {
+          console.error("خطأ حذف المقترح:", err);
+          alert("تعذر حذف المقترح: " + err.message);
+        }
+      }
+    };
+
+    window.deleteRating = async function(id) {
+      if (confirm('هل أنتِ متأكدة من حذف هذا التقييم؟')) {
+        try {
+          await deleteDoc(doc(db, "reviews", id));
+          alert("✓ تم حذف التقييم بنجاح!");
+          loadPendingRatings();
+        } catch (err) {
+          console.error("خطأ حذف التقييم:", err);
+          alert("تعذر حذف التقييم: " + err.message);
+        }
+      }
+    };
+
+    window.approveRating = async function(reviewId, workerId, newRating) {
+      try {
+        await updateDoc(doc(db, "reviews", reviewId), { status: "approved" });
+        
+        // تحديث النجوم للحرفي إذا كان معرفه مسجلاً
+        if (workerId && workerId !== 'undefined' && workerId !== '') {
+          const workerRef = doc(db, "workers", workerId);
+          const workerSnap = await getDoc(workerRef);
+          if (workerSnap.exists()) {
+            const data = workerSnap.data();
+            const currentAvg = data.rating || 5.0;
+            const currentCount = data.ratingsCount || 0;
+            const updatedCount = currentCount + 1;
+            const updatedAvg = ((currentAvg * currentCount) + Number(newRating)) / updatedCount;
+            await updateDoc(workerRef, {
+              rating: Number(updatedAvg.toFixed(1)),
+              ratingsCount: updatedCount
+            });
+          }
+        }
+        
+        alert('✓ تم اعتماد التقييم بنجاح!');
+        loadPendingRatings();
+      } catch (err) {
+        console.error("خطأ اعتماد التقييم:", err);
+        alert("تعذر اعتماد التقييم: " + err.message);
+      }
+    };
 
     document.getElementById('addCategoryForm').addEventListener('submit', async (e) => {
       e.preventDefault();
       const id = document.getElementById('cId').value.trim().toLowerCase();
       const name = document.getElementById('cName').value.trim();
       const icon = document.getElementById('cIcon').value.trim();
-
-      await addDoc(collection(db, "categories"), { id, name, icon, createdAt: serverTimestamp() });
-      e.target.reset();
-      alert('تمت إضافة القسم بنجاح!');
-      loadCategories();
+      try {
+        await addDoc(collection(db, "categories"), { id, name, icon, createdAt: serverTimestamp() });
+        e.target.reset();
+        alert('تمت إضافة القسم بنجاح!');
+        loadCategories();
+      } catch (err) {
+        alert("تعذر إضافة القسم: " + err.message);
+      }
     });
 
     document.getElementById('addWorkerForm').addEventListener('submit', async (e) => {
@@ -447,7 +715,6 @@
       const catSelect = document.getElementById('mCategory');
       const selectedOpt = catSelect.options[catSelect.selectedIndex];
       const icon = selectedOpt.getAttribute('data-icon') || '🛠️';
-
       const name = document.getElementById('mName').value.trim();
       const category = catSelect.value;
       const phone = document.getElementById('mPhone').value.trim();
@@ -456,38 +723,26 @@
       const experience = document.getElementById('mExp').value.trim();
       const bio = document.getElementById('mBio').value.trim();
 
-      await addDoc(collection(db, "workers"), {
-        name, category, phone, area, job, experience, bio,
-        avatar: icon,
-        status: "approved",
-        createdAt: serverTimestamp()
-      });
+      try {
+        await addDoc(collection(db, "workers"), {
+          name, category, phone, area, job, experience, bio,
+          photoUrl: adminBase64Photo || "",
+          avatar: icon,
+          status: "approved",
+          rating: 5.0,
+          ratingsCount: 0,
+          createdAt: serverTimestamp()
+        });
 
-      e.target.reset();
-      alert('تم نشر الحرفي في الدليل السحابي بنجاح!');
-      loadWorkers();
-    });
-
-    async function approveWorker(id) {
-      await updateDoc(doc(db, "workers", id), { status: "approved" });
-      loadPending();
-      loadWorkers();
-    }
-
-    async function deleteWorker(id) {
-      if (confirm('هل أنتِ متأكدة من الحذف؟')) {
-        await deleteDoc(doc(db, "workers", id));
+        e.target.reset();
+        adminBase64Photo = "";
+        document.getElementById('mPhotoPreviewBox').style.display = 'none';
+        alert('تم نشر الحرفي في الدليل السحابي بنجاح!');
         loadWorkers();
-        loadPending();
+      } catch (err) {
+        alert("تعذر نشر الحرفي: " + err.message);
       }
-    }
-
-    async function deleteCategory(id) {
-      if (confirm('هل أنتِ متأكدة من حذف هذا القسم؟')) {
-        await deleteDoc(doc(db, "categories", id));
-        loadCategories();
-      }
-    }
+    });
   </script>
 </body>
 </html>

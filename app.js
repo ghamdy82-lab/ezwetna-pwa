@@ -3,14 +3,24 @@
  * Developed & Owned by: Taghreed Hamdy (CodeCraft Egypt) © 2026
  */
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-import { getFirestore, collection, getDocs, query, where } 
-from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+import { getFirestore, collection, getDocs, addDoc, query, where, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
-// بصمة الملكية الفكرية في المتصفح
-console.log(
-  "%c منصة عَزْوَتْنَا © 2026 | تطوير وملكية فكرية: م. تغريد حمدي (Taghreed Hamdy - CodeCraft Egypt) ",
-  "background: #1F4E5B; color: #FFD166; font-size: 13px; font-weight: bold; padding: 8px 12px; border-radius: 6px;"
-);
+// بصمة الملكية الفكرية
+console.log("%c منصة عَزْوَتْنَا © 2026 | تطوير: م. تغريد حمدي (CodeCraft Egypt) ", "background: #1F4E5B; color: #FFD166; font-size: 13px; font-weight: bold; padding: 8px 12px; border-radius: 6px;");
+
+const TELEGRAM_BOT_TOKEN = "9241445474:AAH8uKYRudHx9JhWGgoC8gTMIghtk0bu2rk";
+const TELEGRAM_CHAT_ID = "9127937709";
+
+async function sendTelegramAlert(text) {
+  try {
+    await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ chat_id: TELEGRAM_CHAT_ID, text: text })
+    });
+  } catch (e) { console.error("Telegram error", e); }
+}
 
 const firebaseConfig = {
   apiKey: "AIzaSyB76NcdVQTSUIYxeBsXh9ojeTMWg9L5mt8",
@@ -24,22 +34,54 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
+const auth = getAuth(app);
+const provider = new GoogleAuthProvider();
+
+let currentUser = null;
+let pendingAction = null;
+
+// 1. مراقبة حالة المستخدم
+onAuthStateChanged(auth, (user) => {
+  currentUser = user;
+  const authBox = document.getElementById("userAuthStateBox");
+  if (user) {
+    document.getElementById("loginModal").style.display = "none";
+    
+    document.getElementById("logoutBtn").addEventListener("click", () => signOut(auth));
+    
+    if (pendingAction === 'suggestion') document.getElementById("sugModal").style.display = "flex";
+    if (pendingAction && pendingAction.startsWith('rate_')) {
+      const parts = pendingAction.split('_');
+      document.getElementById("rateWorkerId").value = parts[1];
+      document.getElementById("ratingWorkerTitle").innerText = `تقييم: ${parts[2]}`;
+      document.getElementById("ratingModal").style.display = "flex";
+    }
+    pendingAction = null;
+  } else {
+    // تفريغ البوكس تماماً عند الخروج عشان ميكررش أي زراير ويسيب زراير الهيدر الثابتة زي ما هي
+    authBox.innerHTML = ``;
+  }
+});
+
+document.getElementById("googleLoginBtn").addEventListener("click", async () => {
+  try {
+    await signInWithPopup(auth, provider);
+  } catch (error) {
+    alert("تعذر تسجيل الدخول، حاول مرة تانية.");
+  }
+});
 
 const workersList = document.getElementById("workersList");
 const searchInput = document.getElementById("searchInput");
 const categoriesBar = document.getElementById("categoriesBar");
-
 let allWorkers = [];
 let currentCategory = "all";
 
-// 1. جلب الأقسام من Firestore
 async function fetchCategories() {
   try {
     const snap = await getDocs(collection(db, "categories"));
     if (!categoriesBar) return;
-
     categoriesBar.innerHTML = `<button class="cat-pill active" data-cat="all">الكل</button>`;
-
     snap.forEach(docSnap => {
       const cat = docSnap.data();
       const btn = document.createElement("button");
@@ -48,7 +90,6 @@ async function fetchCategories() {
       btn.innerHTML = `${cat.icon || '🛠️'} ${cat.name}`;
       categoriesBar.appendChild(btn);
     });
-
     document.querySelectorAll(".cat-pill").forEach(btn => {
       btn.addEventListener("click", () => {
         document.querySelectorAll(".cat-pill").forEach(b => b.classList.remove("active"));
@@ -57,113 +98,112 @@ async function fetchCategories() {
         filterWorkers();
       });
     });
-  } catch (error) {
-    console.error("فشل جلب الأقسام:", error);
-  }
+  } catch (error) { console.error(error); }
 }
 
-// 2. جلب الحرفيين المعتمدين فقط
 async function fetchApprovedWorkers() {
   try {
     const q = query(collection(db, "workers"), where("status", "==", "approved"));
     const snap = await getDocs(q);
-
     allWorkers = [];
-    snap.forEach(docSnap => {
-      allWorkers.push({ id: docSnap.id, ...docSnap.data() });
-    });
-
+    snap.forEach(docSnap => allWorkers.push({ id: docSnap.id, ...docSnap.data() }));
     renderWorkers(allWorkers);
-  } catch (error) {
-    console.error("فشل جلب الحرفيين:", error);
-    workersList.innerHTML = `<p style="grid-column: 1/-1; text-align:center; color:#ef4444;">تعذر الاتصال بالسحابة، يرجى إعادة المحاولة.</p>`;
-  }
+  } catch (error) { console.error(error); }
 }
 
-// 3. عرض كروت الحرفيين شاملة الخبرة والنبذة
 function renderWorkers(workers) {
   if (!workersList) return;
-
   if (workers.length === 0) {
-    workersList.innerHTML = `
-      <div style="grid-column: 1/-1; text-align: center; padding: 40px 20px; color: #64748B;">
-        <p style="font-size: 1.1rem; font-weight: 700;">مفيش نتايج مطابقة للبحث حالياً</p>
-        <p style="font-size: 0.85rem; margin-top: 6px;">جربي تبحثي باسم تاني أو اختاري قسم مختلف</p>
-      </div>
-    `;
+    workersList.innerHTML = `<div style="grid-column:1/-1; text-align:center; padding:40px; color:#64748B;"><p style="font-size:1.1rem; font-weight:700;">مفيش نتايج مطابقة للبحث حالياً</p></div>`;
     return;
   }
-
   workersList.innerHTML = workers.map(worker => {
     const cleanPhone = worker.phone ? worker.phone.replace(/[^0-9]/g, '') : '';
     const whatsappNum = cleanPhone.startsWith('0') ? '2' + cleanPhone : cleanPhone;
+    const avatarHTML = worker.photoUrl ? `<img src="${worker.photoUrl}" alt="${worker.name}" class="worker-img">` : `<div class="worker-avatar">${worker.avatar || '🛠️'}</div>`;
+    const ratingVal = worker.rating || 5.0;
+    const ratingCount = worker.ratingsCount || 0;
 
-    // تجهيز الأيقونة أو الصورة الشخصية لو مرفوعة
-    const avatarHTML = worker.photoUrl 
-      ? `<img src="${worker.photoUrl}" alt="${worker.name}" class="worker-img">`
-      : `<div class="worker-avatar">${worker.avatar || '🛠️'}</div>`;
-
-    // شارة سنين الخبرة
-    const expBadge = worker.experience 
-      ? `<span class="exp-badge">خبرة ${worker.experience}</span>` 
-      : '';
-
-    // النبذة التعريفية
-    const bioHTML = worker.bio 
-      ? `<p class="worker-bio">${worker.bio}</p>` 
-      : '';
-
-    return `
-      <div class="worker-card">
-        <div>
-          <div class="worker-info" style="display:flex; align-items:flex-start; gap:14px;">
-            ${avatarHTML}
-            <div class="worker-details" style="flex:1;">
-              <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:6px;">
-                <h3 style="margin:0; font-size:1.05rem; font-weight:800; color:var(--primary);">${worker.name}</h3>
-                ${expBadge}
+  return `
+        <div class="worker-card" style="background: #ffffff; border-radius: 16px; padding: 12px 14px; margin-bottom: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); border: 1px solid #edf2f7; display: flex; flex-direction: column; gap: 8px;">
+          
+          <!-- 1. السطر الأول: الصورة والاسم ع اليمين + شارة التقييم بالنجوم ع الشمال -->
+          <div style="display: flex; align-items: center; justify-content: space-between;">
+            <div style="display: flex; align-items: center; gap: 10px;">
+              <div style="width: 46px; height: 46px; border-radius: 50%; overflow: hidden; border: 2px solid #0f4c5c; flex-shrink: 0; display: flex; align-items: center; justify-content: center;">
+                ${avatarHTML}
               </div>
-              <span class="job-title" style="display:inline-block; font-size:0.85rem; margin-top:2px;">${worker.job || ''}</span>
-              <p class="area-tag" style="margin:4px 0 0; font-size:0.8rem; color:#64748b;">📍 ${worker.area || ''}</p>
+              <h3 style="margin: 0; font-size: 1.05rem; font-weight: bold; color: #0f4c5c;">${worker.name}</h3>
+            </div>
+
+            <!-- شارة التقييم والنجوم الملمومة -->
+            <div style="display: flex; align-items: center; gap: 4px; background: #fff9e6; color: #b7791f; padding: 4px 8px; border-radius: 12px; font-size: 0.8rem; font-weight: bold; border: 1px solid #fef3c7;">
+              <i class="fa-solid fa-star" style="color: #f59e0b; font-size: 0.75rem;"></i>
+              <span>${Number(ratingVal).toFixed(1)}</span>
+              <span style="color: #a0aec0; font-size: 0.72rem; font-weight: normal;">(${ratingCount})</span>
             </div>
           </div>
-          ${bioHTML}
-        </div>
 
-        <div class="worker-actions" style="display:flex; gap:8px; margin-top:6px;">
-          <a href="tel:${cleanPhone}" class="call-btn" style="flex:1;">
-            <i class="fa-solid fa-phone"></i> اتصال
-          </a>
-          <a href="https://wa.me/${whatsappNum}" target="_blank" class="chat-btn" style="flex:1;">
-            <i class="fa-brands fa-whatsapp"></i> واتساب
-          </a>
+          <!-- 2. السطر الثاني: نوع الحرفة وجنبها على نفس السطر أيقونات الاتصال والواتس الكبيرة -->
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 2px;">
+            <span style="background: #eef8f8; color: #0f4c5c; padding: 4px 12px; border-radius: 20px; font-weight: bold; font-size: 0.82rem;">
+              ${worker.job}
+            </span>
+
+            <div style="display: flex; gap: 8px; align-items: center;">
+              <!-- زرار اتصال كبير -->
+              <a href="tel:${cleanPhone}" style="width: 42px; height: 42px; border-radius: 12px; background: #0f4c5c; color: #ffffff; display: flex; align-items: center; justify-content: center; text-decoration: none; font-size: 1.15rem; box-shadow: 0 2px 6px rgba(15,76,92,0.25);" title="اتصال هاتفي">
+                <i class="fa-solid fa-phone"></i>
+              </a>
+
+              <!-- زرار واتساب كبير -->
+              <a href="https://wa.me/${whatsappNum}" target="_blank" style="width: 42px; height: 42px; border-radius: 12px; background: #25d366; color: #ffffff; display: flex; align-items: center; justify-content: center; text-decoration: none; font-size: 1.35rem; box-shadow: 0 2px 6px rgba(37,211,102,0.25);" title="مراسلة واتساب">
+                <i class="fa-brands fa-whatsapp"></i>
+              </a>
+            </div>
+          </div>
+
+          <!-- 3. السطر الثالث: العنوان والملاحظة -->
+          <div style="font-size: 0.8rem; color: #64748b; display: flex; flex-direction: column; gap: 3px; margin-top: 2px;">
+            <div style="display: flex; align-items: center; gap: 4px;">
+              <i class="fa-solid fa-location-dot" style="color: #e63946;"></i>
+              <span>${worker.area || ''}</span>
+            </div>
+            ${worker.bio ? `<div style="font-size: 0.76rem; color: #718096; margin-right: 18px;">${worker.bio}</div>` : ''}
+          </div>
+
+          <!-- 4. السطر الرابع: التقييم والآراء -->
+          <div style="display: flex; gap: 8px; margin-top: 4px; border-top: 1px dashed #e2e8f0; padding-top: 8px;">
+            <button type="button" onclick="openRatingModal('${worker.id}', '${worker.name}')" style="flex: 1; padding: 7px; border-radius: 8px; border: 1px solid #cbd5e0; background: #f8fafc; font-size: 0.78rem; font-weight: bold; color: #4a5568; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 4px;">
+              <i class="fa-solid fa-pen"></i> تقييم
+            </button>
+            <button type="button" onclick="viewWorkerReviews('${worker.id}', '${worker.name}')" style="flex: 1; padding: 7px; border-radius: 8px; border: 1px solid #cbd5e0; background: #f8fafc; font-size: 0.78rem; font-weight: bold; color: #4a5568; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 4px;">
+              <i class="fa-regular fa-comments"></i> آراء
+            </button>
+          </div>
+
         </div>
-      </div>
-    `;
+      `;
   }).join("");
 }
 
-// 4. البحث والفلترة اللحظية (بالاسم، المهنة، المنطقة، أو النبذة)
 function filterWorkers() {
   const searchTerm = searchInput ? searchInput.value.trim().toLowerCase() : "";
-
-  const filtered = allWorkers.filter(worker => {
-    const matchesCategory = (currentCategory === "all") || (worker.category === currentCategory);
-    const matchesSearch = (worker.name && worker.name.toLowerCase().includes(searchTerm)) ||
-                          (worker.job && worker.job.toLowerCase().includes(searchTerm)) ||
-                          (worker.area && worker.area.toLowerCase().includes(searchTerm)) ||
-                          (worker.bio && worker.bio.toLowerCase().includes(searchTerm));
+  if (searchTerm.length > 0) {
+    currentCategory = "all";
+    document.querySelectorAll(".cat-pill").forEach(b => {
+      b.getAttribute("data-cat") === "all" ? b.classList.add("active") : b.classList.remove("active");
+    });
+  }
+  const filtered = allWorkers.filter(w => {
+    const matchesCategory = (currentCategory === "all") || (w.category === currentCategory);
+    const matchesSearch = (w.name && w.name.toLowerCase().includes(searchTerm)) || (w.job && w.job.toLowerCase().includes(searchTerm)) || (w.area && w.area.toLowerCase().includes(searchTerm));
     return matchesCategory && matchesSearch;
   });
-
   renderWorkers(filtered);
 }
+if (searchInput) searchInput.addEventListener("input", filterWorkers);
 
-if (searchInput) {
-  searchInput.addEventListener("input", filterWorkers);
-}
-
-// 5. تفعيل أزرار مشاركة التطبيق مع الجيران
 function shareApplication() {
   const shareText = "يا جيراني في التجمع، ده دليل «عَزْوَتْنَا» فيه أرقام الصنايعية والخدمات الموثوقة في منطقتنا للتواصل المباشر من غير وسيط:";
   const shareUrl = window.location.origin + window.location.pathname;
@@ -179,12 +219,319 @@ function shareApplication() {
     window.open(waUrl, "_blank");
   }
 }
-
 const shareHeaderBtn = document.getElementById("shareAppBtn");
-const footerShareBtn = document.getElementById("footerShareBtn");
 if (shareHeaderBtn) shareHeaderBtn.addEventListener("click", shareApplication);
-if (footerShareBtn) footerShareBtn.addEventListener("click", shareApplication);
 
-// تشغيل التطبيق
+window.openRatingModal = function(workerId, workerName) {
+  if (!currentUser) {
+    pendingAction = `rate_${workerId}_${workerName}`;
+    document.getElementById("loginModal").style.display = "flex";
+  } else {
+    document.getElementById("rateWorkerId").value = workerId;
+    document.getElementById("ratingWorkerTitle").innerText = `تقييم: ${workerName}`;
+    document.getElementById("ratingModal").style.display = "flex";
+  }
+};
+
+const openSugBtn = document.getElementById("openSugModalBtn");
+if (openSugBtn) {
+  openSugBtn.addEventListener("click", () => {
+    if (!currentUser) {
+      pendingAction = 'suggestion';
+      document.getElementById("loginModal").style.display = "flex";
+    } else {
+      document.getElementById("sugModal").style.display = "flex";
+    }
+  });
+}
+
+const closeSugModalBtn = document.getElementById("closeSugModalBtn");
+if (closeSugModalBtn) closeSugModalBtn.addEventListener("click", () => document.getElementById("sugModal").style.display = "none");
+
+// إرسال الشكوى
+const popupSugForm = document.getElementById("popupSugForm");
+if (popupSugForm) {
+  popupSugForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    if (!currentUser) return;
+    const text = document.getElementById("popupSugText").value.trim();
+    const phone = document.getElementById("popupSugPhone") ? document.getElementById("popupSugPhone").value.trim() : "";
+    const btn = document.getElementById("popupSugBtn");
+    btn.disabled = true; btn.innerText = "جارٍ الإرسال...";
+
+    try {
+      await addDoc(collection(db, "suggestions"), {
+        message: text,
+        userName: currentUser.displayName,
+        userPhone: phone || "بدون رقم",
+        createdAt: serverTimestamp()
+      });
+      const phoneMsg = phone ? `\n📞 الواتساب: ${phone}` : "";
+      await sendTelegramAlert(`💡 شكوى/اقتراح من (${currentUser.displayName}):${phoneMsg}\n💬 الرسالة: ${text}`);
+      alert("تسلم! رسالتك وصلت وهنتواصل معاك.");
+      document.getElementById("popupSugText").value = "";
+      if(document.getElementById("popupSugPhone")) document.getElementById("popupSugPhone").value = "";
+      document.getElementById("sugModal").style.display = "none";
+    } catch (err) { alert("حدث خطأ."); } finally { btn.disabled = false; btn.innerText = "إرسال للإدارة فوراً"; }
+  });
+}
+
+// إرسال التقييم
+const submitRatingForm = document.getElementById("submitRatingForm");
+if (submitRatingForm) {
+  submitRatingForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    if (!currentUser) return;
+    const workerId = document.getElementById("rateWorkerId").value;
+    const rating = Number(document.getElementById("rStars").value);
+    const comment = document.getElementById("rComment").value.trim();
+    const phone = document.getElementById("rPhone") ? document.getElementById("rPhone").value.trim() : "";
+    
+    const workerObj = allWorkers.find(x => x.id === workerId);
+    const workerName = workerObj ? workerObj.name : "مقدم خدمة";
+
+    const btn = document.getElementById("submitRateBtn");
+    btn.disabled = true; btn.innerText = "جارٍ الإرسال...";
+
+    try {
+      await addDoc(collection(db, "reviews"), {
+        workerId, workerName, 
+        userName: currentUser.displayName,
+        userPhone: phone || "بدون رقم",
+        rating, comment, status: "pending", createdAt: serverTimestamp()
+      });
+      const phoneMsg = phone ? `\n📞 الواتساب: ${phone}` : "";
+      await sendTelegramAlert(`⭐ تقييم من الجار (${currentUser.displayName})${phoneMsg}\n🛠️ لـ: ${workerName}\n🌟 النجوم: ${rating}\n💬 الرأي: ${comment}`);
+      alert("شكراً لأمانتك! التقييم وصل للمراجعة.");
+      submitRatingForm.reset();
+      document.getElementById("ratingModal").style.display = "none";
+    } catch (err) { alert("حدث خطأ."); } finally { btn.disabled = false; btn.innerText = "إرسال التقييم للمراجعة"; }
+  });
+}
+
 fetchCategories();
 fetchApprovedWorkers();
+
+// تسجيل الـ Service Worker لتفعيل التثبيت كتطبيق PWA
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('./sw.js')
+      .then(reg => console.log('Service Worker تم تسجيله بنجاح:', reg.scope))
+      .catch(err => console.error('فشل تسجيل Service Worker:', err));
+  });
+}
+
+// دالة عرض التقييمات في النافذة المنبثقة
+window.viewWorkerReviews = async function(workerId, workerName) {
+  document.getElementById("viewReviewsTitle").innerHTML = `<i class="fa-solid fa-star" style="color:#FFD166;"></i> آراء الجيران في (${workerName})`;
+  const container = document.getElementById("reviewsContainer");
+  container.innerHTML = '<div style="text-align: center; color: #64748b; padding: 20px;">جارٍ التحميل...</div>';
+  document.getElementById("viewReviewsModal").style.display = "flex";
+
+  try {
+    const { collection, query, where, getDocs } = await import("https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js");
+    const q = query(collection(db, "reviews"), where("workerId", "==", workerId), where("status", "==", "approved"));
+    const snap = await getDocs(q);
+
+    if (snap.empty) {
+      container.innerHTML = '<p style="text-align:center; color:#94a3b8; font-size:0.9rem; margin-top:20px;">لسه مفيش تقييمات، خليك أول جار يقيم!</p>';
+      return;
+    }
+
+    container.innerHTML = '';
+    snap.forEach(docSnap => {
+      const r = docSnap.data();
+      container.innerHTML += `
+        <div style="border-bottom:1px solid #f1f5f9; padding-bottom:12px; margin-bottom:12px;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+            <strong style="color:var(--primary); font-size:0.9rem;">${r.userName || 'جار'}</strong>
+            <span style="color:#B45309; background:#FEF3C7; padding:2px 8px; border-radius:12px; font-size:0.75rem; font-weight:700;">⭐ ${r.rating}</span>
+          </div>
+          <p style="margin:0; font-size:0.85rem; color:#475569; line-height:1.5;">${r.comment}</p>
+        </div>
+      `;
+    });
+  } catch (error) {
+    container.innerHTML = '<p style="text-align:center; color:#ef4444; font-size:0.9rem;">حدث خطأ في تحميل التقييمات.</p>';
+  }
+};
+
+// ==========================================
+// برمجة زرار تثبيت التطبيق (PWA)
+// ==========================================
+let deferredPrompt;
+const installAppBtn = document.getElementById('installAppBtn');
+
+window.addEventListener('beforeinstallprompt', (e) => {
+  // نمنع المتصفح إنه يطلع الرسالة بتاعته من نفسه
+  e.preventDefault();
+  // نحتفظ بالحدث عشان نطلعه لما المستخدم يدوس على الزرار بتاعنا
+  deferredPrompt = e;
+  // نظهر الزرار الأصفر بتاعنا في الهيدر
+  if (installAppBtn) {
+    installAppBtn.style.display = 'block';
+  }
+});
+
+if (installAppBtn) {
+  installAppBtn.addEventListener('click', async () => {
+    if (deferredPrompt) {
+      // نطلع رسالة التثبيت
+      deferredPrompt.prompt();
+      // نستنى قرار المستخدم (وافق ولا لأ)
+      const { outcome } = await deferredPrompt.userChoice;
+      if (outcome === 'accepted') {
+        console.log('تم التثبيت بنجاح!');
+      }
+      // نصفر المتغير ونخفي الزرار تاني عشان خلاص نزلناه
+      deferredPrompt = null;
+      installAppBtn.style.display = 'none';
+    }
+  });
+}
+
+// ====================================================
+// تشغيل وتفعيل شريط التنقل السفلي والبوب-أب (Bottom Nav & Profile)
+// ====================================================
+document.addEventListener("DOMContentLoaded", () => {
+  const navSearchBtn = document.getElementById("navSearchBtn");
+  const navShareBtn = document.getElementById("navShareBtn");
+  const navJoinBtn = document.getElementById("navJoinBtn");
+  const navProfileBtn = document.getElementById("navProfileBtn");
+
+  const profileModal = document.getElementById("profileModalOverlay");
+  const closeProfileModal = document.getElementById("closeProfileModal");
+  const saveProfileBtn = document.getElementById("saveProfileBtn");
+  const logoutBtn = document.getElementById("logoutBtn");
+  const userPhoneInput = document.getElementById("userSavedPhone");
+  const userAddressInput = document.getElementById("userSavedAddress");
+
+ // 1. زرار البحث في الناف بار: يفتح ويقفل شريط البحث ويركز فيه
+  const searchDropdownBar = document.getElementById("searchDropdownBar");
+  const searchInput = document.getElementById("searchInput");
+  const closeSearchBtn = document.getElementById("closeSearchBtn");
+
+  if (navSearchBtn && searchDropdownBar) {
+    navSearchBtn.addEventListener("click", () => {
+      searchDropdownBar.classList.toggle("active");
+      if (searchDropdownBar.classList.contains("active")) {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+        setTimeout(() => searchInput && searchInput.focus(), 250);
+      }
+    });
+  }
+
+  // قفل البحث ومسح النص
+  if (closeSearchBtn && searchDropdownBar) {
+    closeSearchBtn.addEventListener("click", () => {
+      searchDropdownBar.classList.remove("active");
+      if (searchInput) {
+        searchInput.value = "";
+        if (typeof filterWorkers === "function") filterWorkers();
+      }
+    });
+  }
+
+  // الفلترة اللحظية أثناء الكتابة
+  if (searchInput) {
+    searchInput.addEventListener("input", () => {
+      if (typeof filterWorkers === "function") {
+        filterWorkers();
+      }
+    });
+  }
+
+  // 2. زرار المشاركة: يشارك رابط عزوتنا مع الجيران
+  if (navShareBtn) {
+    navShareBtn.addEventListener("click", async () => {
+      if (navigator.share) {
+        try {
+          await navigator.share({
+            title: "منصة عَزْوَتْنَا",
+            text: "دليل خدمات وأهالي التجمع الثالث - تواصل مع أمهر الحرفيين مباشرة بدون وسيط!",
+            url: window.location.href,
+          });
+        } catch (err) {
+          console.log("تم إلغاء المشاركة");
+        }
+      } else {
+        navigator.clipboard.writeText(window.location.href);
+        alert("تم نسخ رابط المنصة بنجاح!");
+      }
+    });
+  }
+
+  // 3. زرار الانضمام: الذهاب لصفحة تسجيل الحرفي
+  if (navJoinBtn) {
+    navJoinBtn.addEventListener("click", () => {
+      window.location.href = "register.html";
+    });
+  }
+
+  // 4. فتح بوب-أب الحساب
+  if (navProfileBtn && profileModal) {
+    navProfileBtn.addEventListener("click", () => {
+      // استرجاع البيانات المحفوظة محلياً لو موجودة
+      if (userPhoneInput) userPhoneInput.value = localStorage.getItem("ezwetna_user_phone") || "";
+      if (userAddressInput) userAddressInput.value = localStorage.getItem("ezwetna_user_address") || "";
+      
+      profileModal.classList.add("active");
+    });
+  }
+
+  // قفل البوب-أب
+  if (closeProfileModal && profileModal) {
+    closeProfileModal.addEventListener("click", () => {
+      profileModal.classList.remove("active");
+    });
+  }
+
+  // قفل البوب-أب لو داس في المساحة الفاضية برة
+  if (profileModal) {
+    profileModal.addEventListener("click", (e) => {
+      if (e.target === profileModal) {
+        profileModal.classList.remove("active");
+      }
+    });
+  }
+
+  // حفظ بيانات المستخدم السريعة
+  if (saveProfileBtn) {
+    saveProfileBtn.addEventListener("click", () => {
+      if (userPhoneInput) localStorage.setItem("ezwetna_user_phone", userPhoneInput.value.trim());
+      if (userAddressInput) localStorage.setItem("ezwetna_user_address", userAddressInput.value.trim());
+      alert("تم حفظ بياناتك بنجاح لتسهيل طلب الخدمات!");
+      profileModal.classList.remove("active");
+    });
+  }
+
+  // تسجيل الخروج
+  if (logoutBtn) {
+    logoutBtn.addEventListener("click", async () => {
+      localStorage.removeItem("ezwetna_user_phone");
+      localStorage.removeItem("ezwetna_user_address");
+      alert("تم تسجيل الخروج بنجاح.");
+      window.location.reload();
+    });
+  }
+});
+
+// ==========================================
+// تحديث صورة "حسابي" في النافيجيشن تلقائياً
+// ==========================================
+const navAvatar = document.getElementById('navUserAvatar');
+const navAvatarContainer = document.getElementById('navAvatarContainer'); 
+
+if (navAvatar && navAvatarContainer) {
+  onAuthStateChanged(auth, (user) => {
+    if (user && user.photoURL) {
+      // المستخدم مسجل: حط صورة جوجل الحقيقية ونور البوردر
+      navAvatar.src = user.photoURL;
+      navAvatarContainer.style.border = "2px solid #10b981";
+    } else {
+      // مش مسجل أو عمل تسجيل خروج: رجع أيقونة المستخدم الرمادية
+      navAvatar.src = "https://cdn-icons-png.flaticon.com/512/149/149071.png";
+      navAvatarContainer.style.border = "2px solid transparent";
+    }
+  });
+}

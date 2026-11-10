@@ -1,6 +1,6 @@
 <!-- 
   منصة عَزْوَتْنَا - دليل خدمات وأهالي التجمع الثالث
-  جميع الحقوق البرمجية والفكرية محفوظة لـ: م. تغريد حمدي (Taghreed Hamdy - CodeCraft Egypt) © 2026
+  تطوير: م. تغريد حمدي (CodeCraft Egypt) © 2026
 -->
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
@@ -9,86 +9,222 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="author" content="Taghreed Hamdy - CodeCraft Egypt">
   <title>عَزْوَتْنَا | دليل خدمات وأهالي التجمع</title>
-  
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css?v=1.4">
   <link rel="manifest" href="manifest.json">
 </head>
 <body>
 
-  <!-- الهيدر البترولي الفخم -->
   <header class="app-header">
     <div class="header-container">
-      
-      <!-- اللوجو والعنوان -->
       <a href="index.html" class="brand-section">
-        <img src="icons/21762905-9471-44f1-96cc-d8d576c02f75.jpg" alt="لوجو عزوتنا" class="brand-logo">
+        <img src="icons/logo.png.png" alt="لوجو عزوتنا" class="brand-logo">
         <div>
           <h1 class="brand-title">عَزْوَتْنَا</h1>
           <span class="brand-sub">دليل خدمات الحي</span>
         </div>
       </a>
-
-      <!-- البحث وزرار الانضمام وزرار المشاركة -->
-      <div class="top-controls">
-        <div class="compact-search">
-          <i class="fa-solid fa-magnifying-glass"></i>
-          <input type="text" id="searchInput" placeholder="ابحث باسم، مهنة، دكتور، أو منطقة...">
-        </div>
-        <a href="register.html" class="join-btn">
-          <i class="fa-solid fa-plus-circle"></i> انضم لخدمات الحي
-        </a>
-        <button type="button" id="shareAppBtn" class="share-header-btn" title="شارك الدليل مع جيرانك">
-          <i class="fa-solid fa-share-nodes"></i>
+      
+      <!-- الهيدر النظيف بدون تكرار -->
+       <!-- منطقة أزرار الهيدر الخفيفة -->
+      <div class="header-actions" style="display: flex; align-items: center; gap: 8px;">
+        <!-- زرار التثبيت فقط (مخفي افتراضياً لحد ما المتصفح يجهزه) -->
+        <button id="installAppBtn" style="display: none; background: #FFD166; color: #073B4C; border: none; padding: 6px 12px; border-radius: 20px; font-weight: bold; cursor: pointer; font-size: 0.85rem;">
+          تثبيت التطبيق 📲
         </button>
       </div>
+        </div>
+    
+    <div class="disclaimer-banner">
+      <i class="fa-solid fa-shield-cat" style="margin-left: 4px;"></i>
+      <strong>تنويه هام:</strong>           منصة "عَزْوَتْنَا" هي دليل وسيط رقمي حر يهدف فقط لتسهيل التواصل والتعارف بين أهالي الحي ومقدمي الخدمات دون أدنى مسؤولية فنية أو قانونية.
 
+    <!-- شريط التنويه الهام -->
+
+      <!-- شريط البحث المنزلق (تحت التنويه مباشرة ومستقل بذاته) -->
+      <div id="searchDropdownBar" class="search-dropdown-bar">
+        <div class="search-input-box">
+          <i class="fa-solid fa-magnifying-glass" style="color: #64748b; margin-left: 6px;"></i>
+          <input type="search" id="searchInput" placeholder="ابحث باسم الحرفي، المهنة، أو المنطقة..." autocomplete="off">
+        </div>
+        <button type="button" id="closeSearchBtn" class="search-close-btn" title="إغلاق البحث">✕</button>
     </div>
   </header>
 
-  <!-- شريط التنويه الملفت في أعلى الصفحة مباشرة -->
-  <div class="disclaimer-banner">
-    <i class="fa-solid fa-shield-cat" style="margin-left: 4px;"></i>
-    <strong>تنويه هام لأهالي الحي:</strong> 
-    منصة "عَزْوَتْنَا" دليل وسيط حر لتسهيل التواصل المباشر بين الجيران ومقدمي الخدمات. نحن لا نتبع أي جهة أو نضمن أي فني، والتقييمات ملك وتجارب أصحابها فقط.
-  </div>
-
   <main>
-    <!-- شريط الأقسام السريع -->
     <div class="categories-bar-wrapper" id="categoriesBar">
       <button class="cat-pill active" data-cat="all">الكل</button>
     </div>
-
-    <!-- شبكة عرض مقدمي الخدمات -->
     <div id="workersList" class="providers-grid">
-      <div style="grid-column: 1/-1; text-align: center; padding: 40px; color: #64748b;">
-        <i class="fa-solid fa-spinner fa-spin" style="font-size: 1.5rem; color: var(--primary);"></i>
-        <p style="margin-top: 8px;">جارٍ تحميل دليل الخدمات من السحابة...</p>
+      <div style="text-align: center; padding: 40px; color: #64748b; grid-column: 1/-1;">
+        جارٍ تحميل الدليل...
       </div>
     </div>
   </main>
 
-  <!-- الفوتر الرسمي الموثق بحقوق الملكية -->
   <footer class="official-footer">
-    <div class="footer-share-box">
-      <p>عجبك الدليل؟ فيد جيرانك في التجمع وانشره في جروب العمارة أو الحي!</p>
-      <button type="button" id="footerShareBtn" class="whatsapp-share-btn">
-        <i class="fa-brands fa-whatsapp"></i> شارك الدليل في جروب الحي 📲
-      </button>
-    </div>
-    <hr class="footer-divider">
-    <p class="copyright-title">
-      منصة عَزْوَتْنَا &copy; 2026 — دليل أهالي وخدمات التجمع الثالث المستقل
-    </p>
+    <p class="copyright-title">منصة عَزْوَتْنَا &copy; 2026 — دليل أهالي التجمع الثالث</p>
     <p class="copyright-owner">
-      جميع حقوق الملكية الفكرية والتطوير البرمجي محفوظة لـ <strong>Taghreed Hamdy (CodeCraft Egypt)</strong>
+      جميع الحقوق محفوظة لـ: 
+      <a href="https://www.facebook.com/profile.php?id=61596198263613" target="_blank" style="color:var(--accent); text-decoration:none; font-weight:700;">
+        <i class="fa-brands fa-facebook"></i> Taghreed Hamdy (Webify Solutions)
+      </a>
     </p>
   </footer>
 
-  <script type="module" src="app.js"></script>
+  <button type="button" id="openSugModalBtn" style="position: fixed; bottom: 20px; left: 20px; background-color: var(--accent); color: white; padding: 10px 18px; border-radius: 30px; box-shadow: 0 4px 12px rgba(0,0,0,0.25); z-index: 1000; font-family: 'Cairo', sans-serif; font-weight: bold; border: none; cursor: pointer; display: flex; align-items: center; gap: 6px; font-size: 0.88rem;">
+    💬 مقترح أو شكوى
+  </button>
+
+  <!-- نافذة تسجيل الدخول الإلزامية (بتظهر لو مش مسجل وداس تقييم أو شكوى) -->
+  <div id="loginModal" style="position: fixed; inset: 0; background: rgba(15,23,42,0.7); display: none; align-items: center; justify-content: center; z-index: 99999; padding: 16px;">
+    <div style="background: #fff; width: 100%; max-width: 380px; border-radius: 16px; padding: 30px 24px; text-align: center; position: relative;">
+      <button type="button" onclick="document.getElementById('loginModal').style.display='none'" style="position: absolute; top: 16px; left: 16px; background: none; border: none; font-size: 1.2rem; cursor: pointer; color: #64748b;"><i class="fa-solid fa-xmark"></i></button>
+      <img src="icons/logo.png.png" style="width: 60px; border-radius: 12px; margin-bottom: 12px;">
+      <h3 style="margin: 0 0 8px; color: var(--primary);">سجل دخولك كجار</h3>
+      <p style="margin: 0 0 20px; font-size: 0.85rem; color: var(--text-muted);">عشان نحافظ على مصداقية عزوتنا ونمنع التقييمات الوهمية، برجاء تسجيل الدخول بخطوة واحدة.</p>
+      <button id="googleLoginBtn" style="width: 100%; padding: 12px; background: #fff; color: #333; border: 1px solid #cbd5e1; border-radius: 10px; font-family: 'Cairo'; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.05);">
+        <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" style="width: 20px;">
+        المتابعة بحساب Google
+      </button>
+    </div>
+  </div>
+
+  <!-- نافذة الشكاوى والمقترحات -->
+  <div id="sugModal" style="position: fixed; inset: 0; background: rgba(15,23,42,0.6); display: none; align-items: center; justify-content: center; z-index: 9999; padding: 16px;">
+    <div style="background: #fff; width: 100%; max-width: 420px; border-radius: 16px; padding: 24px; position: relative;">
+      <button type="button" id="closeSugModalBtn" style="position: absolute; top: 16px; left: 16px; background: none; border: none; font-size: 1.2rem; cursor: pointer; color: #64748b;"><i class="fa-solid fa-xmark"></i></button>
+      <h3 style="margin: 0 0 8px; color: var(--primary);"><i class="fa-solid fa-lightbulb" style="color:var(--accent);"></i> رسالتك للإدارة</h3>
+      <p style="margin: 0 0 14px; font-size: 0.84rem; color: var(--text-muted);">رسالتك هتوصلنا باسمك المسجل للرد عليك.</p>
+      <form id="popupSugForm">
+        <!-- خانة الواتساب الجديدة -->
+        <div style="margin-bottom: 12px;">
+          <input type="tel" id="popupSugPhone" placeholder="رقم الواتساب للتواصل (اختياري)" dir="ltr" style="width: 100%; padding: 10px 12px; border: 1px solid #cbd5e1; border-radius: 8px; font-family: 'Cairo'; font-size: 0.85rem; outline: none; box-sizing: border-box; text-align: right;">
+        </div>
+        <textarea id="popupSugText" rows="3" placeholder="اكتب رسالتك أو شكوتك هنا..." required style="width: 100%; padding: 12px; border: 1px solid #cbd5e1; border-radius: 10px; font-family: 'Cairo'; outline: none; resize: none; box-sizing: border-box; margin-bottom: 14px;"></textarea>
+        <button type="submit" id="popupSugBtn" style="width: 100%; padding: 11px; background: var(--primary); color: #fff; border: none; border-radius: 10px; font-family: 'Cairo'; font-weight: 700; cursor: pointer;">إرسال للإدارة فوراً</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- نافذة التقييم -->
+  <div id="ratingModal" style="position: fixed; inset: 0; background: rgba(15,23,42,0.6); display: none; align-items: center; justify-content: center; z-index: 9999; padding: 16px;">
+    <div style="background: #fff; width: 100%; max-width: 420px; border-radius: 16px; padding: 24px; position: relative;">
+      <button type="button" onclick="document.getElementById('ratingModal').style.display='none'" style="position: absolute; top: 16px; left: 16px; background: none; border: none; font-size: 1.2rem; cursor: pointer; color: #64748b;"><i class="fa-solid fa-xmark"></i></button>
+      <h3 id="ratingWorkerTitle" style="margin: 0 0 6px; color: var(--primary); font-size: 1.1rem;">تقييم مقدم الخدمة</h3>
+      <p style="margin: 0 0 14px; font-size: 0.82rem; color: var(--text-muted);">هيتم نشر التقييم باسمك الحقيقي عشان نضمن المصداقية.</p>
+      <form id="submitRatingForm">
+        <input type="hidden" id="rateWorkerId">
+        <div style="margin-bottom: 12px;">
+          <label style="display:block; font-size:0.85rem; font-weight:700; margin-bottom:4px;">التقييم بالنجوم</label>
+          <select id="rStars" style="width:100%; padding:10px; border:1px solid #cbd5e1; border-radius:8px; font-family:'Cairo'; background:#fff;">
+            <option value="5">⭐⭐⭐⭐⭐ (ممتاز جداً - 5)</option>
+            <option value="4">⭐⭐⭐⭐ (جيد جداً - 4)</option>
+            <option value="3">⭐⭐⭐ (مرضي - 3)</option>
+            <option value="2">⭐⭐ (ضعيف - 2)</option>
+            <option value="1">⭐ (سيء - 1)</option>
+          </select>
+        </div>
+        <!-- خانة الواتساب الجديدة -->
+        <div style="margin-bottom: 12px;">
+          <input type="tel" id="rPhone" placeholder="رقم الواتساب للتواصل (اختياري)" dir="ltr" style="width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 8px; font-family: 'Cairo'; box-sizing: border-box; text-align: right;">
+        </div>
+        <div style="margin-bottom: 16px;">
+          <label style="display:block; font-size:0.85rem; font-weight:700; margin-bottom:4px;">رأيك أو تجربتك باختصار</label>
+          <textarea id="rComment" rows="2" placeholder="التزم بالميعاد وشغله أمين..." required style="width:100%; padding:10px; border:1px solid #cbd5e1; border-radius:8px; font-family:'Cairo'; resize:none; box-sizing:border-box;"></textarea>
+        </div>
+        <button type="submit" id="submitRateBtn" style="width:100%; padding:11px; background:var(--accent); color:#fff; border:none; border-radius:8px; font-weight:700; font-family:'Cairo'; cursor:pointer;">إرسال التقييم للمراجعة</button>
+      </form>
+    </div>
+  </div>
+  <!-- نافذة عرض آراء الجيران (Pop-up) -->
+  <div id="viewReviewsModal" style="position: fixed; inset: 0; background: rgba(15,23,42,0.7); display: none; align-items: center; justify-content: center; z-index: 99999; padding: 16px;">
+    <div style="background: #fff; width: 100%; max-width: 380px; border-radius: 16px; padding: 20px; position: relative; max-height: 80vh; display: flex; flex-direction: column;">
+      <button type="button" onclick="document.getElementById('viewReviewsModal').style.display='none'" style="position: absolute; top: 16px; left: 16px; background: none; border: none; font-size: 1.2rem; cursor: pointer; color: #64748b;"><i class="fa-solid fa-xmark"></i></button>
+      
+      <h3 id="viewReviewsTitle" style="margin: 0 0 16px; color: var(--primary); font-size: 1.1rem; padding-right: 10px;">
+        <i class="fa-solid fa-star" style="color:#FFD166;"></i> آراء الجيران
+      </h3>
+      
+      <!-- المكان اللي هنرسم فيه التقييمات -->
+      <div id="reviewsContainer" style="overflow-y: auto; flex: 1; padding-right: 5px;">
+        <div style="text-align: center; color: #64748b; padding: 20px;">جارٍ التحميل...</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- شريط التنقل السفلي للموبايل (Bottom Navigation) -->
+  <nav class="bottom-nav" id="bottomNav">
+    <button class="nav-item" id="navSearchBtn" aria-label="بحث">
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="11" cy="11" r="8"></circle>
+        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+      </svg>
+      <span>بحث</span>
+    </button>
+
+    <button class="nav-item" id="navShareBtn" aria-label="مشاركة">
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="18" cy="5" r="3"></circle>
+        <circle cx="6" cy="12" r="3"></circle>
+        <circle cx="18" cy="19" r="3"></circle>
+        <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
+        <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
+      </svg>
+      <span>مشاركة</span>
+    </button>
+
+    <button class="nav-item" id="navJoinBtn" aria-label="انضم كحرفي">
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+        <circle cx="8.5" cy="7" r="4"></circle>
+        <line x1="20" y1="8" x2="20" y2="14"></line>
+        <line x1="23" y1="11" x2="17" y2="11"></line>
+      </svg>
+      <span>انضمام</span>
+    </button>
+
+  <button class="nav-item profile-nav-btn" id="navProfileBtn" aria-label="حسابي">
+  <div id="navAvatarContainer" style="width: 32px; height: 32px; flex-shrink: 0; margin-bottom: 2px; border-radius: 50%; overflow: hidden; border: 2px solid transparent; background-color: #e2e8f0; display: flex; align-items: center; justify-content: center;">
+    <img id="navUserAvatar" src="https://cdn-icons-png.flaticon.com/512/149/149071.png" style="width: 100%; height: 100%; object-fit: cover;" referrerpolicy="no-referrer" alt="">
+  </div>
+  <span>حسابي</span>
+</button>
+  </nav>
+
+  <!-- بوب-أب بيانات المستخدم وتسجيل الخروج (Bottom Sheet Modal) -->
+  <div class="profile-modal-overlay" id="profileModalOverlay">
+    <div class="profile-modal-content">
+      <div class="modal-drag-handle"></div>
+      
+      <div class="modal-header">
+        <h3>بيانات التواصل السريع</h3>
+        <button class="modal-close-btn" id="closeProfileModal">&times;</button>
+      </div>
+
+      <div class="modal-body">
+        <p class="modal-hint">بياناتك بتتحفظ على جهازك لتسهيل إرسال تفاصيل طلبك للحرفيين مباشرة عبر واتساب.</p>
+        
+        <div class="input-group">
+          <label for="userSavedPhone">رقم هاتفك (واتساب):</label>
+          <input type="tel" id="userSavedPhone" placeholder="01xxxxxxxxx" dir="ltr">
+        </div>
+
+        <div class="input-group">
+          <label for="userSavedAddress">عنوانك في التجمع الثالث (المحلية / الحي):</label>
+          <input type="text" id="userSavedAddress" placeholder="مثال: المحلية الأولى - عمارة...">
+        </div>
+
+        <button class="btn-save-profile" id="saveProfileBtn">حفظ البيانات</button>
+        
+        <hr class="modal-divider">
+
+        <button class="btn-logout" id="logoutBtn">تسجيل الخروج</button>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="app.js?v=1.4"></script>
 </body>
-</html>س
+</html>
