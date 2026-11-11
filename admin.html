@@ -3,14 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>لوحة تحكم عزوتنا | الإدارة الكاملة</title>
+  <title>لوحة تحكم عزوتنا | الإدارة الشاملة</title>
   
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   
-  <link rel="stylesheet" href="style.css?v=1.4">
+  <link rel="stylesheet" href="style.css?v=1.6">
   <style>
     .auth-overlay {
       position: fixed; inset: 0; background: #0f172a; display: flex; 
@@ -20,22 +20,26 @@
       background: #ffffff; padding: 32px 24px; border-radius: 16px; 
       width: 90%; max-width: 400px; text-align: center; box-shadow: 0 10px 25px rgba(0,0,0,0.2);
     }
-    .auth-card input {
-      width: 100%; padding: 12px; margin: 16px 0; border: 1px solid #cbd5e1; 
-      border-radius: 10px; font-family: 'Cairo'; font-size: 1rem; text-align: center; box-sizing: border-box;
-    }
     .auth-card button {
       width: 100%; padding: 12px; background: var(--primary); color: #fff; border: none; 
       border-radius: 10px; font-weight: 700; cursor: pointer; font-family: 'Cairo';
     }
     .tabs-nav {
-      display: flex; gap: 10px; margin-bottom: 20px; border-bottom: 2px solid #e2e8f0; padding-bottom: 10px; overflow-x: auto;
+      display: flex; gap: 8px; margin-bottom: 20px; border-bottom: 2px solid #e2e8f0; padding-bottom: 10px; overflow-x: auto;
     }
     .tab-btn {
-      background: none; border: none; padding: 10px 16px; font-family: 'Cairo'; font-size: 0.92rem;
-      font-weight: 700; color: #64748b; cursor: pointer; border-radius: 8px; transition: 0.2s; white-space: nowrap;
+      background: #f8fafc; border: 1px solid #e2e8f0; padding: 9px 15px; font-family: 'Cairo'; font-size: 0.88rem;
+      font-weight: 700; color: #475569; cursor: pointer; border-radius: 10px; transition: 0.2s; white-space: nowrap;
+      display: inline-flex; align-items: center; gap: 6px;
     }
-    .tab-btn.active { background: var(--primary); color: #fff; }
+    .tab-btn:hover { background: #f1f5f9; color: var(--primary); }
+    .tab-btn.active { background: var(--primary); color: #fff; border-color: var(--primary); }
+    .tab-btn .badge-counter {
+      background: rgba(0,0,0,0.08); padding: 2px 7px; border-radius: 12px; font-size: 0.75rem;
+    }
+    .tab-btn.active .badge-counter {
+      background: rgba(255,255,255,0.25); color: #fff;
+    }
     .tab-content { display: none; }
     .tab-content.active { display: block; }
     .card-box {
@@ -44,73 +48,47 @@
     .form-grid {
       display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; margin-bottom: 14px;
     }
-    .form-grid input, .form-grid select {
+    .form-grid input, .form-grid select, .form-grid textarea {
       width: 100%; padding: 10px 12px; border: 1px solid #cbd5e1; border-radius: 8px; font-family: 'Cairo'; box-sizing: border-box;
     }
     .table-container { overflow-x: auto; }
     table { width: 100%; border-collapse: collapse; text-align: right; margin-top: 10px; }
     th, td { padding: 12px 14px; border-bottom: 1px solid #f1f5f9; font-size: 0.9rem; }
     th { background: #f8fafc; color: var(--primary); font-weight: 700; }
-    .btn-approve { background: #10b981; color: #fff; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-family: 'Cairo'; font-weight: 600; }
-    .btn-reject { background: #ef4444; color: #fff; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-family: 'Cairo'; font-weight: 600; }
+    .btn-approve { background: #10b981; color: #fff; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-family: 'Cairo'; font-weight: 600; font-size: 0.8rem; }
+    .btn-reject { background: #ef4444; color: #fff; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-family: 'Cairo'; font-weight: 600; font-size: 0.8rem; }
+    .btn-edit { background: #0284c7; color: #fff; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-family: 'Cairo'; font-weight: 600; font-size: 0.8rem; }
     .badge-job { background: #EAF4F4; color: var(--primary); padding: 3px 10px; border-radius: 20px; font-weight: 700; font-size: 0.8rem; }
-  
-    /* ========================================= */
-    /* تحسينات الموبايل للوحة التحكم (Responsive) */
-    /* ========================================= */
+    
+    /* مودال التعديل */
+    .modal-overlay {
+      position: fixed; inset: 0; background: rgba(15, 23, 42, 0.6); z-index: 999;
+      display: none; align-items: center; justify-content: center; backdrop-filter: blur(3px);
+    }
+    .modal-box {
+      background: #fff; width: 92%; max-width: 600px; max-height: 90vh; overflow-y: auto;
+      border-radius: 16px; padding: 24px; box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    }
+
     @media (max-width: 768px) {
-      /* 1. ترتيب الهيدر ليكون فوق بعضه */
-      .app-header .header-container {
-        flex-direction: column;
-        text-align: center;
-        gap: 12px;
-        padding: 10px;
-      }
-      .app-header .brand {
-        justify-content: center;
-        flex-direction: column;
-      }
+      .app-header .header-container { flex-direction: column; text-align: center; gap: 12px; padding: 10px; }
+      .app-header .brand { justify-content: center; flex-direction: column; }
       .brand-logo { margin: 0 0 10px 0; }
       .back-link { width: 100%; justify-content: center; margin-top: 5px; }
-
-      /* 2. التبويبات قابلة للسحب العرضي (Scrollable) */
-      .tabs-nav {
-        flex-wrap: nowrap;
-        overflow-x: auto;
-        -webkit-overflow-scrolling: touch;
-        padding-bottom: 8px;
-        justify-content: flex-start;
-      }
-      /* تصغير شكل شريط التمرير للتبويبات */
+      .tabs-nav { flex-wrap: nowrap; overflow-x: auto; -webkit-overflow-scrolling: touch; padding-bottom: 8px; justify-content: flex-start; }
       .tabs-nav::-webkit-scrollbar { height: 4px; }
       .tabs-nav::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
-      .tab-btn { font-size: 0.85rem; padding: 8px 12px; }
-
-      /* 3. ترتيب حقول التسجيل فوق بعضها بدلاً من جنب بعض */
-      .form-grid {
-        grid-template-columns: 1fr;
-      }
+      .tab-btn { font-size: 0.82rem; padding: 7px 11px; }
+      .form-grid { grid-template-columns: 1fr; }
       .card-box { padding: 15px; }
-
-      /* 4. حماية الجداول من تخريب عرض الشاشة */
-      .table-container {
-        width: 100%;
-        overflow-x: auto;
-        display: block;
-        border: 1px solid #f1f5f9;
-        border-radius: 8px;
-      }
-      th, td {
-        white-space: nowrap; /* يمنع الكلام من إنه يتكسر ويبوظ شكل الجدول */
-        font-size: 0.85rem;
-        padding: 10px;
-      }
+      .table-container { width: 100%; overflow-x: auto; display: block; border: 1px solid #f1f5f9; border-radius: 8px; }
+      th, td { white-space: nowrap; font-size: 0.85rem; padding: 10px; }
     }
   </style>
 </head>
 <body>
 
- <!-- شاشة الدخول الآمنة بحساب جوجل -->
+  <!-- شاشة الدخول الآمنة بحساب جوجل -->
   <div id="authOverlay" class="auth-overlay">
     <div class="auth-card">
       <div style="font-size: 2.5rem; color: var(--primary); margin-bottom: 8px;">
@@ -119,15 +97,9 @@
       <h3 style="margin: 0 0 8px; color: #1e293b;">إدارة منصة عزوتنا</h3>
       <p style="margin: 0 0 20px; color: #64748b; font-size: 0.85rem;">يُرجى تسجيل الدخول بحساب الإدارة المعتمد</p>
       
-      <!-- زرار الدخول بجوجل -->
       <button id="googleLoginBtn" type="button" style="display:flex; align-items:center; justify-content:center; gap:10px; background:#fff; color:#333; border:1px solid #cbd5e1; padding:12px; border-radius:10px; font-family:'Cairo'; font-weight:700; cursor:pointer; width:100%;">
         <img src="https://img.icons8.com/color/24/000000/google-logo.png" alt="Google">
         الدخول بحساب Google
-      </button>
-      
-      <!-- زرار تسجيل الخروج (هيظهر للإدمن فقط من جوة اللوحة بس هنجهزه هنا) -->
-      <button id="logoutBtn" type="button" style="display:none; background:#ef4444; color:#fff; border:none; padding:10px; border-radius:8px; font-weight:700; margin-top:10px; cursor:pointer;">
-        تسجيل الخروج
       </button>
 
       <p id="errorMsg" style="color: #ef4444; font-size: 0.8rem; display: none; margin-top: 10px; font-weight:bold;"></p>
@@ -154,24 +126,49 @@
     <!-- التبويبات -->
     <div class="tabs-nav">
       <button class="tab-btn active" id="btnTabWorkers">
-        <i class="fa-solid fa-user-plus"></i> الحرفيون (<span id="workersCount">0</span>)
+        <i class="fa-solid fa-users"></i> الحرفيون المعتمدون <span class="badge-counter" id="workersCount">0</span>
       </button>
-      <button class="tab-btn" id="btnTabCategories">
-        <i class="fa-solid fa-shapes"></i> إدارة الأقسام
+      <button class="tab-btn" id="btnTabAddWorker">
+        <i class="fa-solid fa-user-plus"></i> إضافة حرفي
       </button>
       <button class="tab-btn" id="btnTabPending">
-        <i class="fa-solid fa-clock-rotate-left"></i> طلبات المراجعة (<span id="pendingCount">0</span>)
+        <i class="fa-solid fa-clock-rotate-left"></i> طلبات المراجعة <span class="badge-counter" id="pendingCount">0</span>
       </button>
       <button class="tab-btn" id="btnTabRatings">
-        <i class="fa-solid fa-star"></i> تقييمات الجيران (<span id="ratingsCount">0</span>)
+        <i class="fa-solid fa-star"></i> التقييمات <span class="badge-counter" id="ratingsCount">0</span>
       </button>
       <button class="tab-btn" id="btnTabSuggestions">
-        <i class="fa-solid fa-lightbulb"></i> المقترحات والشكاوى (<span id="sugCount">0</span>)
+        <i class="fa-solid fa-comments"></i> المقترحات <span class="badge-counter" id="sugCount">0</span>
+      </button>
+      <button class="tab-btn" id="btnTabCategories">
+        <i class="fa-solid fa-shapes"></i> الأقسام
       </button>
     </div>
 
-    <!-- تبويب 1: إضافة حرفي -->
+    <!-- تبويب 1: الحرفيون المعتمدون -->
     <div id="workersTab" class="tab-content active">
+      <div class="card-box">
+        <h3 style="margin-top:0; color:var(--primary);"><i class="fa-solid fa-list-check"></i> الحرفيون المعتمدون في المنصة</h3>
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>الاسم</th>
+                <th>التخصص</th>
+                <th>المنطقة</th>
+                <th>الهاتف</th>
+                <th>الإحصائيات والتقرير</th>
+                <th style="text-align: center;">إجراءات</th>
+              </tr>
+            </thead>
+            <tbody id="approvedWorkersBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- تبويب 2: إضافة حرفي جديد -->
+    <div id="addWorkerTab" class="tab-content">
       <div class="card-box">
         <h3 style="margin-top:0; color:var(--primary);"><i class="fa-solid fa-plus-circle"></i> إضافة حرفي أو مقدم خدمة جديد</h3>
         <form id="addWorkerForm">
@@ -185,8 +182,15 @@
             <input type="text" id="mJob" placeholder="المسمى الوظيفي (مثلاً: سباك صحي) *" required>
             <input type="text" id="mExp" placeholder="سنين الخبرة (مثلاً: 10 سنين)">
           </div>
-          <input type="text" id="mBio" placeholder="نبذة مختصرة تظهر في الكارت" style="width:100%; padding:10px 12px; border:1px solid #cbd5e1; border-radius:8px; font-family:'Cairo'; box-sizing:border-box; margin-bottom:14px;">
+          <input type="text" id="mBio" placeholder="نبذة مختصرة تظهر في الكارت" style="width:100%; padding:10px 12px; border:1px solid #cbd5e1; border-radius:8px; font-family:'Cairo'; box-sizing:border-box; margin-bottom:12px;">
           
+          <div style="margin-bottom: 12px; background: #fef2f2; border: 1px solid #fecaca; padding: 10px 12px; border-radius: 10px; display: flex; align-items: center; gap: 8px;">
+            <input type="checkbox" id="mEmergency" style="width: 18px; height: 18px; accent-color: #dc2626; cursor: pointer;">
+            <label for="mEmergency" style="font-size: 0.85rem; font-weight: 700; color: #b91c1c; cursor: pointer; margin: 0;">
+              🚨 متاح طوارئ 24 ساعة
+            </label>
+          </div>
+
           <div style="margin-bottom:14px; background:#f8fafc; border:1px dashed #cbd5e1; border-radius:10px; padding:12px; text-align:center;">
             <input type="file" id="mPhoto" accept="image/*" style="display:none;">
             <button type="button" onclick="document.getElementById('mPhoto').click()" style="background:#fff; border:1px solid #cbd5e1; padding:7px 14px; border-radius:8px; font-family:'Cairo'; font-weight:700; cursor:pointer; font-size:0.84rem; color:var(--primary);">
@@ -203,58 +207,6 @@
           </button>
         </form>
       </div>
-
-      <div class="card-box">
-        <h3 style="margin-top:0; color:var(--primary);"><i class="fa-solid fa-list-check"></i> الحرفيون المعتمدون في المنصة</h3>
-        <div class="table-container">
-          <table>
-            <thead>
-              <tr>
-                <th>الاسم</th>
-                <th>التخصص</th>
-                <th>المنطقة</th>
-                <th>الهاتف</th>
-                <th style="text-align: center;">حذف</th>
-              </tr>
-            </thead>
-            <tbody id="approvedWorkersBody"></tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-
-    <!-- تبويب 2: الأقسام -->
-    <div id="categoriesTab" class="tab-content">
-      <div class="card-box">
-        <h3 style="margin-top:0; color:var(--primary);"><i class="fa-solid fa-folder-plus"></i> إضافة قسم جديد</h3>
-        <form id="addCategoryForm">
-          <div class="form-grid">
-            <input type="text" id="cId" placeholder="المعرف بالإنجليزي (مثلاً: doctors)" required>
-            <input type="text" id="cName" placeholder="اسم القسم بالعربي (مثلاً: أطباء وعيادات)" required>
-            <input type="text" id="cIcon" placeholder="الأيقونة أو الإيموجي (مثلاً: 🩺)" required>
-          </div>
-          <button type="submit" style="background:var(--primary); color:#fff; border:none; padding:10px 22px; border-radius:8px; font-weight:700; font-family:'Cairo'; cursor:pointer;">
-            إضافة القسم للسحابة
-          </button>
-        </form>
-      </div>
-
-      <div class="card-box">
-        <h3 style="margin-top:0; color:var(--primary);">الأقسام المتاحة حالياً</h3>
-        <div class="table-container">
-          <table>
-            <thead>
-              <tr>
-                <th>الأيقونة</th>
-                <th>اسم القسم</th>
-                <th>المعرف (ID)</th>
-                <th style="text-align: center;">إجراء</th>
-              </tr>
-            </thead>
-            <tbody id="categoriesTableBody"></tbody>
-          </table>
-        </div>
-      </div>
     </div>
 
     <!-- تبويب 3: طلبات الانتظار -->
@@ -266,7 +218,7 @@
             <thead>
               <tr>
                 <th>الاسم</th>
-                <th>القسم</th>
+                <th>القسم / المهنة</th>
                 <th>المنطقة</th>
                 <th>النبذة</th>
                 <th>الهاتف</th>
@@ -324,13 +276,102 @@
       </div>
     </div>
 
+    <!-- تبويب 6: إدارة الأقسام -->
+    <div id="categoriesTab" class="tab-content">
+      <div class="card-box">
+        <h3 style="margin-top:0; color:var(--primary);"><i class="fa-solid fa-folder-plus"></i> إضافة قسم جديد</h3>
+        <form id="addCategoryForm">
+          <div class="form-grid">
+            <input type="text" id="cId" placeholder="المعرف بالإنجليزي (مثلاً: doctors)" required>
+            <input type="text" id="cName" placeholder="اسم القسم بالعربي (مثلاً: أطباء وعيادات)" required>
+            <input type="text" id="cIcon" placeholder="الأيقونة أو الإيموجي (مثلاً: 🩺)" required>
+          </div>
+          <button type="submit" style="background:var(--primary); color:#fff; border:none; padding:10px 22px; border-radius:8px; font-weight:700; font-family:'Cairo'; cursor:pointer;">
+            إضافة القسم للسحابة
+          </button>
+        </form>
+      </div>
+
+      <div class="card-box">
+        <h3 style="margin-top:0; color:var(--primary);">الأقسام المتاحة حالياً</h3>
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>الأيقونة</th>
+                <th>اسم القسم</th>
+                <th>المعرف (ID)</th>
+                <th style="text-align: center;">إجراء</th>
+              </tr>
+            </thead>
+            <tbody id="categoriesTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
   </main>
+
+  <!-- نافذة (مودال) تعديل بيانات الحرفي -->
+  <div id="editWorkerModal" class="modal-overlay">
+    <div class="modal-box">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+        <h3 style="margin:0; color:var(--primary);"><i class="fa-solid fa-pen-to-square"></i> تعديل بيانات الحرفي</h3>
+        <button type="button" onclick="closeEditModal()" style="background:none; border:none; font-size:1.4rem; cursor:pointer; color:#64748b;">&times;</button>
+      </div>
+      <form id="editWorkerForm">
+        <input type="hidden" id="editWorkerId">
+        <div class="form-grid">
+          <div>
+            <label style="font-size:0.8rem; font-weight:700; color:#475569;">الاسم / اسم المحل</label>
+            <input type="text" id="editName" required>
+          </div>
+          <div>
+            <label style="font-size:0.8rem; font-weight:700; color:#475569;">القسم</label>
+            <select id="editCategory" required></select>
+          </div>
+          <div>
+            <label style="font-size:0.8rem; font-weight:700; color:#475569;">رقم الهاتف</label>
+            <input type="tel" id="editPhone" required dir="ltr">
+          </div>
+          <div>
+            <label style="font-size:0.8rem; font-weight:700; color:#475569;">المنطقة / المحلية</label>
+            <input type="text" id="editArea" required>
+          </div>
+          <div>
+            <label style="font-size:0.8rem; font-weight:700; color:#475569;">المسمى الوظيفي</label>
+            <input type="text" id="editJob" required>
+          </div>
+          <div>
+            <label style="font-size:0.8rem; font-weight:700; color:#475569;">سنوات الخبرة</label>
+            <input type="text" id="editExp">
+          </div>
+        </div>
+        <div style="margin-bottom:12px;">
+          <label style="font-size:0.8rem; font-weight:700; color:#475569;">نبذة مختصرة</label>
+          <input type="text" id="editBio" style="width:100%; padding:10px 12px; border:1px solid #cbd5e1; border-radius:8px; font-family:'Cairo'; box-sizing:border-box;">
+        </div>
+        <div style="margin-bottom: 14px; background: #fef2f2; border: 1px solid #fecaca; padding: 10px 12px; border-radius: 10px; display: flex; align-items: center; gap: 8px;">
+          <input type="checkbox" id="editEmergency" style="width: 18px; height: 18px; accent-color: #dc2626; cursor: pointer;">
+          <label for="editEmergency" style="font-size: 0.85rem; font-weight: 700; color: #b91c1c; cursor: pointer; margin: 0;">
+            🚨 متاح طوارئ 24 ساعة
+          </label>
+        </div>
+        <div style="display:flex; gap:10px; justify-content:flex-end;">
+          <button type="button" onclick="closeEditModal()" style="background:#e2e8f0; color:#334155; border:none; padding:9px 18px; border-radius:8px; font-weight:700; font-family:'Cairo'; cursor:pointer;">إلغاء</button>
+          <button type="submit" style="background:var(--primary); color:#fff; border:none; padding:9px 22px; border-radius:8px; font-weight:700; font-family:'Cairo'; cursor:pointer;">حفظ التعديلات</button>
+        </div>
+      </form>
+    </div>
+  </div>
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { 
       getFirestore, collection, addDoc, getDocs, getDoc, doc, updateDoc, deleteDoc, query, where, orderBy, serverTimestamp 
     } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+    import { getAuth, signInWithPopup, GoogleAuthProvider, signOut, onAuthStateChanged } 
+      from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
     
     const firebaseConfig = {
       apiKey: "AIzaSyB76NcdVQTSUIYxeBsXh9ojeTMWg9L5mt8",
@@ -344,32 +385,22 @@
 
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
-
-   import { getAuth, signInWithPopup, GoogleAuthProvider, signOut, onAuthStateChanged } 
-    from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-
     const auth = getAuth(app);
     const provider = new GoogleAuthProvider();
     
-    // إيميل الإدارة الوحيد المسموح له بالدخول
     const ADMIN_EMAIL = "ghamdy82@gmail.com"; 
     
     const authOverlay = document.getElementById('authOverlay');
     const googleLoginBtn = document.getElementById('googleLoginBtn');
     const errorMsg = document.getElementById('errorMsg');
-    const logoutBtn = document.getElementById('logoutBtn');
+    let adminBase64Photo = "";
 
-    // 1. مراقبة حالة الدخول (لو الإدمن مسجل دخول قبل كدة، يفتح اللوحة علطول)
     onAuthStateChanged(auth, (user) => {
       if (user) {
         if (user.email === ADMIN_EMAIL) {
-          // السماح بالدخول
           authOverlay.style.display = 'none';
           loadAllData();
-          
-          // إظهار زرار الخروج جوة الهيدر (هتضيفيه بعدين في الـ HTML أو نسيبه مخفي دلوقتي)
         } else {
-          // لو إيميل غريب، أخرجه فوراً
           signOut(auth);
           authOverlay.style.display = 'flex';
           errorMsg.textContent = "عفواً، هذا الحساب لا يملك صلاحية الإدارة!";
@@ -380,13 +411,11 @@
       }
     });
 
-    // 2. تفعيل زرار الدخول بجوجل
     googleLoginBtn.addEventListener('click', async () => {
       errorMsg.style.display = 'none';
       try {
         const result = await signInWithPopup(auth, provider);
         const user = result.user;
-        
         if (user.email !== ADMIN_EMAIL) {
           await signOut(auth);
           errorMsg.textContent = "عفواً، أنت لست مسؤولاً في المنصة!";
@@ -399,23 +428,20 @@
       }
     });
 
-   
-      document.getElementById('authOverlay').style.display = 'none';
-      loadAllData();
-    
-
     function switchTab(tabId, btn) {
       document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
       document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-      document.getElementById(tabId).classList.add('active');
-      btn.classList.add('active');
+      const target = document.getElementById(tabId);
+      if (target) target.classList.add('active');
+      if (btn) btn.classList.add('active');
     }
-
+    
     document.getElementById('btnTabWorkers').addEventListener('click', function() { switchTab('workersTab', this); loadWorkers(); });
-    document.getElementById('btnTabCategories').addEventListener('click', function() { switchTab('categoriesTab', this); loadCategories(); });
+    document.getElementById('btnTabAddWorker').addEventListener('click', function() { switchTab('addWorkerTab', this); });
     document.getElementById('btnTabPending').addEventListener('click', function() { switchTab('pendingTab', this); loadPending(); });
     document.getElementById('btnTabRatings').addEventListener('click', function() { switchTab('ratingsTab', this); loadPendingRatings(); });
     document.getElementById('btnTabSuggestions').addEventListener('click', function() { switchTab('suggestionsTab', this); loadSuggestions(); });
+    document.getElementById('btnTabCategories').addEventListener('click', function() { switchTab('categoriesTab', this); loadCategories(); });
 
     document.getElementById('mPhoto').addEventListener('change', function(e) {
       const file = e.target.files[0];
@@ -452,16 +478,22 @@
 
     async function loadCategories() {
       const catSelect = document.getElementById('mCategory');
+      const editCatSelect = document.getElementById('editCategory');
       const catTable = document.getElementById('categoriesTableBody');
       catSelect.innerHTML = '<option value="" disabled selected>اختار القسم *</option>';
+      if (editCatSelect) editCatSelect.innerHTML = '';
       catTable.innerHTML = '';
+      
       const querySnapshot = await getDocs(collection(db, "categories"));
       querySnapshot.forEach((docSnap) => {
         const cat = docSnap.data();
-        catSelect.innerHTML += `<option value="${cat.id}" data-icon="${cat.icon || '🛠️'}">${cat.name} ${cat.icon}</option>`;
+        const opt = `<option value="${cat.id}" data-icon="${cat.icon || '🛠️'}">${cat.name} ${cat.icon || ''}</option>`;
+        catSelect.innerHTML += opt;
+        if (editCatSelect) editCatSelect.innerHTML += opt;
+
         const tr = document.createElement('tr');
         tr.innerHTML = `
-          <td style="font-size:1.3rem;">${cat.icon}</td>
+          <td style="font-size:1.3rem;">${cat.icon || '🛠️'}</td>
           <td><strong>${cat.name}</strong></td>
           <td><code>${cat.id}</code></td>
           <td style="text-align:center;">
@@ -482,18 +514,132 @@
       querySnapshot.forEach((docSnap) => {
         const w = docSnap.data();
         const tr = document.createElement('tr');
+        const emgTag = w.isEmergency ? `<span style="background:#fef2f2; color:#dc2626; padding:2px 6px; border-radius:10px; font-size:0.7rem; font-weight:bold; margin-right:4px;">🚨 طوارئ</span>` : '';
         tr.innerHTML = `
           <td><strong>${w.name}</strong></td>
-          <td><span class="badge-job">${w.job}</span></td>
+          <td><span class="badge-job">${w.job}</span> ${emgTag}</td>
           <td>${w.area}</td>
           <td dir="ltr" style="text-align:right;">${w.phone}</td>
-          <td style="text-align:center;">
-            <button class="btn-reject" onclick="deleteWorker('${docSnap.id}')">حذف</button>
+          <td>
+            <div style="font-size: 0.85rem; font-weight: bold; margin-bottom: 4px; color: #334155;">
+              📞 ${w.callClicks || 0} | 💬 ${w.waClicks || 0}
+            </div>
+            <div style="display:flex; gap:4px; align-items:center;">
+              <button onclick="sendWorkerReport('${w.name}', '${w.phone}', ${w.callClicks || 0}, ${w.waClicks || 0})" 
+                      style="background: #25D366; color: white; border: none; padding: 4px 8px; border-radius: 6px; cursor: pointer; font-size: 0.74rem; font-weight: bold; display: inline-flex; align-items: center; gap: 4px;">
+                📲 إرسال التقرير
+              </button>
+              <button onclick="resetWorkerStats('${docSnap.id}', '${w.name}')" title="تصفير عداد هذا الشهر"
+                      style="background: #f1f5f9; color: #475569; border: 1px solid #cbd5e1; padding: 4px 7px; border-radius: 6px; cursor: pointer; font-size: 0.72rem; font-weight: bold;">
+                🔄 تصفير
+              </button>
+            </div>
+          </td>
+          <td style="text-align:center; white-space:nowrap;">
+            <button class="btn-edit" onclick="openEditWorker('${docSnap.id}')">✏️ تعديل</button>
+            <button class="btn-reject" onclick="deleteWorker('${docSnap.id}')" style="margin-right:4px;">حذف</button>
           </td>
         `;
         tbody.appendChild(tr);
       });
     }
+
+    // إرسال تقرير الواتساب
+    window.sendWorkerReport = function(name, phone, calls, wa) {
+      if (!phone) {
+        alert("لا يوجد رقم هاتف مسجل لهذا الحرفي");
+        return;
+      }
+      const cleanPhone = phone.replace(/[^0-9]/g, '');
+      const finalPhone = cleanPhone.startsWith('0') ? '2' + cleanPhone : (cleanPhone.startsWith('20') ? cleanPhone : '20' + cleanPhone);
+
+      const message = 
+`السلام عليكم يا أسطى ${name}،
+من إدارة منصة (عزوتنا - دليل خدمات الحي) حابين نطمن على شغلك 🌟
+
+خلال الفترة اللي فاتت، وفرت لك المنصة تفاعل مباشر من أهالي الحي:
+📞 مكالمات تليفون: ${calls}
+💬 استفسارات واتساب: ${wa}
+
+نتمنى لك دائماً كل التوفيق والرزق الواسع! 
+ولأن رأيك ودعمك يهمنا جداً لتطوير المنصة واستمرارها، يسعدنا تقييمك للمنصة وكتابة رأيك أو اقتراحك من هنا:
+https://azwetna.web.app/#feedback
+
+شكراً لوجودك معانا في عزوتنا 🤍`;
+
+      window.open(`https://wa.me/${finalPhone}?text=${encodeURIComponent(message)}`, '_blank');
+    };
+
+    // تصفير عداد المكالمات والواتساب للحرفي
+    window.resetWorkerStats = async function(id, name) {
+      if (confirm(`هل تريدين تصفير عداد المكالمات والواتساب لـ (${name}) لبدء حساب شهر جديد؟`)) {
+        try {
+          await updateDoc(doc(db, "workers", id), {
+            callClicks: 0,
+            waClicks: 0
+          });
+          loadWorkers();
+        } catch (err) {
+          alert("تعذر تصفير العداد: " + err.message);
+        }
+      }
+    };
+
+    window.openEditWorker = async function(id) {
+      try {
+        const docRef = doc(db, "workers", id);
+        const docSnap = await getDoc(docRef);
+        if (!docSnap.exists()) {
+          alert("لم يتم العثور على بيانات هذا الحرفي");
+          return;
+        }
+        const data = docSnap.data();
+        document.getElementById('editWorkerId').value = id;
+        document.getElementById('editName').value = data.name || '';
+        document.getElementById('editPhone').value = data.phone || '';
+        document.getElementById('editArea').value = data.area || '';
+        document.getElementById('editJob').value = data.job || '';
+        document.getElementById('editExp').value = data.experience || '';
+        document.getElementById('editBio').value = data.bio || '';
+        document.getElementById('editEmergency').checked = Boolean(data.isEmergency);
+        if (data.category) document.getElementById('editCategory').value = data.category;
+
+        document.getElementById('editWorkerModal').style.display = 'flex';
+      } catch (err) {
+        console.error("خطأ جلب بيانات الحرفي للتعديل:", err);
+        alert("تعذر فتح التعديل: " + err.message);
+      }
+    };
+
+    window.closeEditModal = function() {
+      document.getElementById('editWorkerModal').style.display = 'none';
+    };
+
+    document.getElementById('editWorkerForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const id = document.getElementById('editWorkerId').value;
+      const name = document.getElementById('editName').value.trim();
+      const category = document.getElementById('editCategory').value;
+      const phone = document.getElementById('editPhone').value.trim();
+      const area = document.getElementById('editArea').value.trim();
+      const job = document.getElementById('editJob').value.trim();
+      const experience = document.getElementById('editExp').value.trim();
+      const bio = document.getElementById('editBio').value.trim();
+      const isEmergency = document.getElementById('editEmergency').checked;
+
+      try {
+        const workerRef = doc(db, "workers", id);
+        await updateDoc(workerRef, {
+          name, category, phone, area, job, experience, bio, isEmergency
+        });
+        alert("✓ تم تحديث بيانات الحرفي بنجاح!");
+        closeEditModal();
+        loadWorkers();
+      } catch (err) {
+        console.error("خطأ حفظ التعديل:", err);
+        alert("تعذر حفظ التعديلات: " + err.message);
+      }
+    });
 
     async function loadPending() {
       const tbody = document.getElementById('pendingWorkersBody');
@@ -510,10 +656,11 @@
       noPending.style.display = 'none';
       querySnapshot.forEach((docSnap) => {
         const w = docSnap.data();
+        const emgTag = w.isEmergency ? `<span style="background:#fef2f2; color:#dc2626; padding:2px 6px; border-radius:10px; font-size:0.7rem; font-weight:bold; margin-right:4px;">🚨 طوارئ</span>` : '';
         const tr = document.createElement('tr');
         tr.innerHTML = `
           <td><strong>${w.name}</strong></td>
-          <td><span class="badge-job">${w.job}</span></td>
+          <td><span class="badge-job">${w.job}</span> ${emgTag}</td>
           <td>${w.area}</td>
           <td style="font-size:0.82rem; color:#64748b;">${w.bio || '—'}</td>
           <td dir="ltr" style="text-align:right;">${w.phone}</td>
@@ -571,7 +718,6 @@
         const q = query(collection(db, "suggestions"), orderBy("createdAt", "desc"));
         querySnapshot = await getDocs(q);
       } catch(e) {
-        // حماية في حال عدم وجود فهرس زمني
         querySnapshot = await getDocs(collection(db, "suggestions"));
       }
       
@@ -596,10 +742,6 @@
         tbody.appendChild(tr);
       });
     }
-
-    // ==============================================
-    // دوال الأزرار المربوطة بـ window ومحمية بـ try/catch
-    // ==============================================
 
     window.approveWorker = async function(id) {
       try {
@@ -669,8 +811,6 @@
     window.approveRating = async function(reviewId, workerId, newRating) {
       try {
         await updateDoc(doc(db, "reviews", reviewId), { status: "approved" });
-        
-        // تحديث النجوم للحرفي إذا كان معرفه مسجلاً
         if (workerId && workerId !== 'undefined' && workerId !== '') {
           const workerRef = doc(db, "workers", workerId);
           const workerSnap = await getDoc(workerRef);
@@ -686,7 +826,6 @@
             });
           }
         }
-        
         alert('✓ تم اعتماد التقييم بنجاح!');
         loadPendingRatings();
       } catch (err) {
@@ -722,15 +861,19 @@
       const job = document.getElementById('mJob').value.trim();
       const experience = document.getElementById('mExp').value.trim();
       const bio = document.getElementById('mBio').value.trim();
+      const isEmergency = document.getElementById('mEmergency').checked;
 
       try {
         await addDoc(collection(db, "workers"), {
           name, category, phone, area, job, experience, bio,
+          isEmergency: isEmergency,
           photoUrl: adminBase64Photo || "",
           avatar: icon,
           status: "approved",
           rating: 5.0,
           ratingsCount: 0,
+          callClicks: 0,
+          waClicks: 0,
           createdAt: serverTimestamp()
         });
 
@@ -738,6 +881,7 @@
         adminBase64Photo = "";
         document.getElementById('mPhotoPreviewBox').style.display = 'none';
         alert('تم نشر الحرفي في الدليل السحابي بنجاح!');
+        switchTab('workersTab', document.getElementById('btnTabWorkers'));
         loadWorkers();
       } catch (err) {
         alert("تعذر نشر الحرفي: " + err.message);

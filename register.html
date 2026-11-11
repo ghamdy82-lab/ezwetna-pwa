@@ -15,7 +15,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   
-  <link rel="stylesheet" href="style.css?v=1.3">
+  <link rel="stylesheet" href="style.css?v=1.6">
 </head>
 <body>
 
@@ -40,7 +40,6 @@
     <!-- كارت تسجيل الحرفي -->
     <div class="form-card" style="background:#fff; border:1px solid var(--border-color); border-radius:16px; padding:28px 20px; box-shadow:var(--shadow);">
       
-      <!-- العنوان الملموم: الإيدين مع النص في سطر واحد -->
       <div style="text-align: center; margin-bottom: 16px;">
         <h2 style="display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 1.25rem; color: #0f4c5c; margin: 0 0 4px 0;">
           <span>🤝</span> انضم لعزوتنا في التجمع
@@ -69,11 +68,18 @@
               <option value="تكييفات">تكييفات</option>
               <option value="نقاشة">نقاشة</option>
               <option value="أطباء وعيادات">أطباء وعيادات</option>
+              <option value="other" data-name="أخرى" data-icon="✨">➕ مهنة أخرى (غير موجودة بالقائمة)</option>
             </select>
           </div>
         </div>
 
-       <!-- الصف الثاني: التليفون والخبرة -->
+        <!-- حقل يظهر تلقائياً لو اختار "مهنة أخرى" -->
+        <div id="customJobGroup" class="form-group" style="display: none; margin-bottom: 12px; background: #fff9e6; padding: 10px 12px; border-radius: 10px; border: 1px dashed #f59e0b;">
+          <label style="color: #b45309 !important;">✨ اكتب اسم مهنتك أو تخصصك الجديد بالتفصيل *</label>
+          <input type="text" id="customJobInput" placeholder="مثلاً: فني ألوميتال، صيانة فلاتر مياه، تحفيظ قرآن...">
+        </div>
+
+        <!-- الصف الثاني: التليفون والخبرة -->
         <div class="form-row-double">
           <div class="form-group">
             <label>رقم التليفون / واتساب *</label>
@@ -86,7 +92,7 @@
           </div>
         </div>
 
-       <!-- الصف الثالث: المنطقة والعنوان -->
+        <!-- الصف الثالث: المنطقة والعنوان -->
         <div class="form-row-double">
           <div class="form-group">
             <label>منطقتك في التجمع *</label>
@@ -99,36 +105,39 @@
           </div>
         </div>
 
-        <div style="margin-bottom:14px;">
+        <div style="margin-bottom:12px;">
           <label style="display:block; font-weight:700; margin-bottom:6px; font-size:0.9rem;">نبذة عن شغلك أو خدمات بتقدمها (اختياري)</label>
-          <textarea id="workerBio" rows="3" placeholder="مثلاً: متاح طوارئ 24 ساعة، صيانة أجهزة، معاينة مجانية..." style="width:100%; padding:11px 14px; border:1px solid #cbd5e1; border-radius:10px; font-family:'Cairo'; outline:none; box-sizing:border-box; resize:none;"></textarea>
+          <textarea id="workerBio" rows="3" placeholder="مثلاً: صيانة أجهزة، تأسيس شقق، معاينة مجانية..." style="width:100%; padding:11px 14px; border:1px solid #cbd5e1; border-radius:10px; font-family:'Cairo'; outline:none; box-sizing:border-box; resize:none;"></textarea>
         </div>
 
-      <!-- خانة رفع الصورة مع زرار مخفي ومعاينة سريعة -->
-      <div class="compact-upload-box">
-        <div style="display: flex; align-items: center; gap: 8px; color: #0f4c5c; font-size: 0.85rem; font-weight: bold;">
-          <i class="fa-solid fa-camera"></i>
-          <span>صورة شخصية أو للورشة (اختياري)</span>
-          <span id="uploadStatusText" style="font-size: 0.75rem; color: #16a34a; font-weight: normal;"></span>
+        <!-- خيار متاح للطوارئ 24 ساعة -->
+        <div style="margin-bottom: 12px; background: #fef2f2; border: 1px solid #fecaca; padding: 10px 12px; border-radius: 10px; display: flex; align-items: center; gap: 8px;">
+          <input type="checkbox" id="workerEmergency" style="width: 18px; height: 18px; accent-color: #dc2626; cursor: pointer;">
+          <label for="workerEmergency" style="font-size: 0.85rem; font-weight: 700; color: #b91c1c; cursor: pointer; margin: 0;">
+            🚨 متاح لطلبات الطوارئ 24 ساعة (تظهر شارة طوارئ مميزة على كارتك)
+          </label>
         </div>
 
-        <!-- زرار الاختيار المرئي -->
-        <button type="button" id="uploadTriggerBtn" class="compact-upload-btn">
-          <i class="fa-solid fa-cloud-arrow-up"></i> اختيار صورة
-        </button>
+        <!-- خانة رفع الصورة -->
+        <div class="compact-upload-box">
+          <div style="display: flex; align-items: center; gap: 8px; color: #0f4c5c; font-size: 0.85rem; font-weight: bold;">
+            <i class="fa-solid fa-camera"></i>
+            <span>صورة شخصية أو للورشة (اختياري)</span>
+            <span id="uploadStatusText" style="font-size: 0.75rem; color: #16a34a; font-weight: normal;"></span>
+          </div>
 
-        <!-- مدخل الملف المخفي الحقيقي -->
-        <input type="file" id="workerImageInput" accept="image/*" style="display: none;">
-      </div>
+          <button type="button" id="uploadTriggerBtn" class="compact-upload-btn">
+            <i class="fa-solid fa-cloud-arrow-up"></i> اختيار صورة
+          </button>
 
+          <input type="file" id="workerImageInput" accept="image/*" style="display: none;">
+        </div>
 
         <button type="submit" id="submitBtn" class="submit-form-btn">
           إرسال البيانات للمراجعة
         </button>
       </form>
     </div>
-
- 
 
   </main>
 
@@ -139,18 +148,16 @@
     <p class="copyright-owner">
       جميع حقوق التطوير والبرمجة محفوظة لـ: 
       <a href="https://www.facebook.com/profile.php?id=61596198263613" target="_blank" style="color:var(--accent); text-decoration:none; font-weight:700;">
-        <i class="fa-brands fa-facebook"></i> Taghreed Hamdy (Webify Solutions)
+        <i class="fa-brands fa-facebook"></i> Taghreed Hamdy (CodeCraft Egypt)
       </a>
     </p>
   </footer>
 
-  <!-- السكريبت الموحد: فايربيز + ضغط الصورة + بوت التليجرام -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { getFirestore, collection, addDoc, getDocs, serverTimestamp } 
     from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-    // 1. إعدادات بوت التليجرام
     const TELEGRAM_BOT_TOKEN = "9241445474:AAH8uKYRudHx9JhWGgoC8gTMIghtk0bu2rk";
     const TELEGRAM_CHAT_ID = "9127937709";
 
@@ -166,7 +173,6 @@
       }
     }
 
-    // 2. إعدادات فايربيز
     const firebaseConfig = {
       apiKey: "AIzaSyB76NcdVQTSUIYxeBsXh9ojeTMWg9L5mt8",
       authDomain: "azwetna.firebaseapp.com",
@@ -180,8 +186,24 @@
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
 
-    // 3. جلب الأقسام تلقائياً لو موجودة في الداتابيز
-    const categorySelect = document.getElementById('wCategory') || document.getElementById('workerJob');
+    const categorySelect = document.getElementById('workerJob');
+    const customJobGroup = document.getElementById('customJobGroup');
+    const customJobInput = document.getElementById('customJobInput');
+
+    if (categorySelect) {
+      categorySelect.addEventListener('change', () => {
+        if (categorySelect.value === 'other') {
+          customJobGroup.style.display = 'flex';
+          customJobInput.required = true;
+          customJobInput.focus();
+        } else {
+          customJobGroup.style.display = 'none';
+          customJobInput.required = false;
+          customJobInput.value = '';
+        }
+      });
+    }
+
     async function loadCategories() {
       if (!categorySelect) return;
       try {
@@ -192,6 +214,7 @@
             const cat = docSnap.data();
             categorySelect.innerHTML += `<option value="${cat.id || cat.name}" data-name="${cat.name}" data-icon="${cat.icon || '🛠️'}">${cat.icon || '🛠️'} ${cat.name}</option>`;
           });
+          categorySelect.innerHTML += `<option value="other" data-name="أخرى" data-icon="✨">➕ مهنة أخرى (غير موجودة بالقائمة)</option>`;
         }
       } catch (e) {
         console.log("استخدام الأقسام الافتراضية");
@@ -199,9 +222,8 @@
     }
     loadCategories();
 
-    // 4. ضغط الصورة بالـ Canvas وربط زرار الاختيار
     const uploadTriggerBtn = document.getElementById('uploadTriggerBtn');
-    const photoInput = document.getElementById('workerImageInput') || document.getElementById('wPhoto');
+    const photoInput = document.getElementById('workerImageInput');
     const uploadStatusText = document.getElementById('uploadStatusText');
     let base64Photo = "";
 
@@ -251,22 +273,14 @@
       });
     }
 
-    // 5. إرسال الفورم وحفظ البيانات وإرسال تنبيه تليجرام
-    const craftsmanForm = document.getElementById('craftsmanForm') || document.getElementById('workerRegisterForm');
+    const craftsmanForm = document.getElementById('craftsmanForm');
 
     if (craftsmanForm) {
       craftsmanForm.addEventListener('submit', async (e) => {
         e.preventDefault();
 
-        const nameEl = document.getElementById('wName') || document.getElementById('workerName');
-        const phoneEl = document.getElementById('wPhone') || document.getElementById('workerPhone');
-        const expEl = document.getElementById('wExperience') || document.getElementById('workerExp');
-        const areaEl = document.getElementById('wArea') || document.getElementById('workerArea');
-        const shopEl = document.getElementById('wShop') || document.getElementById('workerAddress');
-        const bioEl = document.getElementById('wBio') || document.getElementById('workerBio');
-
-        const name = nameEl ? nameEl.value.trim() : "";
-        const rawPhone = phoneEl ? phoneEl.value.trim() : "";
+        const name = document.getElementById('workerName').value.trim();
+        const rawPhone = document.getElementById('workerPhone').value.trim();
         const cleanPhone = rawPhone.replace(/[^0-9]/g, '');
 
         if (cleanPhone.length < 11) {
@@ -274,24 +288,32 @@
           return;
         }
 
-        const categoryId = categorySelect ? categorySelect.value : "";
-        const selectedOption = categorySelect ? categorySelect.options[categorySelect.selectedIndex] : null;
-        const jobName = selectedOption ? (selectedOption.getAttribute('data-name') || selectedOption.text.replace(/^[^\s]+\s*/, '') || selectedOption.value) : "خدمات عامة";
-        const icon = selectedOption ? (selectedOption.getAttribute('data-icon') || "🛠️") : "🛠️";
+        const isOther = categorySelect.value === 'other';
+        const customJobText = customJobInput ? customJobInput.value.trim() : "";
 
-        const exp = expEl ? expEl.value.trim() : "";
-        const area = areaEl ? areaEl.value.trim() : "";
-        const shop = shopEl ? shopEl.value.trim() : "";
-        const bio = bioEl ? bioEl.value.trim() : "";
+        if (isOther && !customJobText) {
+          alert('برجاء كتابة اسم مهنتك أو تخصصك في الخانة المخصصة');
+          return;
+        }
 
-        const submitBtn = craftsmanForm.querySelector("button[type='submit']") || document.getElementById('submitBtn');
+        const categoryId = isOther ? "other" : categorySelect.value;
+        const selectedOption = categorySelect.options[categorySelect.selectedIndex];
+        const jobName = isOther ? `🆕 ${customJobText}` : (selectedOption.getAttribute('data-name') || selectedOption.text.replace(/^[^\s]+\s*/, '') || selectedOption.value);
+        const icon = isOther ? "✨" : (selectedOption.getAttribute('data-icon') || "🛠️");
+
+        const exp = document.getElementById('workerExp').value.trim();
+        const area = document.getElementById('workerArea').value.trim();
+        const shop = document.getElementById('workerAddress').value.trim();
+        const bio = document.getElementById('workerBio').value.trim();
+        const isEmergency = document.getElementById('workerEmergency').checked;
+
+        const submitBtn = document.getElementById('submitBtn');
         if (submitBtn) {
           submitBtn.disabled = true;
           submitBtn.innerText = 'جارٍ تسجيل البيانات...';
         }
 
         try {
-          // الحفظ في مجموعة workers بحالة pending للمراجعة
           await addDoc(collection(db, "workers"), {
             name: name,
             category: categoryId,
@@ -302,14 +324,18 @@
             bio: bio,
             photoUrl: base64Photo || "",
             avatar: icon,
+            isEmergency: isEmergency,
             status: "pending",
             rating: 5.0,
             ratingsCount: 0,
+            callClicks: 0,
+            waClicks: 0,
             createdAt: serverTimestamp()
           });
 
-          // إرسال الإشعار لتليجرام
-          await sendTelegramAlert(`🚨 طلب تسجيل حرفي جديد في عزوتنا!\n👤 الاسم: ${name}\n🛠️ المهنة: ${jobName}\n📍 المنطقة: ${area}\n📞 التليفون: ${cleanPhone}`);
+          const extraAlert = isOther ? `\n💡 تنبيه: الحرفي اقترح قسم جديد غير موجود (${customJobText})` : "";
+          const emgAlert = isEmergency ? `\n🚨 متاح طوارئ 24 ساعة` : "";
+          await sendTelegramAlert(`🚨 طلب تسجيل حرفي جديد في عزوتنا!\n👤 الاسم: ${name}\n🛠️ المهنة: ${jobName}\n📍 المنطقة: ${area}\n📞 التليفون: ${cleanPhone}${emgAlert}${extraAlert}`);
 
           alert('شكراً لانضمامك لعزوتنا! تم استلام بياناتك بنجاح وجارٍ مراجعتها.');
           craftsmanForm.reset();
