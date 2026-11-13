@@ -1,4 +1,4 @@
-const CACHE_NAME = 'ezwetna-v9';
+const CACHE_NAME = 'ezwetna-v12';
 const ASSETS_TO_CACHE = [
   '/',
   '/index.html',
@@ -13,7 +13,6 @@ self.addEventListener('install', (event) => {
   self.skipWaiting();
   event.waitUntil(
     caches.open(CACHE_NAME).then(async (cache) => {
-      // بنحفظ ملف ملف عشان لو واحد وقع ميبوظش الباقي
       for (const asset of ASSETS_TO_CACHE) {
         try {
           await cache.add(asset);

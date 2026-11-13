@@ -10,7 +10,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   
-  <link rel="stylesheet" href="style.css?v=1.6">
+  <link rel="stylesheet" href="style.css?v=2.2">
   <style>
     .auth-overlay {
       position: fixed; inset: 0; background: #0f172a; display: flex; 
@@ -20,22 +20,19 @@
       background: #ffffff; padding: 32px 24px; border-radius: 16px; 
       width: 90%; max-width: 400px; text-align: center; box-shadow: 0 10px 25px rgba(0,0,0,0.2);
     }
-    .auth-card button {
-      width: 100%; padding: 12px; background: var(--primary); color: #fff; border: none; 
-      border-radius: 10px; font-weight: 700; cursor: pointer; font-family: 'Cairo';
-    }
     .tabs-nav {
-      display: flex; gap: 8px; margin-bottom: 20px; border-bottom: 2px solid #e2e8f0; padding-bottom: 10px; overflow-x: auto;
+      display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 16px;
+      border-bottom: 1px solid #e2e8f0; padding-bottom: 12px;
     }
     .tab-btn {
-      background: #f8fafc; border: 1px solid #e2e8f0; padding: 9px 15px; font-family: 'Cairo'; font-size: 0.88rem;
-      font-weight: 700; color: #475569; cursor: pointer; border-radius: 10px; transition: 0.2s; white-space: nowrap;
-      display: inline-flex; align-items: center; gap: 6px;
+      background: #ffffff; border: 1px solid #cbd5e1; padding: 6px 12px; font-size: 0.78rem;
+      font-weight: 700; color: #334155; cursor: pointer; border-radius: 20px; transition: 0.2s;
+      display: inline-flex; align-items: center; gap: 5px;
     }
     .tab-btn:hover { background: #f1f5f9; color: var(--primary); }
-    .tab-btn.active { background: var(--primary); color: #fff; border-color: var(--primary); }
+    .tab-btn.active { background: var(--primary); color: #fff; border-color: var(--primary); box-shadow: 0 2px 6px rgba(15, 76, 92, 0.2); }
     .tab-btn .badge-counter {
-      background: rgba(0,0,0,0.08); padding: 2px 7px; border-radius: 12px; font-size: 0.75rem;
+      background: rgba(0,0,0,0.07); padding: 1px 6px; border-radius: 10px; font-size: 0.7rem;
     }
     .tab-btn.active .badge-counter {
       background: rgba(255,255,255,0.25); color: #fff;
@@ -43,52 +40,43 @@
     .tab-content { display: none; }
     .tab-content.active { display: block; }
     .card-box {
-      background: #fff; border-radius: 14px; border: 1px solid #e2e8f0; padding: 20px; margin-bottom: 24px;
+      background: #fff; border-radius: 14px; border: 1px solid #e2e8f0; padding: 18px; margin-bottom: 20px;
     }
     .form-grid {
-      display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; margin-bottom: 14px;
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; margin-bottom: 12px;
     }
     .form-grid input, .form-grid select, .form-grid textarea {
-      width: 100%; padding: 10px 12px; border: 1px solid #cbd5e1; border-radius: 8px; font-family: 'Cairo'; box-sizing: border-box;
+      width: 100%; padding: 9px 11px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 0.85rem;
+    }
+    .admin-search-box {
+      display: flex; align-items: center; gap: 8px; background: #f8fafc;
+      border: 1.5px solid #cbd5e1; border-radius: 10px; padding: 8px 12px; margin-bottom: 12px;
+    }
+    .admin-search-box input {
+      border: none; background: transparent; width: 100%; outline: none; font-size: 0.86rem;
     }
     .table-container { overflow-x: auto; }
-    table { width: 100%; border-collapse: collapse; text-align: right; margin-top: 10px; }
-    th, td { padding: 12px 14px; border-bottom: 1px solid #f1f5f9; font-size: 0.9rem; }
+    table { width: 100%; border-collapse: collapse; text-align: right; margin-top: 8px; }
+    th, td { padding: 10px 12px; border-bottom: 1px solid #f1f5f9; font-size: 0.85rem; }
     th { background: #f8fafc; color: var(--primary); font-weight: 700; }
-    .btn-approve { background: #10b981; color: #fff; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-family: 'Cairo'; font-weight: 600; font-size: 0.8rem; }
-    .btn-reject { background: #ef4444; color: #fff; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-family: 'Cairo'; font-weight: 600; font-size: 0.8rem; }
-    .btn-edit { background: #0284c7; color: #fff; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-family: 'Cairo'; font-weight: 600; font-size: 0.8rem; }
-    .badge-job { background: #EAF4F4; color: var(--primary); padding: 3px 10px; border-radius: 20px; font-weight: 700; font-size: 0.8rem; }
+    .btn-approve { background: #10b981; color: #fff; border: none; padding: 5px 10px; border-radius: 6px; cursor: pointer; font-weight: 700; font-size: 0.76rem; }
+    .btn-reject { background: #ef4444; color: #fff; border: none; padding: 5px 10px; border-radius: 6px; cursor: pointer; font-weight: 700; font-size: 0.76rem; }
+    .btn-edit { background: #0284c7; color: #fff; border: none; padding: 5px 10px; border-radius: 6px; cursor: pointer; font-weight: 700; font-size: 0.76rem; }
+    .btn-warn { background: #f59e0b; color: #fff; border: none; padding: 5px 10px; border-radius: 6px; cursor: pointer; font-weight: 700; font-size: 0.76rem; }
+    .badge-job { background: #EAF4F4; color: var(--primary); padding: 2px 9px; border-radius: 20px; font-weight: 700; font-size: 0.76rem; }
     
-    /* مودال التعديل */
     .modal-overlay {
       position: fixed; inset: 0; background: rgba(15, 23, 42, 0.6); z-index: 999;
       display: none; align-items: center; justify-content: center; backdrop-filter: blur(3px);
     }
     .modal-box {
-      background: #fff; width: 92%; max-width: 600px; max-height: 90vh; overflow-y: auto;
-      border-radius: 16px; padding: 24px; box-shadow: 0 10px 25px rgba(0,0,0,0.2);
-    }
-
-    @media (max-width: 768px) {
-      .app-header .header-container { flex-direction: column; text-align: center; gap: 12px; padding: 10px; }
-      .app-header .brand { justify-content: center; flex-direction: column; }
-      .brand-logo { margin: 0 0 10px 0; }
-      .back-link { width: 100%; justify-content: center; margin-top: 5px; }
-      .tabs-nav { flex-wrap: nowrap; overflow-x: auto; -webkit-overflow-scrolling: touch; padding-bottom: 8px; justify-content: flex-start; }
-      .tabs-nav::-webkit-scrollbar { height: 4px; }
-      .tabs-nav::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
-      .tab-btn { font-size: 0.82rem; padding: 7px 11px; }
-      .form-grid { grid-template-columns: 1fr; }
-      .card-box { padding: 15px; }
-      .table-container { width: 100%; overflow-x: auto; display: block; border: 1px solid #f1f5f9; border-radius: 8px; }
-      th, td { white-space: nowrap; font-size: 0.85rem; padding: 10px; }
+      background: #fff; width: 92%; max-width: 620px; max-height: 90vh; overflow-y: auto;
+      border-radius: 16px; padding: 22px; box-shadow: 0 10px 25px rgba(0,0,0,0.2);
     }
   </style>
 </head>
 <body>
 
-  <!-- شاشة الدخول الآمنة بحساب جوجل -->
   <div id="authOverlay" class="auth-overlay">
     <div class="auth-card">
       <div style="font-size: 2.5rem; color: var(--primary); margin-bottom: 8px;">
@@ -97,7 +85,7 @@
       <h3 style="margin: 0 0 8px; color: #1e293b;">إدارة منصة عزوتنا</h3>
       <p style="margin: 0 0 20px; color: #64748b; font-size: 0.85rem;">يُرجى تسجيل الدخول بحساب الإدارة المعتمد</p>
       
-      <button id="googleLoginBtn" type="button" style="display:flex; align-items:center; justify-content:center; gap:10px; background:#fff; color:#333; border:1px solid #cbd5e1; padding:12px; border-radius:10px; font-family:'Cairo'; font-weight:700; cursor:pointer; width:100%;">
+      <button id="googleLoginBtn" type="button" style="display:flex; align-items:center; justify-content:center; gap:10px; background:#fff; color:#333; border:1px solid #cbd5e1; padding:12px; border-radius:10px; font-weight:700; cursor:pointer; width:100%;">
         <img src="https://img.icons8.com/color/24/000000/google-logo.png" alt="Google">
         الدخول بحساب Google
       </button>
@@ -112,7 +100,7 @@
         <img src="icons/logo.png.png" alt="لوجو عزوتنا" class="brand-logo">
         <div>
           <h1 class="brand-title">لوحة التحكم الشاملة</h1>
-          <span class="brand-sub">إدارة الأقسام والخدمات والتقييمات والاقتراحات</span>
+          <span class="brand-sub">إدارة الحرفيين والأقسام والتقييمات</span>
         </div>
       </div>
       <a href="index.html" class="back-link">
@@ -121,12 +109,11 @@
     </div>
   </header>
 
-  <main style="max-width: 1100px; margin: 20px auto; padding: 0 16px;">
+  <main style="max-width: 1100px; margin: 16px auto; padding: 0 14px;">
     
-    <!-- التبويبات -->
     <div class="tabs-nav">
       <button class="tab-btn active" id="btnTabWorkers">
-        <i class="fa-solid fa-users"></i> الحرفيون المعتمدون <span class="badge-counter" id="workersCount">0</span>
+        <i class="fa-solid fa-users"></i> المعتمدون <span class="badge-counter" id="workersCount">0</span>
       </button>
       <button class="tab-btn" id="btnTabAddWorker">
         <i class="fa-solid fa-user-plus"></i> إضافة حرفي
@@ -135,20 +122,32 @@
         <i class="fa-solid fa-clock-rotate-left"></i> طلبات المراجعة <span class="badge-counter" id="pendingCount">0</span>
       </button>
       <button class="tab-btn" id="btnTabRatings">
-        <i class="fa-solid fa-star"></i> التقييمات <span class="badge-counter" id="ratingsCount">0</span>
+        <i class="fa-solid fa-star"></i> تقييمات الحرفيين <span class="badge-counter" id="ratingsCount">0</span>
+      </button>
+      <button class="tab-btn" id="btnTabPlatformRatings">
+        <i class="fa-solid fa-award"></i> تقييم المنصة <span class="badge-counter" id="platRatingsCount">0</span>
       </button>
       <button class="tab-btn" id="btnTabSuggestions">
-        <i class="fa-solid fa-comments"></i> المقترحات <span class="badge-counter" id="sugCount">0</span>
+        <i class="fa-solid fa-envelope-open-text"></i> المقترحات والشكاوى <span class="badge-counter" id="sugCount">0</span>
       </button>
       <button class="tab-btn" id="btnTabCategories">
-        <i class="fa-solid fa-shapes"></i> الأقسام
+        <i class="fa-solid fa-shapes"></i> الأقسام <span class="badge-counter" id="categoriesCountBadge">0</span>
       </button>
     </div>
 
-    <!-- تبويب 1: الحرفيون المعتمدون -->
+    <!-- تبويب 1: الحرفيون المعتمدون + شريط بحث فوري -->
     <div id="workersTab" class="tab-content active">
       <div class="card-box">
-        <h3 style="margin-top:0; color:var(--primary);"><i class="fa-solid fa-list-check"></i> الحرفيون المعتمدون في المنصة</h3>
+        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:10px;">
+          <h3 style="margin:0; color:var(--primary); font-size:1rem;"><i class="fa-solid fa-list-check"></i> الحرفيون المعتمدون في المنصة</h3>
+          <span id="adminSearchMatchCount" style="font-size:0.78rem; color:#64748b; font-weight:700;"></span>
+        </div>
+
+        <div class="admin-search-box">
+          <i class="fa-solid fa-magnifying-glass" style="color:#64748b;"></i>
+          <input type="search" id="adminWorkerSearch" placeholder="ابحثي هنا بالاسم، التخصص، المحلية، أو رقم التليفون للوصول لأي كارت فوراً...">
+        </div>
+
         <div class="table-container">
           <table>
             <thead>
@@ -156,9 +155,10 @@
                 <th>الاسم</th>
                 <th>التخصص</th>
                 <th>المنطقة</th>
-                <th>الهاتف</th>
-                <th>الإحصائيات والتقرير</th>
-                <th style="text-align: center;">إجراءات</th>
+                <th>أرقام الهاتف</th>
+                <th>الكارت</th>
+                <th>التفاعل والتقرير</th>
+                <th style="text-align: center;">إنذار / إجراءات</th>
               </tr>
             </thead>
             <tbody id="approvedWorkersBody"></tbody>
@@ -170,39 +170,68 @@
     <!-- تبويب 2: إضافة حرفي جديد -->
     <div id="addWorkerTab" class="tab-content">
       <div class="card-box">
-        <h3 style="margin-top:0; color:var(--primary);"><i class="fa-solid fa-plus-circle"></i> إضافة حرفي أو مقدم خدمة جديد</h3>
+        <h3 style="margin-top:0; color:var(--primary); font-size:1rem;"><i class="fa-solid fa-plus-circle"></i> إضافة حرفي أو محل جديد للدليل</h3>
         <form id="addWorkerForm">
           <div class="form-grid">
             <input type="text" id="mName" placeholder="الاسم / اسم المحل *" required>
             <select id="mCategory" required>
               <option value="" disabled selected>اختار القسم *</option>
             </select>
-            <input type="tel" id="mPhone" placeholder="رقم الهاتف (01xxxxxxxxx) *" required dir="ltr">
-            <input type="text" id="mArea" placeholder="المنطقة (المحلية، الحي...) *" required>
-            <input type="text" id="mJob" placeholder="المسمى الوظيفي (مثلاً: سباك صحي) *" required>
-            <input type="text" id="mExp" placeholder="سنين الخبرة (مثلاً: 10 سنين)">
+
+            <div>
+              <input type="tel" id="mPhone" placeholder="رقم الهاتف الأساسي *" required dir="ltr">
+              <div class="phone-flags-row">
+                <label><input type="checkbox" id="mP1Call" checked> 📞 اتصال</label>
+                <label><input type="checkbox" id="mP1Wa" checked> 💬 واتساب</label>
+              </div>
+            </div>
+
+            <div>
+              <input type="tel" id="mPhone2" placeholder="رقم هاتف تاني / أرضي (اختياري)" dir="ltr">
+              <div class="phone-flags-row">
+                <label><input type="checkbox" id="mP2Call" checked> 📞 اتصال</label>
+                <label><input type="checkbox" id="mP2Wa"> 💬 واتساب</label>
+              </div>
+            </div>
+
+            <input type="text" id="mArea" list="adminZonesList" placeholder="المحلية والمنطقة (مثلاً: المحلية الأولى - منطقة رابعة) *" required>
+            <datalist id="adminZonesList">
+              <option value="المحلية الأولى">
+              <option value="المحلية الثانية">
+              <option value="المحلية الثالثة">
+              <option value="المحلية الرابعة">
+              <option value="المحلية الخامسة">
+              <option value="المحلية السادسة">
+              <option value="المحلية السابعة">
+              <option value="إسكان الشباب">
+              <option value="المستقبل">
+              <option value="القطامية">
+            </datalist>
+
+            <input type="text" id="mJob" placeholder="المسمى الوظيفي (مثلاً: حدايد وبويات، كوافيرة) *" required>
+            <input type="text" id="mExp" placeholder="سنين الخبرة أو علامة مميزة للعنوان">
           </div>
-          <input type="text" id="mBio" placeholder="نبذة مختصرة تظهر في الكارت" style="width:100%; padding:10px 12px; border:1px solid #cbd5e1; border-radius:8px; font-family:'Cairo'; box-sizing:border-box; margin-bottom:12px;">
+          <input type="text" id="mBio" placeholder="نبذة مختصرة تظهر في الكارت (اختياري)" style="width:100%; padding:9px 11px; border:1px solid #cbd5e1; border-radius:8px; margin-bottom:10px; font-size:0.85rem;">
           
-          <div style="margin-bottom: 12px; background: #fef2f2; border: 1px solid #fecaca; padding: 10px 12px; border-radius: 10px; display: flex; align-items: center; gap: 8px;">
-            <input type="checkbox" id="mEmergency" style="width: 18px; height: 18px; accent-color: #dc2626; cursor: pointer;">
-            <label for="mEmergency" style="font-size: 0.85rem; font-weight: 700; color: #b91c1c; cursor: pointer; margin: 0;">
+          <div style="margin-bottom: 10px; background: #fef2f2; border: 1px solid #fecaca; padding: 9px 12px; border-radius: 10px; display: flex; align-items: center; gap: 8px;">
+            <input type="checkbox" id="mEmergency" style="width: 17px; height: 17px; accent-color: #dc2626; cursor: pointer;">
+            <label for="mEmergency" style="font-size: 0.82rem; font-weight: 700; color: #b91c1c; cursor: pointer; margin: 0;">
               🚨 متاح طوارئ 24 ساعة
             </label>
           </div>
 
-          <div style="margin-bottom:14px; background:#f8fafc; border:1px dashed #cbd5e1; border-radius:10px; padding:12px; text-align:center;">
+          <div style="margin-bottom:12px; background:#f8fafc; border:1px dashed #cbd5e1; border-radius:10px; padding:10px; text-align:center;">
             <input type="file" id="mPhoto" accept="image/*" style="display:none;">
-            <button type="button" onclick="document.getElementById('mPhoto').click()" style="background:#fff; border:1px solid #cbd5e1; padding:7px 14px; border-radius:8px; font-family:'Cairo'; font-weight:700; cursor:pointer; font-size:0.84rem; color:var(--primary);">
-              <i class="fa-solid fa-camera"></i> إضافة صورة شخصية أو للورشة (اختياري)
+            <button type="button" onclick="document.getElementById('mPhoto').click()" style="background:#fff; border:1px solid #cbd5e1; padding:7px 14px; border-radius:8px; font-weight:700; cursor:pointer; font-size:0.82rem; color:var(--primary);">
+              🪪 رفع صورة كارت الحرفي / المحل (اختياري)
             </button>
             <div id="mPhotoPreviewBox" style="margin-top:8px; display:none;">
-              <img id="mPhotoImg" src="" alt="معاينة" style="width:55px; height:55px; border-radius:8px; object-fit:cover; border:2px solid var(--primary);">
-              <p id="mPhotoName" style="font-size:0.75rem; color:#64748b; margin:2px 0 0;"></p>
+              <img id="mPhotoImg" src="" alt="معاينة الكارت" style="max-width:140px; max-height:90px; border-radius:8px; object-fit:contain; border:2px solid var(--primary);">
+              <p id="mPhotoName" style="font-size:0.75rem; color:#16a34a; font-weight:bold; margin:4px 0 0;"></p>
             </div>
           </div>
 
-          <button type="submit" style="background:var(--accent); color:#fff; border:none; padding:10px 24px; border-radius:8px; font-weight:700; font-family:'Cairo'; cursor:pointer;">
+          <button type="submit" style="background:var(--accent); color:#fff; border:none; padding:10px 24px; border-radius:8px; font-weight:700; cursor:pointer;">
             حفظ ونشر فوراً في الدليل
           </button>
         </form>
@@ -212,7 +241,7 @@
     <!-- تبويب 3: طلبات الانتظار -->
     <div id="pendingTab" class="tab-content">
       <div class="card-box">
-        <h3 style="margin-top:0; color:var(--primary);"><i class="fa-solid fa-user-clock"></i> طلبات التسجيل بانتظار الموافقة</h3>
+        <h3 style="margin-top:0; color:var(--primary); font-size:1rem;"><i class="fa-solid fa-user-clock"></i> طلبات التسجيل بانتظار الموافقة</h3>
         <div class="table-container">
           <table>
             <thead>
@@ -221,7 +250,8 @@
                 <th>القسم / المهنة</th>
                 <th>المنطقة</th>
                 <th>النبذة</th>
-                <th>الهاتف</th>
+                <th>أرقام الهاتف</th>
+                <th>الكارت</th>
                 <th style="text-align: center;">القرار</th>
               </tr>
             </thead>
@@ -232,10 +262,10 @@
       </div>
     </div>
 
-    <!-- تبويب 4: التقييمات -->
+    <!-- تبويب 4: التقييمات للحرفيين -->
     <div id="ratingsTab" class="tab-content">
       <div class="card-box">
-        <h3 style="margin-top:0; color:var(--primary);"><i class="fa-solid fa-star"></i> تقييمات الجيران بانتظار المراجعة</h3>
+        <h3 style="margin-top:0; color:var(--primary); font-size:1rem;"><i class="fa-solid fa-star"></i> تقييمات الحرفيين بانتظار المراجعة</h3>
         <div class="table-container">
           <table>
             <thead>
@@ -255,45 +285,69 @@
       </div>
     </div>
 
-    <!-- تبويب 5: المقترحات -->
-    <div id="suggestionsTab" class="tab-content">
+    <!-- تبويب 5: تقييمات المنصة فقط -->
+    <div id="platformRatingsTab" class="tab-content">
       <div class="card-box">
-        <h3 style="margin-top:0; color:var(--primary);"><i class="fa-solid fa-comments"></i> رسائل واقتراحات سكان الحي</h3>
+        <h3 style="margin-top:0; color:var(--primary); font-size:1rem;"><i class="fa-solid fa-award"></i> تقييمات الجيران والحرفيين للمنصة</h3>
         <div class="table-container">
           <table>
             <thead>
               <tr>
-                <th>الرسالة / الاقتراح</th>
-                <th>اسم الجار</th>
+                <th>النجوم</th>
+                <th>رأي المستخدم في المنصة</th>
+                <th>الاسم</th>
                 <th>الواتساب</th>
-                <th style="text-align: center; width: 120px;">إجراء</th>
+                <th>الحالة</th>
+                <th style="text-align: center;">إجراء</th>
               </tr>
             </thead>
-            <tbody id="suggestionsBody"></tbody>
+            <tbody id="platformRatingsBody"></tbody>
           </table>
-          <p id="noSugMsg" style="text-align:center; color:#94a3b8; padding:20px; display:none;">لا توجد اقتراحات مرسلة حالياً.</p>
+          <p id="noPlatRatingsMsg" style="text-align:center; color:#94a3b8; padding:20px; display:none;">لا توجد تقييمات للمنصة حالياً.</p>
         </div>
       </div>
     </div>
 
-    <!-- تبويب 6: إدارة الأقسام -->
+    <!-- تبويب 6: المقترحات والشكاوى فقط -->
+    <div id="suggestionsTab" class="tab-content">
+      <div class="card-box">
+        <h3 style="margin-top:0; color:var(--primary); font-size:1rem;"><i class="fa-solid fa-envelope-open-text"></i> المقترحات والشكاوى الخاصة للإدارة</h3>
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>الشكوى / المقترح</th>
+                <th>الاسم</th>
+                <th>الواتساب</th>
+                <th>الحالة</th>
+                <th style="text-align: center;">إجراء</th>
+              </tr>
+            </thead>
+            <tbody id="suggestionsBody"></tbody>
+          </table>
+          <p id="noSugMsg" style="text-align:center; color:#94a3b8; padding:20px; display:none;">لا توجد مقترحات أو شكاوى حالياً.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- تبويب 7: إدارة الأقسام (مع العدد وإمكانية التعديل) -->
     <div id="categoriesTab" class="tab-content">
       <div class="card-box">
-        <h3 style="margin-top:0; color:var(--primary);"><i class="fa-solid fa-folder-plus"></i> إضافة قسم جديد</h3>
+        <h3 style="margin-top:0; color:var(--primary); font-size:1rem;"><i class="fa-solid fa-folder-plus"></i> إضافة قسم جديد</h3>
         <form id="addCategoryForm">
           <div class="form-grid">
-            <input type="text" id="cId" placeholder="المعرف بالإنجليزي (مثلاً: doctors)" required>
-            <input type="text" id="cName" placeholder="اسم القسم بالعربي (مثلاً: أطباء وعيادات)" required>
-            <input type="text" id="cIcon" placeholder="الأيقونة أو الإيموجي (مثلاً: 🩺)" required>
+            <input type="text" id="cId" placeholder="المعرف بالإنجليزي (مثلاً: teachers)" required>
+            <input type="text" id="cName" placeholder="اسم القسم بالعربي (مثلاً: مدرسين وتحفيظ قرآن)" required>
+            <input type="text" id="cIcon" placeholder="الأيقونة أو الإيموجي (مثلاً: 🎓)" required>
           </div>
-          <button type="submit" style="background:var(--primary); color:#fff; border:none; padding:10px 22px; border-radius:8px; font-weight:700; font-family:'Cairo'; cursor:pointer;">
+          <button type="submit" style="background:var(--primary); color:#fff; border:none; padding:10px 22px; border-radius:8px; font-weight:700; cursor:pointer;">
             إضافة القسم للسحابة
           </button>
         </form>
       </div>
 
       <div class="card-box">
-        <h3 style="margin-top:0; color:var(--primary);">الأقسام المتاحة حالياً</h3>
+        <h3 style="margin-top:0; color:var(--primary); font-size:1rem;">الأقسام المتاحة حالياً وعدد الحرفيين بكل قسم</h3>
         <div class="table-container">
           <table>
             <thead>
@@ -301,7 +355,8 @@
                 <th>الأيقونة</th>
                 <th>اسم القسم</th>
                 <th>المعرف (ID)</th>
-                <th style="text-align: center;">إجراء</th>
+                <th>عدد الحرفيين</th>
+                <th style="text-align: center;">تعديل / حذف</th>
               </tr>
             </thead>
             <tbody id="categoriesTableBody"></tbody>
@@ -312,54 +367,104 @@
 
   </main>
 
-  <!-- نافذة (مودال) تعديل بيانات الحرفي -->
+  <!-- نافذة تعديل القسم بدون حذفه -->
+  <div id="editCategoryModal" class="modal-overlay">
+    <div class="modal-box" style="max-width: 420px;">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
+        <h3 style="margin:0; color:var(--primary); font-size:1rem;"><i class="fa-solid fa-pen"></i> تعديل بيانات القسم</h3>
+        <button type="button" onclick="document.getElementById('editCategoryModal').style.display='none'" style="background:none; border:none; font-size:1.4rem; cursor:pointer; color:#64748b;">&times;</button>
+      </div>
+      <form id="editCategoryForm">
+        <input type="hidden" id="editCatDocId">
+        <div style="margin-bottom:10px;">
+          <label style="font-size:0.8rem; font-weight:700; color:#475569;">المعرف (ID ثابت للحفاظ على الحرفيين):</label>
+          <input type="text" id="editCatId" disabled style="width:100%; padding:8px 10px; border:1px solid #e2e8f0; background:#f1f5f9; border-radius:8px; color:#64748b;">
+        </div>
+        <div style="margin-bottom:10px;">
+          <label style="font-size:0.8rem; font-weight:700; color:#475569;">اسم القسم بالعربي:</label>
+          <input type="text" id="editCatName" required style="width:100%; padding:9px 10px; border:1px solid #cbd5e1; border-radius:8px;">
+        </div>
+        <div style="margin-bottom:14px;">
+          <label style="font-size:0.8rem; font-weight:700; color:#475569;">الأيقونة (الإيموجي):</label>
+          <input type="text" id="editCatIcon" required style="width:100%; padding:9px 10px; border:1px solid #cbd5e1; border-radius:8px;">
+        </div>
+        <div style="display:flex; gap:8px; justify-content:flex-end;">
+          <button type="button" onclick="document.getElementById('editCategoryModal').style.display='none'" style="background:#e2e8f0; color:#334155; border:none; padding:8px 14px; border-radius:8px; font-weight:700; cursor:pointer;">إلغاء</button>
+          <button type="submit" style="background:var(--primary); color:#fff; border:none; padding:8px 18px; border-radius:8px; font-weight:700; cursor:pointer;">حفظ التعديل</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- نافذة تعديل بيانات الحرفي -->
   <div id="editWorkerModal" class="modal-overlay">
     <div class="modal-box">
-      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
-        <h3 style="margin:0; color:var(--primary);"><i class="fa-solid fa-pen-to-square"></i> تعديل بيانات الحرفي</h3>
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
+        <h3 style="margin:0; color:var(--primary); font-size:1rem;"><i class="fa-solid fa-pen-to-square"></i> تعديل بيانات الحرفي</h3>
         <button type="button" onclick="closeEditModal()" style="background:none; border:none; font-size:1.4rem; cursor:pointer; color:#64748b;">&times;</button>
       </div>
       <form id="editWorkerForm">
         <input type="hidden" id="editWorkerId">
         <div class="form-grid">
           <div>
-            <label style="font-size:0.8rem; font-weight:700; color:#475569;">الاسم / اسم المحل</label>
+            <label style="font-size:0.78rem; font-weight:700; color:#475569;">الاسم / اسم المحل</label>
             <input type="text" id="editName" required>
           </div>
           <div>
-            <label style="font-size:0.8rem; font-weight:700; color:#475569;">القسم</label>
+            <label style="font-size:0.78rem; font-weight:700; color:#475569;">القسم</label>
             <select id="editCategory" required></select>
           </div>
           <div>
-            <label style="font-size:0.8rem; font-weight:700; color:#475569;">رقم الهاتف</label>
+            <label style="font-size:0.78rem; font-weight:700; color:#475569;">رقم الهاتف الأساسي</label>
             <input type="tel" id="editPhone" required dir="ltr">
+            <div class="phone-flags-row">
+              <label><input type="checkbox" id="editP1Call"> 📞 اتصال</label>
+              <label><input type="checkbox" id="editP1Wa"> 💬 واتساب</label>
+            </div>
           </div>
           <div>
-            <label style="font-size:0.8rem; font-weight:700; color:#475569;">المنطقة / المحلية</label>
-            <input type="text" id="editArea" required>
+            <label style="font-size:0.78rem; font-weight:700; color:#475569;">رقم الهاتف الثاني (اختياري)</label>
+            <input type="tel" id="editPhone2" dir="ltr">
+            <div class="phone-flags-row">
+              <label><input type="checkbox" id="editP2Call"> 📞 اتصال</label>
+              <label><input type="checkbox" id="editP2Wa"> 💬 واتساب</label>
+            </div>
           </div>
           <div>
-            <label style="font-size:0.8rem; font-weight:700; color:#475569;">المسمى الوظيفي</label>
+            <label style="font-size:0.78rem; font-weight:700; color:#475569;">المحلية والمنطقة</label>
+            <input type="text" id="editArea" list="adminZonesList" required>
+          </div>
+          <div>
+            <label style="font-size:0.78rem; font-weight:700; color:#475569;">المسمى الوظيفي</label>
             <input type="text" id="editJob" required>
           </div>
           <div>
-            <label style="font-size:0.8rem; font-weight:700; color:#475569;">سنوات الخبرة</label>
+            <label style="font-size:0.78rem; font-weight:700; color:#475569;">سنوات الخبرة / العنوان</label>
             <input type="text" id="editExp">
           </div>
         </div>
-        <div style="margin-bottom:12px;">
-          <label style="font-size:0.8rem; font-weight:700; color:#475569;">نبذة مختصرة</label>
-          <input type="text" id="editBio" style="width:100%; padding:10px 12px; border:1px solid #cbd5e1; border-radius:8px; font-family:'Cairo'; box-sizing:border-box;">
+        <div style="margin-bottom:10px;">
+          <label style="font-size:0.78rem; font-weight:700; color:#475569;">نبذة مختصرة</label>
+          <input type="text" id="editBio" style="width:100%; padding:9px 11px; border:1px solid #cbd5e1; border-radius:8px; font-size:0.85rem;">
         </div>
-        <div style="margin-bottom: 14px; background: #fef2f2; border: 1px solid #fecaca; padding: 10px 12px; border-radius: 10px; display: flex; align-items: center; gap: 8px;">
-          <input type="checkbox" id="editEmergency" style="width: 18px; height: 18px; accent-color: #dc2626; cursor: pointer;">
-          <label for="editEmergency" style="font-size: 0.85rem; font-weight: 700; color: #b91c1c; cursor: pointer; margin: 0;">
+        <div style="margin-bottom: 10px; background: #fef2f2; border: 1px solid #fecaca; padding: 9px 12px; border-radius: 10px; display: flex; align-items: center; gap: 8px;">
+          <input type="checkbox" id="editEmergency" style="width: 17px; height: 17px; accent-color: #dc2626; cursor: pointer;">
+          <label for="editEmergency" style="font-size: 0.82rem; font-weight: 700; color: #b91c1c; cursor: pointer; margin: 0;">
             🚨 متاح طوارئ 24 ساعة
           </label>
         </div>
+
+        <div style="margin-bottom: 12px; background: #f8fafc; border: 1px dashed #cbd5e1; border-radius: 10px; padding: 9px; text-align: center;">
+          <input type="file" id="editCardInput" accept="image/*" style="display: none;">
+          <button type="button" onclick="document.getElementById('editCardInput').click()" style="background: #fff; border: 1px solid #cbd5e1; padding: 6px 14px; border-radius: 8px; font-weight: 700; cursor: pointer; font-size: 0.8rem; color: var(--primary);">
+            🪪 رفع / تغيير صورة الكارت
+          </button>
+          <span id="editCardStatus" style="font-size: 0.74rem; color: #16a34a; display: block; margin-top: 4px;"></span>
+        </div>
+
         <div style="display:flex; gap:10px; justify-content:flex-end;">
-          <button type="button" onclick="closeEditModal()" style="background:#e2e8f0; color:#334155; border:none; padding:9px 18px; border-radius:8px; font-weight:700; font-family:'Cairo'; cursor:pointer;">إلغاء</button>
-          <button type="submit" style="background:var(--primary); color:#fff; border:none; padding:9px 22px; border-radius:8px; font-weight:700; font-family:'Cairo'; cursor:pointer;">حفظ التعديلات</button>
+          <button type="button" onclick="closeEditModal()" style="background:#e2e8f0; color:#334155; border:none; padding:8px 16px; border-radius:8px; font-weight:700; cursor:pointer;">إلغاء</button>
+          <button type="submit" style="background:var(--primary); color:#fff; border:none; padding:8px 20px; border-radius:8px; font-weight:700; cursor:pointer;">حفظ التعديلات</button>
         </div>
       </form>
     </div>
@@ -368,7 +473,7 @@
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { 
-      getFirestore, collection, addDoc, getDocs, getDoc, doc, updateDoc, deleteDoc, query, where, orderBy, serverTimestamp 
+      getFirestore, collection, addDoc, getDocs, getDoc, doc, updateDoc, deleteDoc, query, where, orderBy, serverTimestamp, increment 
     } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
     import { getAuth, signInWithPopup, GoogleAuthProvider, signOut, onAuthStateChanged } 
       from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
@@ -393,7 +498,9 @@
     const authOverlay = document.getElementById('authOverlay');
     const googleLoginBtn = document.getElementById('googleLoginBtn');
     const errorMsg = document.getElementById('errorMsg');
-    let adminBase64Photo = "";
+    let adminBase64Card = "";
+    let editBase64Card = null;
+    let cachedApprovedWorkers = [];
 
     onAuthStateChanged(auth, (user) => {
       if (user) {
@@ -415,14 +522,12 @@
       errorMsg.style.display = 'none';
       try {
         const result = await signInWithPopup(auth, provider);
-        const user = result.user;
-        if (user.email !== ADMIN_EMAIL) {
+        if (result.user.email !== ADMIN_EMAIL) {
           await signOut(auth);
           errorMsg.textContent = "عفواً، أنت لست مسؤولاً في المنصة!";
           errorMsg.style.display = 'block';
         }
       } catch (error) {
-        console.error("خطأ في تسجيل الدخول:", error);
         errorMsg.textContent = "حدث خطأ، يرجى المحاولة مرة أخرى.";
         errorMsg.style.display = 'block';
       }
@@ -440,63 +545,95 @@
     document.getElementById('btnTabAddWorker').addEventListener('click', function() { switchTab('addWorkerTab', this); });
     document.getElementById('btnTabPending').addEventListener('click', function() { switchTab('pendingTab', this); loadPending(); });
     document.getElementById('btnTabRatings').addEventListener('click', function() { switchTab('ratingsTab', this); loadPendingRatings(); });
-    document.getElementById('btnTabSuggestions').addEventListener('click', function() { switchTab('suggestionsTab', this); loadSuggestions(); });
+    document.getElementById('btnTabPlatformRatings').addEventListener('click', function() { switchTab('platformRatingsTab', this); loadFeedbackSeparated(); });
+    document.getElementById('btnTabSuggestions').addEventListener('click', function() { switchTab('suggestionsTab', this); loadFeedbackSeparated(); });
     document.getElementById('btnTabCategories').addEventListener('click', function() { switchTab('categoriesTab', this); loadCategories(); });
 
-    document.getElementById('mPhoto').addEventListener('change', function(e) {
-      const file = e.target.files[0];
-      if (!file) return;
-      document.getElementById('mPhotoName').innerText = file.name;
+    function compressCardImage(file, callback) {
       const reader = new FileReader();
       reader.onload = function(evt) {
         const img = new Image();
         img.onload = function() {
           const canvas = document.createElement('canvas');
-          const maxDim = 300;
+          const maxDim = 750;
           let width = img.width, height = img.height;
-          if (width > height) { if (width > maxDim) { height *= maxDim / width; width = maxDim; } }
-          else { if (height > maxDim) { width *= maxDim / height; height = maxDim; } }
+          if (width > height) { if (width > maxDim) { height = Math.round((height * maxDim) / width); width = maxDim; } }
+          else { if (height > maxDim) { width = Math.round((width * maxDim) / height); height = maxDim; } }
           canvas.width = width; canvas.height = height;
           const ctx = canvas.getContext('2d');
           ctx.drawImage(img, 0, 0, width, height);
-          adminBase64Photo = canvas.toDataURL('image/jpeg', 0.7);
-          document.getElementById('mPhotoImg').src = adminBase64Photo;
-          document.getElementById('mPhotoPreviewBox').style.display = 'block';
+          callback(canvas.toDataURL('image/jpeg', 0.72));
         };
         img.src = evt.target.result;
       };
       reader.readAsDataURL(file);
+    }
+
+    document.getElementById('mPhoto').addEventListener('change', function(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+      document.getElementById('mPhotoName').innerText = "✓ تم تجهيز الكارت: " + file.name;
+      compressCardImage(file, (base64) => {
+        adminBase64Card = base64;
+        document.getElementById('mPhotoImg').src = adminBase64Card;
+        document.getElementById('mPhotoPreviewBox').style.display = 'block';
+      });
+    });
+
+    document.getElementById('editCardInput').addEventListener('change', function(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+      compressCardImage(file, (base64) => {
+        editBase64Card = base64;
+        document.getElementById('editCardStatus').innerText = "✓ تم اختيار صورة كارت جديدة";
+      });
     });
 
     async function loadAllData() {
-      try { await loadCategories(); } catch(e) { console.error("خطأ الأقسام:", e); }
-      try { await loadWorkers(); } catch(e) { console.error("خطأ الحرفيين:", e); }
-      try { await loadPending(); } catch(e) { console.error("خطأ طلبات الانتظار:", e); }
-      try { await loadPendingRatings(); } catch(e) { console.error("خطأ التقييمات:", e); }
-      try { await loadSuggestions(); } catch(e) { console.error("خطأ المقترحات:", e); }
+      try { await loadWorkers(); } catch(e) {}
+      try { await loadCategories(); } catch(e) {}
+      try { await loadPending(); } catch(e) {}
+      try { await loadPendingRatings(); } catch(e) {}
+      try { await loadFeedbackSeparated(); } catch(e) {}
     }
 
+    // تحميل الأقسام مع حساب عدد الحرفيين جوه كل قسم وإمكانية التعديل
     async function loadCategories() {
       const catSelect = document.getElementById('mCategory');
       const editCatSelect = document.getElementById('editCategory');
       const catTable = document.getElementById('categoriesTableBody');
+      const catCountBadge = document.getElementById('categoriesCountBadge');
       catSelect.innerHTML = '<option value="" disabled selected>اختار القسم *</option>';
       if (editCatSelect) editCatSelect.innerHTML = '';
       catTable.innerHTML = '';
       
+      const workerCountsByCat = {};
+      cachedApprovedWorkers.forEach(w => {
+        const c = w.category || 'other';
+        workerCountsByCat[c] = (workerCountsByCat[c] || 0) + 1;
+      });
+
       const querySnapshot = await getDocs(collection(db, "categories"));
+      if (catCountBadge) catCountBadge.innerText = querySnapshot.size;
+
       querySnapshot.forEach((docSnap) => {
         const cat = docSnap.data();
-        const opt = `<option value="${cat.id}" data-icon="${cat.icon || '🛠️'}">${cat.name} ${cat.icon || ''}</option>`;
+        const countInCat = workerCountsByCat[cat.id] || 0;
+        const opt = `<option value="${cat.id}" data-icon="${cat.icon || '🛠️'}">${cat.name} ${cat.icon || ''} (${countInCat})</option>`;
         catSelect.innerHTML += opt;
         if (editCatSelect) editCatSelect.innerHTML += opt;
+
+        const safeName = (cat.name || '').replace(/'/g, "\\'");
+        const safeIcon = (cat.icon || '🛠️').replace(/'/g, "\\'");
 
         const tr = document.createElement('tr');
         tr.innerHTML = `
           <td style="font-size:1.3rem;">${cat.icon || '🛠️'}</td>
           <td><strong>${cat.name}</strong></td>
           <td><code>${cat.id}</code></td>
-          <td style="text-align:center;">
+          <td><span style="background:#eef8f8; color:var(--primary); padding:2px 10px; border-radius:12px; font-weight:800;">${countInCat} حرفي</span></td>
+          <td style="text-align:center; white-space:nowrap;">
+            <button class="btn-edit" onclick="openEditCategory('${docSnap.id}', '${cat.id}', '${safeName}', '${safeIcon}')" style="margin-left:4px;">✏️ تعديل</button>
             <button class="btn-reject" onclick="deleteCategory('${docSnap.id}')">حذف</button>
           </td>
         `;
@@ -504,55 +641,161 @@
       });
     }
 
+    window.openEditCategory = function(docId, catId, catName, catIcon) {
+      document.getElementById('editCatDocId').value = docId;
+      document.getElementById('editCatId').value = catId;
+      document.getElementById('editCatName').value = catName;
+      document.getElementById('editCatIcon').value = catIcon;
+      document.getElementById('editCategoryModal').style.display = 'flex';
+    };
+
+    document.getElementById('editCategoryForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const docId = document.getElementById('editCatDocId').value;
+      const newName = document.getElementById('editCatName').value.trim();
+      const newIcon = document.getElementById('editCatIcon').value.trim();
+
+      try {
+        await updateDoc(doc(db, "categories", docId), {
+          name: newName,
+          icon: newIcon
+        });
+        alert("✓ تم تعديل بيانات القسم بنجاح!");
+        document.getElementById('editCategoryModal').style.display = 'none';
+        loadCategories();
+      } catch (err) {
+        alert("تعذر تعديل القسم: " + err.message);
+      }
+    });
+
+    function formatWaPhone(phone) {
+      const clean = (phone || "").replace(/[^0-9]/g, '');
+      return clean.startsWith('0') ? '2' + clean : (clean.startsWith('20') ? clean : '20' + clean);
+    }
+
     async function loadWorkers() {
-      const tbody = document.getElementById('approvedWorkersBody');
       const countEl = document.getElementById('workersCount');
-      tbody.innerHTML = '';
       const q = query(collection(db, "workers"), where("status", "==", "approved"));
       const querySnapshot = await getDocs(q);
       countEl.innerText = querySnapshot.size;
+
+      cachedApprovedWorkers = [];
       querySnapshot.forEach((docSnap) => {
-        const w = docSnap.data();
+        cachedApprovedWorkers.push({ id: docSnap.id, ...docSnap.data() });
+      });
+
+      renderApprovedWorkersTable();
+    }
+
+    function renderApprovedWorkersTable() {
+      const tbody = document.getElementById('approvedWorkersBody');
+      const searchInput = document.getElementById('adminWorkerSearch');
+      const matchCountEl = document.getElementById('adminSearchMatchCount');
+      tbody.innerHTML = '';
+
+      const term = searchInput ? searchInput.value.trim().toLowerCase() : '';
+      const filtered = cachedApprovedWorkers.filter(w => {
+        if (!term) return true;
+        const text = `${w.name || ''} ${w.job || ''} ${w.area || ''} ${w.phone || ''} ${w.phone2 || ''}`.toLowerCase();
+        return text.includes(term);
+      });
+
+      if (matchCountEl) {
+        matchCountEl.textContent = term ? `نتائج البحث: ${filtered.length} من ${cachedApprovedWorkers.length}` : `إجمالي المعتمدين: ${cachedApprovedWorkers.length}`;
+      }
+
+      filtered.forEach((w) => {
         const tr = document.createElement('tr');
-        const emgTag = w.isEmergency ? `<span style="background:#fef2f2; color:#dc2626; padding:2px 6px; border-radius:10px; font-size:0.7rem; font-weight:bold; margin-right:4px;">🚨 طوارئ</span>` : '';
+        const emgTag = w.isEmergency ? `<span style="background:#fef2f2; color:#dc2626; padding:2px 6px; border-radius:10px; font-size:0.7rem; font-weight:bold;">🚨 طوارئ</span>` : '';
+        const warnings = w.warningsCount || 0;
+        const warnBadge = warnings > 0 ? `<span style="background:#fef3c7; color:#b45309; padding:2px 6px; border-radius:10px; font-size:0.7rem; font-weight:bold;">⚠️ إنذار ${warnings}/2</span>` : '';
+        const phonesText = w.phone2 ? `${w.phone}<br><small style="color:#64748b;">بديل: ${w.phone2}</small>` : w.phone;
+        const hasCardBadge = (w.cardImage || w.photoUrl) ? `<span style="color:#0284c7; font-weight:bold; font-size:0.78rem;">🪪 مرفق</span>` : `<span style="color:#94a3b8; font-size:0.75rem;">—</span>`;
+        const waPhone = (w.phone2 && w.phone2Wa && !w.phone1Wa) ? w.phone2 : w.phone;
+        const safeName = (w.name || '').replace(/'/g, "\\'");
+
+        const warnButtonHTML = warnings >= 1
+          ? `<button class="btn-reject" onclick="issueWorkerWarning('${w.id}', '${safeName}', '${waPhone}', ${warnings})" title="إنذار تاني وحذف نهائي لتكرار الشكوى">🚫 إنذار ٢ وحذف</button>`
+          : `<button class="btn-warn" onclick="issueWorkerWarning('${w.id}', '${safeName}', '${waPhone}', 0)" title="إرسال إنذار أول عبر واتساب">⚠️ إنذار</button>`;
+
         tr.innerHTML = `
-          <td><strong>${w.name}</strong></td>
+          <td><strong>${w.avatar || '🛠️'} ${w.name}</strong><br>${warnBadge}</td>
           <td><span class="badge-job">${w.job}</span> ${emgTag}</td>
           <td>${w.area}</td>
-          <td dir="ltr" style="text-align:right;">${w.phone}</td>
+          <td dir="ltr" style="text-align:right;">${phonesText}</td>
+          <td>${hasCardBadge}</td>
           <td>
-            <div style="font-size: 0.85rem; font-weight: bold; margin-bottom: 4px; color: #334155;">
+            <div style="font-size: 0.82rem; font-weight: bold; margin-bottom: 4px; color: #334155;">
               📞 ${w.callClicks || 0} | 💬 ${w.waClicks || 0}
             </div>
             <div style="display:flex; gap:4px; align-items:center;">
-              <button onclick="sendWorkerReport('${w.name}', '${w.phone}', ${w.callClicks || 0}, ${w.waClicks || 0})" 
-                      style="background: #25D366; color: white; border: none; padding: 4px 8px; border-radius: 6px; cursor: pointer; font-size: 0.74rem; font-weight: bold; display: inline-flex; align-items: center; gap: 4px;">
-                📲 إرسال التقرير
+              <button onclick="sendWorkerReport('${safeName}', '${waPhone}', ${w.callClicks || 0}, ${w.waClicks || 0})" 
+                      style="background: #25D366; color: white; border: none; padding: 4px 7px; border-radius: 6px; cursor: pointer; font-size: 0.72rem; font-weight: bold;">
+                📲 تقرير
               </button>
-              <button onclick="resetWorkerStats('${docSnap.id}', '${w.name}')" title="تصفير عداد هذا الشهر"
-                      style="background: #f1f5f9; color: #475569; border: 1px solid #cbd5e1; padding: 4px 7px; border-radius: 6px; cursor: pointer; font-size: 0.72rem; font-weight: bold;">
+              <button onclick="resetWorkerStats('${w.id}', '${safeName}')"
+                      style="background: #f1f5f9; color: #475569; border: 1px solid #cbd5e1; padding: 4px 6px; border-radius: 6px; cursor: pointer; font-size: 0.7rem; font-weight: bold;">
                 🔄 تصفير
               </button>
             </div>
           </td>
           <td style="text-align:center; white-space:nowrap;">
-            <button class="btn-edit" onclick="openEditWorker('${docSnap.id}')">✏️ تعديل</button>
-            <button class="btn-reject" onclick="deleteWorker('${docSnap.id}')" style="margin-right:4px;">حذف</button>
+            ${warnButtonHTML}
+            <button class="btn-edit" onclick="openEditWorker('${w.id}')" style="margin-right:3px;">✏️</button>
+            <button class="btn-reject" onclick="deleteWorker('${w.id}')" style="margin-right:3px;">حذف</button>
           </td>
         `;
         tbody.appendChild(tr);
       });
     }
 
-    // إرسال تقرير الواتساب
-    window.sendWorkerReport = function(name, phone, calls, wa) {
-      if (!phone) {
-        alert("لا يوجد رقم هاتف مسجل لهذا الحرفي");
-        return;
-      }
-      const cleanPhone = phone.replace(/[^0-9]/g, '');
-      const finalPhone = cleanPhone.startsWith('0') ? '2' + cleanPhone : (cleanPhone.startsWith('20') ? cleanPhone : '20' + cleanPhone);
+    const adminWorkerSearch = document.getElementById('adminWorkerSearch');
+    if (adminWorkerSearch) {
+      adminWorkerSearch.addEventListener('input', renderApprovedWorkersTable);
+    }
 
+    window.issueWorkerWarning = async function(workerId, name, phone, currentWarnings) {
+      if (!workerId) return;
+      const waTarget = formatWaPhone(phone);
+
+      if (currentWarnings >= 1) {
+        if (confirm(`هذا الحرفي (${name}) لديه إنذار سابق بالفعل.\nهل تريدين إرسال إشعار الحذف النهائي على واتساب وحذفه من المنصة الآن؟`)) {
+          const finalMsg = 
+`السلام عليكم يا أسطى ${name}،
+من إدارة منصة (عزوتنا - دليل خدمات الحي).
+
+نأسف لإبلاغك بأنه نظراً لتكرار التقييمات السلبية والشكاوى من أهالي الحي بعد الإنذار السابق، وحفاظاً على ثقة ومصداقية المنصة، تم إيقاف وحذف بياناتك من دليل عزوتنا.
+
+مع خالص التقدير،
+إدارة منصة عزوتنا`;
+          if (waTarget) window.open(`https://wa.me/${waTarget}?text=${encodeURIComponent(finalMsg)}`, '_blank');
+          await deleteDoc(doc(db, "workers", workerId));
+          alert(`✓ تم حذف (${name}) نهائياً لتكرار التقييم السيء.`);
+          await loadWorkers();
+          await loadCategories();
+        }
+      } else {
+        if (confirm(`هل تريدين توجيه إنذار أول لـ (${name}) عبر واتساب بسبب تقييم سلبي؟`)) {
+          const warnMsg = 
+`السلام عليكم يا أسطى ${name}،
+من إدارة منصة (عزوتنا - دليل خدمات الحي) 🤝
+
+حرصاً منّا على سمعتك الطيبة وثقة أهالي التجمع الثالث فيك، بننبه حضرتك إن وصلنا تقييم سلبي من أحد الجيران بخصوص التعامل الأخير.
+ده مجرد تنبيه ودي أول من الإدارة لمراجعة جودة الخدمة والالتزام بالمواعيد والأسعار، لأن تكرار التقييمات السلبية بيؤدي تلقائياً لحذف الحساب من الدليل.
+
+نتمنى لك كل التوفيق والرزق الحلال 🤍
+إدارة منصة عزوتنا`;
+          if (waTarget) window.open(`https://wa.me/${waTarget}?text=${encodeURIComponent(warnMsg)}`, '_blank');
+          await updateDoc(doc(db, "workers", workerId), { warningsCount: increment(1) });
+          alert(`✓ تم تسجيل الإنذار الأول لـ (${name}) بنجاح.`);
+          loadWorkers();
+        }
+      }
+    };
+
+    window.sendWorkerReport = function(name, phone, calls, wa) {
+      if (!phone) return alert("لا يوجد رقم هاتف مسجل لهذا الحرفي");
+      const finalPhone = formatWaPhone(phone);
       const message = 
 `السلام عليكم يا أسطى ${name}،
 من إدارة منصة (عزوتنا - دليل خدمات الحي) حابين نطمن على شغلك 🌟
@@ -566,47 +809,40 @@
 https://azwetna.web.app/#feedback
 
 شكراً لوجودك معانا في عزوتنا 🤍`;
-
       window.open(`https://wa.me/${finalPhone}?text=${encodeURIComponent(message)}`, '_blank');
     };
 
-    // تصفير عداد المكالمات والواتساب للحرفي
     window.resetWorkerStats = async function(id, name) {
       if (confirm(`هل تريدين تصفير عداد المكالمات والواتساب لـ (${name}) لبدء حساب شهر جديد؟`)) {
-        try {
-          await updateDoc(doc(db, "workers", id), {
-            callClicks: 0,
-            waClicks: 0
-          });
-          loadWorkers();
-        } catch (err) {
-          alert("تعذر تصفير العداد: " + err.message);
-        }
+        await updateDoc(doc(db, "workers", id), { callClicks: 0, waClicks: 0 });
+        loadWorkers();
       }
     };
 
     window.openEditWorker = async function(id) {
       try {
-        const docRef = doc(db, "workers", id);
-        const docSnap = await getDoc(docRef);
-        if (!docSnap.exists()) {
-          alert("لم يتم العثور على بيانات هذا الحرفي");
-          return;
-        }
+        const docSnap = await getDoc(doc(db, "workers", id));
+        if (!docSnap.exists()) return;
         const data = docSnap.data();
+        editBase64Card = null;
         document.getElementById('editWorkerId').value = id;
         document.getElementById('editName').value = data.name || '';
         document.getElementById('editPhone').value = data.phone || '';
+        document.getElementById('editP1Call').checked = data.phone1Call !== undefined ? data.phone1Call : true;
+        document.getElementById('editP1Wa').checked = data.phone1Wa !== undefined ? data.phone1Wa : true;
+        document.getElementById('editPhone2').value = data.phone2 || '';
+        document.getElementById('editP2Call').checked = data.phone2Call !== undefined ? data.phone2Call : Boolean(data.phone2);
+        document.getElementById('editP2Wa').checked = data.phone2Wa !== undefined ? data.phone2Wa : false;
         document.getElementById('editArea').value = data.area || '';
         document.getElementById('editJob').value = data.job || '';
         document.getElementById('editExp').value = data.experience || '';
         document.getElementById('editBio').value = data.bio || '';
         document.getElementById('editEmergency').checked = Boolean(data.isEmergency);
+        document.getElementById('editCardStatus').innerText = (data.cardImage || data.photoUrl) ? "يوجد كارت مرفق حالياً" : "";
         if (data.category) document.getElementById('editCategory').value = data.category;
 
         document.getElementById('editWorkerModal').style.display = 'flex';
       } catch (err) {
-        console.error("خطأ جلب بيانات الحرفي للتعديل:", err);
         alert("تعذر فتح التعديل: " + err.message);
       }
     };
@@ -618,25 +854,37 @@ https://azwetna.web.app/#feedback
     document.getElementById('editWorkerForm').addEventListener('submit', async (e) => {
       e.preventDefault();
       const id = document.getElementById('editWorkerId').value;
-      const name = document.getElementById('editName').value.trim();
-      const category = document.getElementById('editCategory').value;
-      const phone = document.getElementById('editPhone').value.trim();
-      const area = document.getElementById('editArea').value.trim();
-      const job = document.getElementById('editJob').value.trim();
-      const experience = document.getElementById('editExp').value.trim();
-      const bio = document.getElementById('editBio').value.trim();
-      const isEmergency = document.getElementById('editEmergency').checked;
+      const editCatSelect = document.getElementById('editCategory');
+      const selectedOpt = editCatSelect.options[editCatSelect.selectedIndex];
+      const icon = selectedOpt ? (selectedOpt.getAttribute('data-icon') || '🛠️') : '🛠️';
+      const p2 = document.getElementById('editPhone2').value.trim();
+
+      const updateData = {
+        name: document.getElementById('editName').value.trim(),
+        category: editCatSelect.value,
+        avatar: icon,
+        phone: document.getElementById('editPhone').value.trim(),
+        phone1Call: document.getElementById('editP1Call').checked,
+        phone1Wa: document.getElementById('editP1Wa').checked,
+        phone2: p2,
+        phone2Call: p2 ? document.getElementById('editP2Call').checked : false,
+        phone2Wa: p2 ? document.getElementById('editP2Wa').checked : false,
+        area: document.getElementById('editArea').value.trim(),
+        job: document.getElementById('editJob').value.trim(),
+        experience: document.getElementById('editExp').value.trim(),
+        bio: document.getElementById('editBio').value.trim(),
+        isEmergency: document.getElementById('editEmergency').checked
+      };
+
+      if (editBase64Card) updateData.cardImage = editBase64Card;
 
       try {
-        const workerRef = doc(db, "workers", id);
-        await updateDoc(workerRef, {
-          name, category, phone, area, job, experience, bio, isEmergency
-        });
+        await updateDoc(doc(db, "workers", id), updateData);
         alert("✓ تم تحديث بيانات الحرفي بنجاح!");
         closeEditModal();
-        loadWorkers();
+        await loadWorkers();
+        await loadCategories();
       } catch (err) {
-        console.error("خطأ حفظ التعديل:", err);
         alert("تعذر حفظ التعديلات: " + err.message);
       }
     });
@@ -656,14 +904,17 @@ https://azwetna.web.app/#feedback
       noPending.style.display = 'none';
       querySnapshot.forEach((docSnap) => {
         const w = docSnap.data();
-        const emgTag = w.isEmergency ? `<span style="background:#fef2f2; color:#dc2626; padding:2px 6px; border-radius:10px; font-size:0.7rem; font-weight:bold; margin-right:4px;">🚨 طوارئ</span>` : '';
+        const emgTag = w.isEmergency ? `<span style="background:#fef2f2; color:#dc2626; padding:2px 6px; border-radius:10px; font-size:0.7rem; font-weight:bold;">🚨 طوارئ</span>` : '';
+        const phonesText = w.phone2 ? `${w.phone}<br><small>بديل: ${w.phone2}</small>` : w.phone;
+        const hasCard = (w.cardImage || w.photoUrl) ? `🪪 نعم` : `—`;
         const tr = document.createElement('tr');
         tr.innerHTML = `
           <td><strong>${w.name}</strong></td>
           <td><span class="badge-job">${w.job}</span> ${emgTag}</td>
           <td>${w.area}</td>
           <td style="font-size:0.82rem; color:#64748b;">${w.bio || '—'}</td>
-          <td dir="ltr" style="text-align:right;">${w.phone}</td>
+          <td dir="ltr" style="text-align:right;">${phonesText}</td>
+          <td>${hasCard}</td>
           <td style="text-align:center;">
             <button class="btn-approve" onclick="approveWorker('${docSnap.id}')">موافقة</button>
             <button class="btn-reject" onclick="deleteWorker('${docSnap.id}')">رفض</button>
@@ -678,27 +929,28 @@ https://azwetna.web.app/#feedback
       const countEl = document.getElementById('ratingsCount');
       const noMsg = document.getElementById('noRatingsMsg');
       tbody.innerHTML = '';
-      
       const q = query(collection(db, "reviews"), where("status", "==", "pending"));
       const querySnapshot = await getDocs(q);
-      
       countEl.innerText = querySnapshot.size;
       if (querySnapshot.empty) {
         noMsg.style.display = 'block';
         return;
       }
       noMsg.style.display = 'none';
-      
       querySnapshot.forEach((docSnap) => {
         const r = docSnap.data();
         const tr = document.createElement('tr');
+        const badReviewWarnBtn = (r.rating <= 2 && r.workerId)
+          ? `<button class="btn-warn" onclick="warnWorkerFromReview('${r.workerId}', '${r.workerName || ''}')" style="margin-left:3px;">⚠️ إنذار الحرفي</button>`
+          : '';
         tr.innerHTML = `
           <td><strong>${r.workerName || 'مهني'}</strong></td>
           <td>${r.userName || '—'}</td>
-          <td dir="ltr" style="font-size:0.85rem; color:#10b981; font-weight:bold;">${r.userPhone || '—'}</td>
+          <td dir="ltr" style="font-size:0.82rem; color:#10b981; font-weight:bold;">${r.userPhone || '—'}</td>
           <td>⭐ ${r.rating}</td>
           <td>${r.comment || '—'}</td>
-          <td style="text-align:center;">
+          <td style="text-align:center; white-space:nowrap;">
+            ${badReviewWarnBtn}
             <button class="btn-approve" onclick="approveRating('${docSnap.id}', '${r.workerId || ''}', ${r.rating || 5})">اعتماد</button>
             <button class="btn-reject" onclick="deleteRating('${docSnap.id}')">حذف</button>
           </td>
@@ -707,131 +959,155 @@ https://azwetna.web.app/#feedback
       });
     }
 
-    async function loadSuggestions() {
-      const tbody = document.getElementById('suggestionsBody');
-      const countEl = document.getElementById('sugCount');
-      const noSug = document.getElementById('noSugMsg');
-      tbody.innerHTML = '';
-      
+    window.warnWorkerFromReview = async function(workerId, workerName) {
+      const snap = await getDoc(doc(db, "workers", workerId));
+      if (!snap.exists()) return alert("الحرفي غير موجود في الدليل.");
+      const w = snap.data();
+      issueWorkerWarning(workerId, w.name || workerName, w.phone, w.warningsCount || 0);
+    };
+
+    async function loadFeedbackSeparated() {
+      const platTbody = document.getElementById('platformRatingsBody');
+      const platCountEl = document.getElementById('platRatingsCount');
+      const noPlatMsg = document.getElementById('noPlatRatingsMsg');
+
+      const sugTbody = document.getElementById('suggestionsBody');
+      const sugCountEl = document.getElementById('sugCount');
+      const noSugMsg = document.getElementById('noSugMsg');
+
+      platTbody.innerHTML = '';
+      sugTbody.innerHTML = '';
+
       let querySnapshot;
       try {
-        const q = query(collection(db, "suggestions"), orderBy("createdAt", "desc"));
-        querySnapshot = await getDocs(q);
+        querySnapshot = await getDocs(query(collection(db, "suggestions"), orderBy("createdAt", "desc")));
       } catch(e) {
         querySnapshot = await getDocs(collection(db, "suggestions"));
       }
-      
-      countEl.innerText = querySnapshot.size;
-      if (querySnapshot.empty) {
-        noSug.style.display = 'block';
-        return;
-      }
-      noSug.style.display = 'none';
-      
+
+      let platCount = 0;
+      let sugCount = 0;
+
       querySnapshot.forEach((docSnap) => {
         const s = docSnap.data();
-        const tr = document.createElement('tr');
-        tr.innerHTML = `
-          <td>${s.message}</td>
-          <td>${s.userName || '—'}</td>
-          <td dir="ltr" style="font-size:0.85rem; color:#10b981; font-weight:bold;">${s.userPhone || '—'}</td>
-          <td style="text-align:center;">
-            <button class="btn-reject" onclick="deleteSuggestion('${docSnap.id}')">حذف</button>
-          </td>
-        `;
-        tbody.appendChild(tr);
+        const isSuggestion = s.type === 'suggestion';
+
+        if (!isSuggestion) {
+          platCount++;
+          const isApproved = s.status === 'approved';
+          const statusBadge = isApproved 
+            ? `<span style="background:#dcfce7; color:#15803d; padding:2px 8px; border-radius:12px; font-size:0.74rem; font-weight:bold;">منشور بالموقع ✓</span>`
+            : `<span style="background:#f1f5f9; color:#64748b; padding:2px 8px; border-radius:12px; font-size:0.74rem;">بانتظار الاعتماد</span>`;
+
+          const tr = document.createElement('tr');
+          tr.innerHTML = `
+            <td>⭐ ${s.rating || 5}</td>
+            <td>${s.message}</td>
+            <td>${s.userName || '—'}</td>
+            <td dir="ltr" style="font-size:0.82rem; color:#10b981; font-weight:bold;">${s.userPhone || '—'}</td>
+            <td>${statusBadge}</td>
+            <td style="text-align:center; white-space:nowrap;">
+              ${!isApproved ? `<button class="btn-approve" onclick="approveSuggestion('${docSnap.id}')" style="margin-left:4px;">اعتماد للعرض</button>` : ''}
+              <button class="btn-reject" onclick="deleteSuggestion('${docSnap.id}')">حذف</button>
+            </td>
+          `;
+          platTbody.appendChild(tr);
+        } else {
+          sugCount++;
+          const isReviewed = s.status === 'reviewed';
+          const statusBadge = isReviewed
+            ? `<span style="background:#e0f2fe; color:#0369a1; padding:2px 8px; border-radius:12px; font-size:0.74rem; font-weight:bold;">تمت المراجعة ✓</span>`
+            : `<span style="background:#fef3c7; color:#b45309; padding:2px 8px; border-radius:12px; font-size:0.74rem; font-weight:bold;">جديد</span>`;
+
+          const tr = document.createElement('tr');
+          tr.innerHTML = `
+            <td>${s.message}</td>
+            <td>${s.userName || '—'}</td>
+            <td dir="ltr" style="font-size:0.82rem; color:#10b981; font-weight:bold;">${s.userPhone || '—'}</td>
+            <td>${statusBadge}</td>
+            <td style="text-align:center; white-space:nowrap;">
+              ${!isReviewed ? `<button class="btn-edit" onclick="markSuggestionReviewed('${docSnap.id}')" style="margin-left:4px;">تمت المراجعة</button>` : ''}
+              <button class="btn-reject" onclick="deleteSuggestion('${docSnap.id}')">حذف</button>
+            </td>
+          `;
+          sugTbody.appendChild(tr);
+        }
       });
+
+      platCountEl.innerText = platCount;
+      sugCountEl.innerText = sugCount;
+      noPlatMsg.style.display = platCount === 0 ? 'block' : 'none';
+      noSugMsg.style.display = sugCount === 0 ? 'block' : 'none';
     }
 
+    window.approveSuggestion = async function(id) {
+      await updateDoc(doc(db, "suggestions", id), { status: "approved" });
+      alert("✓ تم اعتماد تقييم المنصة ليظهر في (آراء الجيران)!");
+      loadFeedbackSeparated();
+    };
+
+    window.markSuggestionReviewed = async function(id) {
+      await updateDoc(doc(db, "suggestions", id), { status: "reviewed" });
+      loadFeedbackSeparated();
+    };
+
     window.approveWorker = async function(id) {
-      try {
-        await updateDoc(doc(db, "workers", id), { status: "approved" });
-        alert("✓ تم اعتماد الحرفي بنجاح ونشره في الدليل!");
-        loadPending();
-        loadWorkers();
-      } catch (err) {
-        console.error("خطأ اعتماد الحرفي:", err);
-        alert("تعذر اعتماد الحرفي: " + err.message);
-      }
+      await updateDoc(doc(db, "workers", id), { status: "approved" });
+      alert("✓ تم اعتماد الحرفي بنجاح ونشره في الدليل!");
+      await loadPending();
+      await loadWorkers();
+      await loadCategories();
     };
 
     window.deleteWorker = async function(id) {
       if (confirm('هل أنتِ متأكدة من حذف هذا الحرفي نهائياً؟')) {
-        try {
-          await deleteDoc(doc(db, "workers", id));
-          alert("✓ تم الحذف بنجاح!");
-          loadWorkers();
-          loadPending();
-        } catch (err) {
-          console.error("خطأ حذف الحرفي:", err);
-          alert("تعذر حذف الحرفي: " + err.message);
-        }
+        await deleteDoc(doc(db, "workers", id));
+        await loadWorkers();
+        await loadPending();
+        await loadCategories();
       }
     };
 
     window.deleteCategory = async function(id) {
       if (confirm('هل أنتِ متأكدة من حذف هذا القسم؟')) {
-        try {
-          await deleteDoc(doc(db, "categories", id));
-          alert("✓ تم حذف القسم بنجاح!");
-          loadCategories();
-        } catch (err) {
-          console.error("خطأ حذف القسم:", err);
-          alert("تعذر حذف القسم: " + err.message);
-        }
+        await deleteDoc(doc(db, "categories", id));
+        loadCategories();
       }
     };
 
     window.deleteSuggestion = async function(id) {
-      if (confirm('هل أنتِ متأكدة من حذف هذا المقترح؟')) {
-        try {
-          await deleteDoc(doc(db, "suggestions", id));
-          alert("✓ تم حذف المقترح بنجاح!");
-          loadSuggestions();
-        } catch (err) {
-          console.error("خطأ حذف المقترح:", err);
-          alert("تعذر حذف المقترح: " + err.message);
-        }
+      if (confirm('هل أنتِ متأكدة من الحذف؟')) {
+        await deleteDoc(doc(db, "suggestions", id));
+        loadFeedbackSeparated();
       }
     };
 
     window.deleteRating = async function(id) {
       if (confirm('هل أنتِ متأكدة من حذف هذا التقييم؟')) {
-        try {
-          await deleteDoc(doc(db, "reviews", id));
-          alert("✓ تم حذف التقييم بنجاح!");
-          loadPendingRatings();
-        } catch (err) {
-          console.error("خطأ حذف التقييم:", err);
-          alert("تعذر حذف التقييم: " + err.message);
-        }
+        await deleteDoc(doc(db, "reviews", id));
+        loadPendingRatings();
       }
     };
 
     window.approveRating = async function(reviewId, workerId, newRating) {
-      try {
-        await updateDoc(doc(db, "reviews", reviewId), { status: "approved" });
-        if (workerId && workerId !== 'undefined' && workerId !== '') {
-          const workerRef = doc(db, "workers", workerId);
-          const workerSnap = await getDoc(workerRef);
-          if (workerSnap.exists()) {
-            const data = workerSnap.data();
-            const currentAvg = data.rating || 5.0;
-            const currentCount = data.ratingsCount || 0;
-            const updatedCount = currentCount + 1;
-            const updatedAvg = ((currentAvg * currentCount) + Number(newRating)) / updatedCount;
-            await updateDoc(workerRef, {
-              rating: Number(updatedAvg.toFixed(1)),
-              ratingsCount: updatedCount
-            });
-          }
+      await updateDoc(doc(db, "reviews", reviewId), { status: "approved" });
+      if (workerId && workerId !== 'undefined' && workerId !== '') {
+        const workerRef = doc(db, "workers", workerId);
+        const workerSnap = await getDoc(workerRef);
+        if (workerSnap.exists()) {
+          const data = workerSnap.data();
+          const currentAvg = data.rating || 5.0;
+          const currentCount = data.ratingsCount || 0;
+          const updatedCount = currentCount + 1;
+          const updatedAvg = ((currentAvg * currentCount) + Number(newRating)) / updatedCount;
+          await updateDoc(workerRef, {
+            rating: Number(updatedAvg.toFixed(1)),
+            ratingsCount: updatedCount
+          });
         }
-        alert('✓ تم اعتماد التقييم بنجاح!');
-        loadPendingRatings();
-      } catch (err) {
-        console.error("خطأ اعتماد التقييم:", err);
-        alert("تعذر اعتماد التقييم: " + err.message);
       }
+      alert('✓ تم اعتماد التقييم بنجاح!');
+      loadPendingRatings();
     };
 
     document.getElementById('addCategoryForm').addEventListener('submit', async (e) => {
@@ -839,14 +1115,10 @@ https://azwetna.web.app/#feedback
       const id = document.getElementById('cId').value.trim().toLowerCase();
       const name = document.getElementById('cName').value.trim();
       const icon = document.getElementById('cIcon').value.trim();
-      try {
-        await addDoc(collection(db, "categories"), { id, name, icon, createdAt: serverTimestamp() });
-        e.target.reset();
-        alert('تمت إضافة القسم بنجاح!');
-        loadCategories();
-      } catch (err) {
-        alert("تعذر إضافة القسم: " + err.message);
-      }
+      await addDoc(collection(db, "categories"), { id, name, icon, createdAt: serverTimestamp() });
+      e.target.reset();
+      alert('تمت إضافة القسم بنجاح!');
+      loadCategories();
     });
 
     document.getElementById('addWorkerForm').addEventListener('submit', async (e) => {
@@ -857,6 +1129,11 @@ https://azwetna.web.app/#feedback
       const name = document.getElementById('mName').value.trim();
       const category = catSelect.value;
       const phone = document.getElementById('mPhone').value.trim();
+      const phone1Call = document.getElementById('mP1Call').checked;
+      const phone1Wa = document.getElementById('mP1Wa').checked;
+      const phone2 = document.getElementById('mPhone2').value.trim();
+      const phone2Call = phone2 ? document.getElementById('mP2Call').checked : false;
+      const phone2Wa = phone2 ? document.getElementById('mP2Wa').checked : false;
       const area = document.getElementById('mArea').value.trim();
       const job = document.getElementById('mJob').value.trim();
       const experience = document.getElementById('mExp').value.trim();
@@ -865,9 +1142,13 @@ https://azwetna.web.app/#feedback
 
       try {
         await addDoc(collection(db, "workers"), {
-          name, category, phone, area, job, experience, bio,
+          name, category,
+          phone, phone1Call, phone1Wa,
+          phone2, phone2Call, phone2Wa,
+          area, job, experience, bio,
           isEmergency: isEmergency,
-          photoUrl: adminBase64Photo || "",
+          warningsCount: 0,
+          cardImage: adminBase64Card || "",
           avatar: icon,
           status: "approved",
           rating: 5.0,
@@ -878,11 +1159,12 @@ https://azwetna.web.app/#feedback
         });
 
         e.target.reset();
-        adminBase64Photo = "";
+        adminBase64Card = "";
         document.getElementById('mPhotoPreviewBox').style.display = 'none';
         alert('تم نشر الحرفي في الدليل السحابي بنجاح!');
         switchTab('workersTab', document.getElementById('btnTabWorkers'));
-        loadWorkers();
+        await loadWorkers();
+        await loadCategories();
       } catch (err) {
         alert("تعذر نشر الحرفي: " + err.message);
       }
